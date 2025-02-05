@@ -1,3 +1,4 @@
+// app/_layout.tsx (main tab layout)
 import { Tabs } from 'expo-router';
 import React from 'react';
 import { Platform } from 'react-native';
@@ -18,19 +19,20 @@ export default function TabLayout() {
         tabBarButton: HapticTab,
         tabBarBackground: TabBarBackground,
         tabBarStyle: Platform.select({
-          ios: { position: 'absolute', },
+          ios: { position: 'absolute' },
           default: {},
         }),
-      }}>
+      }}
+    >
       <Tabs.Screen
-        name="index" // This should match your HomeScreen file
+        name="home" // This now points to your nested home layout with its own stack
         options={{
           title: 'Home',
           tabBarIcon: ({ color }) => <IconSymbol size={28} name="house.fill" color={color} />,
         }}
       />
       <Tabs.Screen
-        name="login"
+        name="/Login/Disclaimer"
         options={{
           title: 'Login',
           tabBarIcon: ({ color }) => <IconSymbol size={28} name="paperplane.fill" color={color} />,

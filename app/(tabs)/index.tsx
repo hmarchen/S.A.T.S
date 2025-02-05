@@ -11,7 +11,7 @@ export default function HomeScreen() {
       <Text style={styles.title}>
         Welcome to the Faculty of Science Engineering and Information Technology [SEIT]
       </Text>
-      <TouchableOpacity style={styles.loginButton} onPress={() => { router.push('/login') }}>
+      <TouchableOpacity style={styles.loginButton} onPress={() => { router.push('/Login/Disclaimer') }}>
         <Text style={styles.buttonText}>Login</Text>
       </TouchableOpacity>
     </View>
