@@ -39,6 +39,18 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     borderColor: '#ccc',
   },
+
+  studentNumber: {
+    height: 40,
+    marginBottom: 12,
+    borderWidth: 1,
+    padding: 10,
+    width: '20%',
+    borderRadius: 5,
+    backgroundColor: '#fff',
+    borderColor: '#ccc',
+  },
+
   buttonContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -73,6 +85,16 @@ const styles = StyleSheet.create({
     fontSize: 20, // Standardized button text size
     textAlign: 'center', // Added for consistent text alignment
   },
+  messageBox: {
+    height: 300,
+    marginBottom: 12,
+    borderWidth: 1,
+    padding: 10,
+    width: '90%',
+    borderRadius: 5,
+    backgroundColor: '#fff',
+    borderColor: '#ccc',
+  }
 });
 
 export default styles;

@@ -1,35 +1,31 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Pressable, SafeAreaView, TextInput, Alert } from 'react-native';
+import { View, Text, SafeAreaView, TextInput, Alert, Pressable } from 'react-native';
 import { useRouter } from 'expo-router';
 import styles from '../css/styles';
 
-export default function studentName() {
-  
+export default function StudentName() {
   const router = useRouter(); 
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
-  const handleSubmit = () => { Alert.alert('Form Submitted', `Name: ${firstName} ${lastName}`);  };
-  const handleClear = () => { setFirstName(''); setLastName(''); };
+
+  const handleSubmit = () => { 
+    Alert.alert('Form Submitted', `Name: ${firstName} ${lastName}`);  
+    console.log('Navigating to StudentNumber...');  
+    router.push('/Login/StudentNumber'); 
+  };
+
+  const handleClear = () => { 
+    setFirstName(''); 
+    setLastName(''); 
+  };
 
   return (
     <SafeAreaView style={styles.container}>
-      <Text style={styles.title}>Login</Text>
-     
-      <TextInput
-        style={styles.input}
-        value={firstName}
-        onChangeText={setFirstName}
-        placeholder="First Name"
-      />
-      <TextInput
-        style={styles.input}
-        value={lastName}
-        onChangeText={setLastName}
-        placeholder="Last Name"
-      />
-      
+      <Text style={styles.title}>Enter your Legal Full Name</Text>
+      <TextInput style={styles.input} value={firstName} onChangeText={setFirstName} placeholder="First Name" />
+      <TextInput style={styles.input} value={lastName} onChangeText={setLastName} placeholder="Last Name" />
       <View style={styles.buttonContainer}>
-        <Pressable style={styles.button} onPress={handleSubmit}>
+        <Pressable style={styles.button} onPress={handleSubmit}> 
           <Text style={styles.buttonText}>NEXT</Text>
         </Pressable>
         <Pressable style={[styles.button, styles.clearButton]} onPress={handleClear}>
