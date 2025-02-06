@@ -1,15 +1,15 @@
 # DEV LOGS
 
+### February 5, 2025
+- re-do of the login system to make it more mobile friendly
+- fixed formatting errors and styles associated with them
+
 ### February, 2, 2025
 
 - implemented an index page
 - implemented a login page prototype
 - made the 404 page prettier
 - implemented a seperate style sheet (javascript)
-
-### February 5, 2025
-- re-do of the login system to make it more mobile friendly
-- fixed formatting errors and styles associated with them
 
 # Welcome to your Expo app 👋
 
