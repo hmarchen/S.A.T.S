@@ -1,5 +1,9 @@
 # DEV LOGS
 
+### February 10th 2025
+- REBASE to another database with Github Projects.
+- Wireframe Development (on paper literally)
+
 ### February 5, 2025
 - re-do of the login system to make it more mobile friendly
 - fixed formatting errors and styles associated with them
