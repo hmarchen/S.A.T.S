@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Pressable, SafeAreaView, TextInput, Alert } from 'react-native';
 import { useRouter } from 'expo-router';
+import Breadcrumb from './breadcrumb';
 import styles from '../css/styles';
 
 export default function Institution() {
@@ -34,13 +35,14 @@ export default function Institution() {
       />
       
       <View style={styles.buttonContainer}>
-        <Pressable style={styles.button} onPress={handleSubmit}>
-          <Text style={styles.buttonText}>NEXT</Text>
-        </Pressable>
         <Pressable style={[styles.button, styles.clearButton]} onPress={handleClear}>
           <Text style={styles.buttonText}>CLEAR</Text>
         </Pressable>
+        <Pressable style={styles.button} onPress={handleSubmit}>
+          <Text style={styles.buttonText}>NEXT</Text>
+        </Pressable>
       </View>
+      <Breadcrumb entities={['Disclaimer', 'Full Name', 'Student ID', 'DCMail', 'Institution']} flowDepth={4} />
     </SafeAreaView>
   );
 }
