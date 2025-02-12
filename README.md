@@ -1,5 +1,10 @@
 # DEV LOGS
 
+### February 11th 2025
+- implemented the front end for breadcrumbs
+- revised the button layout for better flow and UX design
+- Fixing tab space inconsistencies
+
 ### February 10th 2025
 - REBASE to another database with Github Projects.
 - Wireframe Development (on paper literally)
