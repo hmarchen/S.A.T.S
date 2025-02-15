@@ -59,6 +59,41 @@ const styles = StyleSheet.create({
     fontSize: 20, // Standardized button text size
     textAlign: 'center', // Added for consistent text alignment
   },
+  gridContainer: {
+    margin: 5,
+    width: 'auto',
+    flexGrow: 1,
+  },
+  gridItem: {
+    flex: 1,
+    height: 263,
+    backgroundColor: '#0B8261',
+    justifyContent: 'center',
+    alignItems: 'center',
+    margin: 5,
+    color: 'Blue',
+    overflow: "hidden",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 5 },
+    shadowOpacity: 0.3,
+    shadowRadius: 6,
+    elevation: 6, // For Android shadow
+  },
+  gridItemText: {
+    color: '#fff',
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+  messageBox: {
+    height: 300,
+    marginBottom: 12,
+    borderWidth: 1,
+    padding: 10,
+    width: '90%',
+    borderRadius: 5,
+    backgroundColor: '#fff',
+    borderColor: '#ccc',
+  }
 });
 
 export default styles;
