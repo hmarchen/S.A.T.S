@@ -3,8 +3,7 @@
 ### February 19th 2025
 - Merging Ramiyan's Branch (breadcrumb)
    - this branch features the breadcrumb layout at the bottom of the form as a progress tracker 
-- Merging Hlib's Branch
-   -    
+- Merging Hlib's Branch   
 
 
 ### February 11th 2025
