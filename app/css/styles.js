@@ -9,12 +9,26 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   title: {
-    fontSize: 28,
+    fontSize: 48,
     fontWeight: 'bold',
     textAlign: 'center',
     color: '#333',
     marginBottom: 20, // Added for consistency with spacing
   },
+  paragraph: {
+    fontSize: 20,
+    fontWeight: 'semibold',
+    textAlign: 'center',
+    color: 'black',
+    marginBottom: 5
+  },  
+  list: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    color: 'black',
+    marginBottom: 5
+  },  
   input: {
     height: 40,
     marginBottom: 12,
@@ -25,6 +39,18 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     borderColor: '#ccc',
   },
+
+  studentNumber: {
+    height: 40,
+    marginBottom: 12,
+    borderWidth: 1,
+    padding: 10,
+    width: '40%',
+    borderRadius: 5,
+    backgroundColor: '#fff',
+    borderColor: '#ccc',
+  },
+
   buttonContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
