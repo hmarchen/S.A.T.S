@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Pressable, SafeAreaView, TextInput, Alert } from 'react-native';
+import Breadcrumb from './breadcrumb';
 import { useRouter } from 'expo-router';
 import styles from '../css/styles';
 
@@ -13,7 +14,7 @@ export default function VisitReason() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Text style={styles.title}>Institutional Information</Text>
+      <Text style={styles.title}>Reason for Visit</Text>
      
       <TextInput
         style={styles.messageBox}
@@ -23,13 +24,14 @@ export default function VisitReason() {
       />
 
       <View style={styles.buttonContainer}>
-        <Pressable style={styles.button} onPress={handleSubmit}>
-          <Text style={styles.buttonText}>NEXT</Text>
-        </Pressable>
         <Pressable style={[styles.button, styles.clearButton]} onPress={handleClear}>
           <Text style={styles.buttonText}>CLEAR</Text>
         </Pressable>
+        <Pressable style={styles.button} onPress={handleSubmit}>
+          <Text style={styles.buttonText}>SUBMIT</Text>
+        </Pressable>
       </View>
+      <Breadcrumb entities={['Full Name', 'Student ID', 'DCMail', 'Institution', 'Visit Reason']} flowDepth={4} />
     </SafeAreaView>
   );
 }
