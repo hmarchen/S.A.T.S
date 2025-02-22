@@ -1,5 +1,21 @@
 # DEV LOGS
 
+### February 21st 2025
+
+#### READING WEEK SPRINT OBJECTIVE LIST  
+---
+
+
+1. Main Objective: RSVP functionality via email
+2. Secondary Objective: UI rework
+
+_Roles_: 
+- Sheizah: Front-End
+- Yasir: Testing the API for its features
+- Hlib: API Research regarding REST methods
+- Ramiyan: General Programming
+- Andrei: Documentation and Development Logs
+
 ### February 19th 2025
 - Merging Ramiyan's Branch (breadcrumb)
    - this branch features the breadcrumb layout at the bottom of the form as a progress tracker 
