@@ -2,19 +2,20 @@
 
 ### February 21st 2025
 
-#### READING WEEK SPRINT OBJECTIVE LIST  
+#### READING WEEK SPRINT OBJECTIVE LIST
 ---
 
+ 1. Main Objective: RSVP functionality via email
+ 2. Secondary Objective: UI rework
 
-1. Main Objective: RSVP functionality via email
-2. Secondary Objective: UI rework
-
-_Roles_: 
+Roles: 
 - Sheizah: Front-End
 - Yasir: Testing the API for its features
 - Hlib: API Research regarding REST methods
 - Ramiyan: General Programming
 - Andrei: Documentation and Development Logs
+
+Overall: have a minimal viable product to show by check #2 where a barebones backend is working with a reworked frontend.
 
 ### February 19th 2025
 - Merging Ramiyan's Branch (breadcrumb)
