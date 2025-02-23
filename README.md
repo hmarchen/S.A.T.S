@@ -2,6 +2,21 @@
 
 ---
 
+## 📅 February 22nd, 2025
+
+### Changes Made
+- Created a new branch called "ramiyan_general"
+- Andrei will make a prototype implementation for MS Graph REST API by the end of the sprint
+
+### PLAN
+--- 
+
+- create an ending screen to tell the student that is the end of the application
+- Save data to JSON to display at the end as a list
+- make a keyboard appear automatically when a new screen appears for login
+
+---
+
 ## 📅 February 21st, 2025
 
 ### 🏆 READING WEEK SPRINT OBJECTIVE LIST
