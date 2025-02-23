@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, SafeAreaView, TextInput, Alert, Pressable } from 'react-native';
+import { View, Text, SafeAreaView, TextInput, Alert, Pressable, KeyboardAvoidingView, Platform } from 'react-native';
 import { useRouter } from 'expo-router';
 import Breadcrumb from './breadcrumb';
 import styles from '../css/styles';
@@ -21,19 +21,35 @@ export default function StudentName() {
     };
 
     return (
-        <SafeAreaView style={styles.container}>
-            <Text style={styles.title}>Enter your Legal Full Name</Text>
-            <TextInput style={styles.input} value={firstName} onChangeText={setFirstName} placeholder="First Name" />
-            <TextInput style={styles.input} value={lastName} onChangeText={setLastName} placeholder="Last Name" />
-            <View style={styles.buttonContainer}>
-                <Pressable style={[styles.button, styles.clearButton]} onPress={handleClear}>
-                    <Text style={styles.buttonText}>CLEAR</Text>
-                </Pressable>
-                <Pressable style={styles.button} onPress={handleSubmit}>
-                    <Text style={styles.buttonText}>NEXT</Text>
-                </Pressable>
-            </View>
-            <Breadcrumb entities={['Disclaimer', 'full name']} flowDepth={1} />
-        </SafeAreaView>
+        <KeyboardAvoidingView
+            style={styles.container}
+            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+            keyboardVerticalOffset={20}
+        >
+            <SafeAreaView style={styles.container}>
+                <Text style={styles.title}>Enter your Legal Full Name</Text>
+                <TextInput
+                    style={styles.input}
+                    value={firstName}
+                    onChangeText={setFirstName}
+                    placeholder="First Name"
+                />
+                <TextInput
+                    style={styles.input}
+                    value={lastName}
+                    onChangeText={setLastName}
+                    placeholder="Last Name"
+                />
+                <View style={styles.buttonContainer}>
+                    <Pressable style={[styles.button, styles.clearButton]} onPress={handleClear}>
+                        <Text style={styles.buttonText}>CLEAR</Text>
+                    </Pressable>
+                    <Pressable style={styles.button} onPress={handleSubmit}>
+                        <Text style={styles.buttonText}>NEXT</Text>
+                    </Pressable>
+                </View>
+                <Breadcrumb entities={['Disclaimer', 'full name']} flowDepth={1} />
+            </SafeAreaView>
+        </KeyboardAvoidingView>
     );
 }

@@ -111,14 +111,19 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   messageBox: {
-    height: 300,
-    marginBottom: 12,
-    borderWidth: 1,
-    padding: 10,
-    width: '90%',
-    borderRadius: 5,
-    backgroundColor: '#fff',
-    borderColor: '#ccc',
+    height: 'auto', // Adjusts height based on content
+    marginBottom: 12, // Space below the message box
+    borderWidth: 1, // Width of the border
+    padding: 10, // Inner padding for content
+    width: '50%', // Width of the message box
+    maxWidth: 500, // Maximum width to prevent overflow
+    borderRadius: 5, // Rounded corners
+    backgroundColor: '#fff', // Background color
+    borderColor: '#ccc', // Border color
+    borderStyle: 'solid', // Ensure the border is visible
+    overflowWrap: 'break-word', // Ensures long words wrap
+    wordWrap: 'break-word', // Fallback for older browsers
+    boxSizing: 'border-box', // Includes padding and border in width calculations
   }
 });
 
