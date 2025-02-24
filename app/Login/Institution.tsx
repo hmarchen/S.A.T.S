@@ -12,8 +12,8 @@ export default function Institution() {
   
   const handleSubmit = () => { 
     Alert.alert('Form Submitted', `${Institution}, ${Program}`); 
-    console.log('Navigating to VisitReason...');  
-    router.push('/Login/VisitReason'); 
+    console.log('Navigating to Reason...');
+    router.push('/Login/reason');
 };
   const handleClear = () => { setInstitution(''), setProgram('')};
 

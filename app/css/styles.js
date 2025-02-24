@@ -13,7 +13,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     textAlign: 'center',
     color: '#333',
-    marginBottom: 20, // Added for consistency with spacing
+    marginBottom: 20,
   },
   paragraph: {
     fontSize: 20,
@@ -58,14 +58,14 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   button: {
-    backgroundColor: '#007bff', // Changed to standard blue
+    backgroundColor: '#007bff',
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderRadius: 5,
     alignItems: 'center',
     flex: 1,
     marginHorizontal: 5,
-    height: 45, // Added for consistency with height
+    height: 45,
   },
   loginButton: {
     marginVertical: 80,
@@ -82,8 +82,8 @@ const styles = StyleSheet.create({
   buttonText: {
     color: '#fff',
     fontWeight: 'bold',
-    fontSize: 20, // Standardized button text size
-    textAlign: 'center', // Added for consistent text alignment
+    fontSize: 20,
+    textAlign: 'center',
   },
   gridContainer: {
     margin: 5,

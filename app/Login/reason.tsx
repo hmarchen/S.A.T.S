@@ -7,18 +7,12 @@ import { TouchableOpacity } from 'react-native';
 
 
 export default function Reason() {
-
-    
-    const data = Array.from({ length: 9 }).map((_, index) => ({ id: index.toString(), title: `Item ${index + 1}` }));
-
-    const handlePress = (title: String) => {
-      console.log(title);
-    }
+    const data = Array.from({ length: 15 }).map((_, index) => ({ id: index.toString(), title: `Item ${index + 1}` }));
+    const handlePress = (title: String) => { console.log(title); }
 
   return (
-    
-    <SafeAreaView style={{flex:1}}>
-        <FlatList 
+    <SafeAreaView style={{ flex: 1, backgroundColor: 'white' }}>
+        <FlatList
             data={data}
             renderItem={({ item }) => (
                 <TouchableOpacity style={styles.gridItem} onPress={() => handlePress(item.title)}>
@@ -28,8 +22,7 @@ export default function Reason() {
             keyExtractor={item => item.id}
             numColumns={3}
             contentContainerStyle={styles.gridContainer}
-
         />
-</SafeAreaView>
+    </SafeAreaView>
   );
 }
