@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { View, Text, FlatList } from 'react-native';
+import { View, Text, FlatList, Pressable, Alert } from 'react-native';
+import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import styles from '../css/styles';
 import { Colors } from 'react-native/Libraries/NewAppScreen';
@@ -7,8 +8,15 @@ import { TouchableOpacity } from 'react-native';
 
 
 export default function Reason() {
+    const router = useRouter();
     const data = Array.from({ length: 15 }).map((_, index) => ({ id: index.toString(), title: `Item ${index + 1}` }));
     const handlePress = (title: String) => { console.log(title); }
+
+    const handleSubmit = () => {
+        Alert.alert('Form Submitted');
+        console.log('Navigating to end...');
+        router.push('/Login/EndScreen');
+    };
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: 'white' }}>
@@ -23,6 +31,11 @@ export default function Reason() {
             numColumns={3}
             contentContainerStyle={styles.gridContainer}
         />
+         <View style={styles.buttonContainer}>
+           <Pressable style={styles.button} onPress={handleSubmit}>
+             <Text style={styles.buttonText}>SUBMIT</Text>
+           </Pressable>
+         </View>
     </SafeAreaView>
   );
 }
