@@ -1,49 +1,79 @@
-# DEV LOGS
+# 📜 DEV LOGS
 
-### February 19th 2025
-- Merging Ramiyan's Branch (breadcrumb)
-   - this branch features the breadcrumb layout at the bottom of the form as a progress tracker 
-- Merging Hlib's Branch (Reasons Dashboard)
-   - this branch was used to implement a prototype menu to display the reason for an appointment    
+---
 
+## 📅 February 21st, 2025
 
-### February 11th 2025
-- implemented the front end for breadcrumbs
-- revised the button layout for better flow and UX design
-- Fixing tab space inconsistencies
+### 🏆 READING WEEK SPRINT OBJECTIVE LIST
 
-### February 10th 2025
-- REBASE to another database with Github Projects.
-- Wireframe Development (on paper literally)
+**Main Objective:** RSVP functionality via email  
+**Secondary Objective:** UI rework  
 
-### February 5, 2025
-- re-do of the login system to make it more mobile friendly
-- fixed formatting errors and styles associated with them
+**Roles:**
+- **Sheizah:** Front-End & 3D model of a kiosk
+- **Yasir:** API testing
+- **Hlib:** API research (REST methods)
+- **Ramiyan:** General programming
+- **Andrei:** Documentation & development logs
 
-### February, 2, 2025
+**Goal:** Have a **minimum viable product (MVP)** ready by Check #2, ensuring a barebones backend is functional alongside a reworked frontend.
 
-- implemented an index page
-- implemented a login page prototype
-- made the 404 page prettier
-- implemented a seperate style sheet (javascript)
+---
+
+## 📅 February 19th, 2025
+- ✅ **Merged Ramiyan's Branch** (*Breadcrumb*)
+  - Implemented breadcrumb layout as a progress tracker at the bottom of the form.
+- ✅ **Merged Hlib's Branch** (*Reasons Dashboard*)
+  - Created a prototype menu to display appointment reasons.
+
+---
+
+## 📅 February 11th, 2025
+- 🚀 Implemented front-end breadcrumbs.
+- 🎨 Revised button layout for better flow & UX.
+- 🔧 Fixed tab space inconsistencies.
+
+---
+
+## 📅 February 10th, 2025
+- 🔄 **Rebased** the database with GitHub Projects.
+- 📝 Wireframe development (**literally on paper**).
+
+---
+
+## 📅 February 5th, 2025
+- 📱 Redesigned login system for mobile-friendliness.
+- ✨ Fixed formatting errors & style inconsistencies.
+
+---
+
+## 📅 February 2nd, 2025
+- 📌 Implemented index page.
+- 🔑 Created login page prototype.
+- 🎭 Improved 404 page aesthetics.
+- 🎨 Separated JavaScript into a dedicated stylesheet.
+
+---
 
 # Welcome to your Expo app 👋
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+This is an [Expo](https://expo.dev) project created with [create-expo-app](https://www.npmjs.com/package/create-expo-app).
 
 ## Get started
 
 1. Install dependencies
 
-   ```bash
+   
+bash
    npm install
-   ```
+
 
 2. Start the app
 
-   ```bash
+   
+bash
     npx expo start
-   ```
+
 
 In the output, you'll find options to open the app in a
 
@@ -58,9 +88,9 @@ You can start developing by editing the files inside the **app** directory. This
 
 When you're ready, run:
 
-```bash
+bash
 npm run reset-project
-```
+
 
 This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
 
