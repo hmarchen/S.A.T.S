@@ -37,81 +37,216 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 var _this = this;
 // server.js
 var express = require('express');
-var Client = require('@microsoft/microsoft-graph-client').Client;
+var cors = require('cors');
+var nodemailer = require('nodemailer');
+var ics = require('ics');
+var Imap = require('imap');
+var simpleParser = require('mailparser').simpleParser;
 require('dotenv').config();
-require('isomorphic-fetch');
-var msal = require('@azure/msal-node');
 var app = express();
+// Configure CORS to allow requests from your frontend
+app.use(cors({
+    origin: '*', // Allow all origins for development
+    methods: ['GET', 'POST', 'OPTIONS'], // Allow specific methods
+    allowedHeaders: ['Content-Type'], // Allow specific headers
+}));
 app.use(express.json());
-var config = {
+// Create transporter using Gmail
+var transporter = nodemailer.createTransport({
+    service: 'gmail',
     auth: {
-        clientId: process.env.CLIENT_ID,
-        authority: 'https://login.microsoftonline.com/f8cdef31-a31e-4b4a-93e4-5f571e91255a',
-        clientSecret: process.env.CLIENT_SECRET
-    },
-};
-var cca = new msal.ConfidentialClientApplication(config);
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS // This should be an App Password from Google Account
+    }
+});
+// Verify connection configuration
+transporter.verify(function (error, success) {
+    if (error) {
+        console.log("Transporter verification error:", error);
+    }
+    else {
+        console.log("Server is ready to take our messages");
+    }
+});
 app.post('/send-invite', function (req, res) { return __awaiter(_this, void 0, void 0, function () {
-    var _a, name, email, studentId, authResponse_1, client, startDateTime, endDateTime, event_1, error_1;
+    var _a, name, email, studentId, now, nextDay, event_1;
     return __generator(this, function (_b) {
-        switch (_b.label) {
-            case 0:
-                _a = req.body, name = _a.name, email = _a.email, studentId = _a.studentId;
-                _b.label = 1;
-            case 1:
-                _b.trys.push([1, 4, , 5]);
-                return [4 /*yield*/, cca.acquireTokenByClientCredential({
-                        scopes: ['https://graph.microsoft.com/.default'],
-                    })];
-            case 2:
-                authResponse_1 = _b.sent();
-                client = Client.init({
-                    authProvider: function (done) {
-                        done(null, authResponse_1.accessToken);
-                    },
-                });
-                startDateTime = new Date();
-                startDateTime.setDate(startDateTime.getDate() + 1);
-                startDateTime.setHours(10, 0, 0, 0);
-                endDateTime = new Date(startDateTime);
-                endDateTime.setHours(endDateTime.getHours() + 1);
-                event_1 = {
-                    subject: "SEIT Visit - ".concat(name),
-                    body: {
-                        contentType: 'HTML',
-                        content: "<p>Student Name: ".concat(name, "<br>Student ID: ").concat(studentId, "<br>Email: ").concat(email, "</p>"),
-                    },
-                    start: {
-                        dateTime: startDateTime.toISOString(),
-                        timeZone: 'UTC',
-                    },
-                    end: {
-                        dateTime: endDateTime.toISOString(),
-                        timeZone: 'UTC',
-                    },
-                    attendees: [
+        _a = req.body, name = _a.name, email = _a.email, studentId = _a.studentId;
+        try {
+            now = new Date();
+            nextDay = new Date(now);
+            nextDay.setDate(now.getDate() + 1);
+            nextDay.setHours(10, 0, 0, 0); // Set time to 10:00 AM
+            event_1 = {
+                start: [nextDay.getFullYear(), nextDay.getMonth() + 1, nextDay.getDate(), 10, 0], // Next day at 10 AM
+                duration: { hours: 1 },
+                title: "SEIT Visit Request - ".concat(name),
+                description: "Student ID: ".concat(studentId, "\nEmail: ").concat(email),
+                location: 'Online',
+                url: 'http://example.com',
+                status: 'CONFIRMED',
+                organizer: { name: 'Admin', email: process.env.EMAIL_USER },
+                attendees: [{ name: name, email: email }],
+            };
+            // Generate the .ics file
+            ics.createEvent(event_1, function (error, value) {
+                if (error) {
+                    console.error('Error creating .ics file:', error);
+                    res.status(500).send('Failed to create calendar event');
+                    return;
+                }
+                // Send email to advisor with .ics attachment
+                var advisorMessage = {
+                    from: process.env.EMAIL_USER, // Admin email
+                    to: process.env.ADVISOR_EMAIL, // Advisor email
+                    subject: "SEIT Visit Request - ".concat(name),
+                    html: "\n          <h2>SEIT Visit Request</h2>\n          <p><strong>Student Details:</strong></p>\n          <ul>\n            <li>Name: ".concat(name, "</li>\n            <li>Student ID: ").concat(studentId, "</li>\n            <li>Email: ").concat(email, "</li>\n          </ul>\n          <p>Please review the request and respond with your decision.</p>\n        "),
+                    attachments: [
                         {
-                            emailAddress: {
-                                address: email,
-                            },
-                            type: 'required',
+                            filename: 'invite.ics',
+                            content: value,
                         },
                     ],
                 };
-                return [4 /*yield*/, client.api('/me/events').post(event_1)];
-            case 3:
+                transporter.sendMail(advisorMessage, function (err, info) {
+                    if (err) {
+                        console.error('Error sending email:', err);
+                        res.status(500).send('Failed to send email');
+                    }
+                    else {
+                        console.log('Email sent:', info.response);
+                        res.status(200).send('Request sent to advisor successfully');
+                    }
+                });
+            });
+        }
+        catch (error) {
+            console.error('Error sending request to advisor:', error);
+            res.status(500).send("Failed to send request: ".concat(error.message));
+        }
+        return [2 /*return*/];
+    });
+}); });
+// New endpoint to handle rejections
+app.post('/handle-rejection', function (req, res) { return __awaiter(_this, void 0, void 0, function () {
+    var _a, name, reason, studentMessage, error_1;
+    return __generator(this, function (_b) {
+        switch (_b.label) {
+            case 0:
+                _a = req.body, name = _a.name, reason = _a.reason;
+                _b.label = 1;
+            case 1:
+                _b.trys.push([1, 3, , 4]);
+                studentMessage = {
+                    from: process.env.EMAIL_USER, // Admin email
+                    to: process.env.STUDENT_EMAIL, // Fixed student email
+                    subject: "Appointment Declined - ".concat(name),
+                    html: "\n        <h2>Appointment Declined</h2>\n        <p>Dear Student,</p>\n        <p>Your appointment request has been declined.</p>\n        <p><strong>Reason for declining:</strong></p>\n        <p>".concat(reason, "</p>\n        <p>Please book another appointment at your earliest convenience.</p>\n      ")
+                };
+                return [4 /*yield*/, transporter.sendMail(studentMessage)];
+            case 2:
                 _b.sent();
-                res.status(200).send('Invite sent successfully');
-                return [3 /*break*/, 5];
-            case 4:
+                res.status(200).send('Rejection handled successfully');
+                return [3 /*break*/, 4];
+            case 3:
                 error_1 = _b.sent();
-                console.error('Error sending invite:', error_1);
-                res.status(500).send('Failed to send invite');
-                return [3 /*break*/, 5];
-            case 5: return [2 /*return*/];
+                console.error('Error handling rejection:', error_1);
+                res.status(500).send('Failed to handle rejection');
+                return [3 /*break*/, 4];
+            case 4: return [2 /*return*/];
         }
     });
 }); });
+// Configure IMAP
+var imap = new Imap({
+    user: process.env.EMAIL_USER,
+    password: process.env.EMAIL_PASS,
+    host: 'imap.gmail.com',
+    port: 993,
+    tls: true,
+    tlsOptions: { rejectUnauthorized: false }
+});
+function processNewEmails() {
+    var _this = this;
+    console.log('Processing new emails...');
+    imap.openBox('INBOX', false, function (err, box) {
+        if (err) {
+            console.error('Error opening inbox:', err);
+            return;
+        }
+        // Search for unread emails
+        imap.search(['UNSEEN'], function (err, results) {
+            console.log('Found unread emails:', results.length);
+            if (!results.length)
+                return;
+            var f = imap.fetch(results, {
+                bodies: '',
+                markSeen: true
+            });
+            f.on('message', function (msg) {
+                msg.on('body', function (stream) {
+                    simpleParser(stream, function (err, parsed) { return __awaiter(_this, void 0, void 0, function () {
+                        var bodyText, reasonMatch, reason, studentEmail, error_2;
+                        var _a;
+                        return __generator(this, function (_b) {
+                            switch (_b.label) {
+                                case 0:
+                                    console.log('Processing email with subject:', parsed.subject);
+                                    if (err) {
+                                        console.error('Error parsing email:', err);
+                                        return [2 /*return*/];
+                                    }
+                                    if (!((_a = parsed.subject) === null || _a === void 0 ? void 0 : _a.includes('Declined: SEIT Visit'))) return [3 /*break*/, 4];
+                                    console.log('Found decline response for:', parsed.subject);
+                                    bodyText = parsed.text || '';
+                                    reasonMatch = bodyText.match(/Decline reason:(.*?)(?=\n|$)/i);
+                                    reason = reasonMatch ? reasonMatch[1].trim() : 'No reason provided';
+                                    console.log('Extracted decline reason:', reason);
+                                    studentEmail = process.env.STUDENT_EMAIL;
+                                    if (!studentEmail) return [3 /*break*/, 4];
+                                    _b.label = 1;
+                                case 1:
+                                    _b.trys.push([1, 3, , 4]);
+                                    return [4 /*yield*/, fetch('http://localhost:3000/handle-rejection', {
+                                            method: 'POST',
+                                            headers: {
+                                                'Content-Type': 'application/json',
+                                            },
+                                            body: JSON.stringify({
+                                                name: parsed.subject.replace('Declined: SEIT Visit - ', ''),
+                                                email: studentEmail,
+                                                reason: reason
+                                            }),
+                                        })];
+                                case 2:
+                                    _b.sent();
+                                    return [3 /*break*/, 4];
+                                case 3:
+                                    error_2 = _b.sent();
+                                    console.error('Error handling decline:', error_2);
+                                    return [3 /*break*/, 4];
+                                case 4: return [2 /*return*/];
+                            }
+                        });
+                    }); });
+                });
+            });
+        });
+    });
+}
+// Connect to IMAP and start listening
+imap.once('ready', function () {
+    console.log('IMAP Connection ready');
+    processNewEmails();
+    // Listen for new emails
+    imap.on('mail', function () {
+        processNewEmails();
+    });
+});
+imap.once('error', function (err) {
+    console.error('IMAP connection error:', err);
+});
+imap.connect();
 app.listen(3000, function () {
     console.log('Server is running on port 3000');
 });
