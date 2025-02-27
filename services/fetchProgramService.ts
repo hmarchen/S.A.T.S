@@ -4,7 +4,7 @@ import { JSDOM, VirtualConsole } from 'jsdom';
 import cors from 'cors';
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.FETCH_PROGRAM_SERVICE_PORT || 3000;
 
 app.use(cors());
 
