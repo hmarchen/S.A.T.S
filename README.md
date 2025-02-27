@@ -2,6 +2,16 @@
 
 ---
 
+## 📅 February 27th, 2025
+
+### Changes Made
+- Made the app read a JSON file at the end of the login process
+
+### Plan
+- Make the app write and delete (hopefully do full CRUD operations)
+
+---
+
 ## 📅 February 22nd, 2025
 
 ### Changes Made
@@ -11,7 +21,7 @@
 - create an ending screen to tell the student that is the end of the application
 
 ### PLAN
----
+
 - Save data to JSON to display at the end as a list
 
 ---
