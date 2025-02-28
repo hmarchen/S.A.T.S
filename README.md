@@ -2,10 +2,10 @@
 
 ---
 
-## 📅 February 27th, 2025
+## 📅 February 28th, 2025
 
 ### Changes Made
-- Made the app read a JSON file at the end of the login process
+- Made the app read a JSON file at the end of the login process using Expo Filesystem
 
 ### Plan
 - Make the app write and delete (hopefully do full CRUD operations)
