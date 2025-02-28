@@ -13,7 +13,7 @@ export default function Institution() {
   const handleSubmit = () => { 
     Alert.alert('Form Submitted', `${Institution}, ${Program}`); 
     console.log('Navigating to VisitReason...');  
-    router.push('/Login/VisitReason'); 
+    router.push('/Login/Reason'); 
 };
   const handleClear = () => { setInstitution(''), setProgram('')};
 
@@ -42,7 +42,7 @@ export default function Institution() {
           <Text style={styles.buttonText}>NEXT</Text>
         </Pressable>
       </View>
-      <Breadcrumb entities={['Disclaimer', 'Full Name', 'Student ID', 'DCMail', 'Institution']} flowDepth={4} />
+      <Breadcrumb entities={['Disclaimer', 'Student ID', 'Full Name', 'DCMail', 'Institution']} flowDepth={4} />
     </SafeAreaView>
   );
 }

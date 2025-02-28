@@ -4,9 +4,12 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import styles from '../css/styles';
 import { Colors } from 'react-native/Libraries/NewAppScreen';
 import { TouchableOpacity } from 'react-native';
+import { useRouter } from 'expo-router';
 
 
 export default function Reason() {
+
+  const router = useRouter();
 
     
     const data = Array.from({ length: 9 }).map((_, index) => ({ id: index.toString(), title: `Item ${index + 1}` }));
@@ -30,6 +33,7 @@ export default function Reason() {
             contentContainerStyle={styles.gridContainer}
 
         />
+          <Text style={styles.textLink} onPress={() => router.push('/Login/OtherReason')}>Didn't find what you wanted?</Text>
 </SafeAreaView>
   );
 }

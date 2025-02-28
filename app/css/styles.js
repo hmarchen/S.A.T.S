@@ -102,7 +102,7 @@ const styles = StyleSheet.create({
   },
   gridItem: {
     flex: 1,
-    height: 263,
+    height: 220,
     backgroundColor: '#0B8261',
     justifyContent: 'center',
     alignItems: 'center',
@@ -129,6 +129,12 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     backgroundColor: '#fff',
     borderColor: '#ccc',
+  },
+  textLink: {
+    textAlign: 'center',
+    color: 'blue',
+    fontSize: 20,
+    paddingBottom: 40,
   }
 });
 

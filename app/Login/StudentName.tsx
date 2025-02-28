@@ -12,7 +12,7 @@ export default function StudentName() {
     const handleSubmit = () => {
         Alert.alert('Form Submitted', `Name: ${firstName} ${lastName}`);
         console.log('Navigating to StudentNumber...');
-        router.push('/Login/StudentNumber');
+        router.push('/Login/DCMail');
     };
 
     const handleClear = () => {
@@ -33,7 +33,7 @@ export default function StudentName() {
                     <Text style={styles.buttonText}>NEXT</Text>
                 </Pressable>
             </View>
-            <Breadcrumb entities={['Disclaimer', 'full name']} flowDepth={1} />
+            <Breadcrumb entities={['Disclaimer', 'Student Number', 'full name']} flowDepth={2} />
         </SafeAreaView>
     );
 }
