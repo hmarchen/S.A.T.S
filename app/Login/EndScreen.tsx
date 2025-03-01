@@ -10,21 +10,21 @@ import styles from "../css/styles";
 export default function EndScreen() {
   const router = useRouter();
   const [userData, setUserData] = useState(null);
-  const fileUri = FileSystem.documentDirectory + "user.json";
+  const filePath = FileSystem.documentDirectory + "user.json";
 
   useEffect(() => {
     const loadJsonFile = async () => {
       try {
-        const fileInfo = await FileSystem.getInfoAsync(fileUri);
-        console.log(fileInfo.exists ? `File exists at: ${fileUri}` : "File does not exist. Copying from assets...");
+        const fileInfo = await FileSystem.getInfoAsync(filePath);
+        console.log(fileInfo.exists ? `File exists at: ${filePath}` : "File does not exist. Copying from assets...");
 
         if (!fileInfo.exists) {
           const userJson = require("../../assets/data/user.json");
-          await FileSystem.writeAsStringAsync(fileUri, JSON.stringify(userJson));
-          console.log(`File copied to: ${fileUri}`);
+          await FileSystem.writeAsStringAsync(filePath, JSON.stringify(userJson));
+          console.log(`File copied to: ${filePath}`);
         }
 
-        setUserData(JSON.parse(await FileSystem.readAsStringAsync(fileUri)));
+        setUserData(JSON.parse(await FileSystem.readAsStringAsync(filePath)));
       } catch (error) {
         console.error("Error reading JSON file:", error);
       }
@@ -37,7 +37,7 @@ export default function EndScreen() {
     try {
       if (userData) {
         // Modify the userData object here if necessary before saving
-        await FileSystem.writeAsStringAsync(fileUri, JSON.stringify(userData, null, 2));
+        await FileSystem.writeAsStringAsync(filePath, JSON.stringify(userData, null, 2));
         Alert.alert("Success", "User data saved successfully.");
         router.push("/Login/Disclaimer");
       }

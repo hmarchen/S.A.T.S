@@ -9,7 +9,7 @@
 
 ### Plan
 - Make data save to the JSON file at the end
-
+- ISSUE: File temporary overwrites variables but does not save it permanently 
 ---
 
 ## 📅 February 28th, 2025
