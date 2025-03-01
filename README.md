@@ -2,6 +2,16 @@
 
 ---
 
+## 📅 March 1st, 2025
+
+### Changes Made
+- Implementation of CRUD operations (EXPO FILE SYSTEM)
+
+### Plan
+- Make data save to the JSON file at the end
+
+---
+
 ## 📅 February 28th, 2025
 
 ### Changes Made

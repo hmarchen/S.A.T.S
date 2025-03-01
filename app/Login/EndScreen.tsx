@@ -1,80 +1,75 @@
-import React, { useEffect, useState } from 'react';
-import { View, Text, Pressable } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import Breadcrumb from './breadcrumb';
-import styles from '../css/styles';
-import { useRouter } from 'expo-router';
-import { Card } from '@rneui/themed';
-import * as FileSystem from 'expo-file-system';
+import React, { useEffect, useState } from "react";
+import { View, Text, Pressable, Alert } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { useRouter } from "expo-router";
+import { Card } from "@rneui/themed";
+import * as FileSystem from "expo-file-system";
+import Breadcrumb from "./breadcrumb";
+import styles from "../css/styles";
 
 export default function EndScreen() {
-    const router = useRouter();
-    const [userData, setUserData] = useState(null);
-    const fileUri = FileSystem.documentDirectory + 'user.json';
+  const router = useRouter();
+  const [userData, setUserData] = useState(null);
+  const fileUri = FileSystem.documentDirectory + "user.json";
 
-    useEffect(() => {
-        const loadJsonFile = async () => {
-            try {
-                // Check if the file exists in the document directory
-                const fileInfo = await FileSystem.getInfoAsync(fileUri);
-                console.log('File info:', fileInfo);
+  useEffect(() => {
+    const loadJsonFile = async () => {
+      try {
+        const fileInfo = await FileSystem.getInfoAsync(fileUri);
+        console.log(fileInfo.exists ? `File exists at: ${fileUri}` : "File does not exist. Copying from assets...");
 
-                if (!fileInfo.exists) {
-                    console.log('File does not exist. Copying from assets...');
-                    const userJson = require('../../assets/data/user.json');
-                    const jsonString = JSON.stringify(userJson);
-                    await FileSystem.writeAsStringAsync(fileUri, jsonString);
-                    console.log('File copied from assets to:', fileUri);
-                }
-                else { console.log('File exists at:', fileUri); }
+        if (!fileInfo.exists) {
+          const userJson = require("../../assets/data/user.json");
+          await FileSystem.writeAsStringAsync(fileUri, JSON.stringify(userJson));
+          console.log(`File copied to: ${fileUri}`);
+        }
 
-                // Read the file
-                const jsonContent = await FileSystem.readAsStringAsync(fileUri);
-                const parsedData = JSON.parse(jsonContent);
-                setUserData(parsedData);
-            }
-            catch (error) { console.error('Error reading JSON file:', error); }
-        };
+        setUserData(JSON.parse(await FileSystem.readAsStringAsync(fileUri)));
+      } catch (error) {
+        console.error("Error reading JSON file:", error);
+      }
+    };
 
-        loadJsonFile();
-    }, []);
+    loadJsonFile();
+  }, []);
 
-    if (!userData) {
-        return (
-            <SafeAreaView style={styles.container}>
-                <Text style={styles.text}>Loading user data...</Text>
-            </SafeAreaView>
-        );
+  const handleConfirm = async () => {
+    try {
+      if (userData) {
+        // Modify the userData object here if necessary before saving
+        await FileSystem.writeAsStringAsync(fileUri, JSON.stringify(userData, null, 2));
+        Alert.alert("Success", "User data saved successfully.");
+        router.push("/Login/Disclaimer");
+      }
+    } catch (error) {
+      console.error("Error writing to file:", error);
+      Alert.alert("Error", "Failed to save data.");
     }
+  };
 
-    const user = userData[0];
+  if (!userData) return <SafeAreaView style={styles.container}><Text style={styles.text}>Loading user data...</Text></SafeAreaView>;
 
-    return (
-        <SafeAreaView style={styles.container}>
-            <Card containerStyle={{ marginTop: 15, marginBottom: 20 }}>
-                <Card.Title>Thank you for your application!</Card.Title>
-                <Text style={styles.text}>Your Details:</Text>
-                <Text style={styles.text}>First Name: {user.firstname}</Text>
-                <Text style={styles.text}>Last Name: {user.lastname}</Text>
-                <Text style={styles.text}>Student ID: {user.studentID}</Text>
-                <Text style={styles.text}>Email: {user.DCMail}</Text>
-                <Text style={styles.text}>Campus: {user.campus}</Text>
-                <Text style={styles.text}>Program: {user.program}</Text>
-                <Text style={styles.text}>Reason: {user.reason}</Text>
-            </Card>
+  const { firstname, lastname, studentID, DCMail, campus, program, reason } = userData[0];
 
-            <Pressable
-                style={styles.loginButton}
-                onPress={() => router.push('/Login/Disclaimer')}
-                accessibilityLabel="Tap to return to the menu"
-            >
-                <Text style={styles.buttonText}>Return to Menu</Text>
-            </Pressable>
+  return (
+    <SafeAreaView style={styles.container}>
+      <Card containerStyle={{ marginTop: 15, marginBottom: 20 }}>
+        <Card.Title>Thank you for your application!</Card.Title>
+        <Text style={styles.text}>Your Details:</Text>
+        <Text style={styles.text}>First Name: {firstname}</Text>
+        <Text style={styles.text}>Last Name: {lastname}</Text>
+        <Text style={styles.text}>Student ID: {studentID}</Text>
+        <Text style={styles.text}>Email: {DCMail}</Text>
+        <Text style={styles.text}>Campus: {campus}</Text>
+        <Text style={styles.text}>Program: {program}</Text>
+        <Text style={styles.text}>Reason: {reason}</Text>
+      </Card>
 
-            <Breadcrumb
-                entities={['Full Name', 'Student ID', 'DCMail', 'Institution', 'Visit Reason', 'end']}
-                flowDepth={5}
-            />
-        </SafeAreaView>
-    );
+      <Pressable style={styles.loginButton} onPress={handleConfirm} accessibilityLabel="Tap to confirm and return to the menu">
+        <Text style={styles.buttonText}>Confirm Appointment</Text>
+      </Pressable>
+
+      <Breadcrumb entities={["Full Name", "Student ID", "DCMail", "Institution", "Visit Reason", "end"]} flowDepth={5} />
+    </SafeAreaView>
+  );
 }
