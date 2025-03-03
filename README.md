@@ -2,6 +2,40 @@
 
 ---
 
+## 📅 March 1st, 2025
+
+### Changes Made
+- Implementation of CRUD operations (EXPO FILE SYSTEM)
+
+### Plan
+- Make data save to the JSON file at the end
+- ISSUE: File temporary overwrites variables but does not save it permanently 
+---
+
+## 📅 February 28th, 2025
+
+### Changes Made
+- Made the app read a JSON file at the end of the login process using Expo Filesystem
+
+### Plan
+- Make the app write and delete (hopefully do full CRUD operations)
+
+---
+
+## 📅 February 22nd, 2025
+
+### Changes Made
+- Created a new branch called "ramiyan_general"
+- Andrei will make a prototype implementation for MS Graph REST API by the end of the sprint
+- Make a keyboard appear automatically when a new screen appears for login
+- create an ending screen to tell the student that is the end of the application
+
+### PLAN
+
+- Save data to JSON to display at the end as a list
+
+---
+
 ## 📅 February 21st, 2025
 
 ### 🏆 READING WEEK SPRINT OBJECTIVE LIST

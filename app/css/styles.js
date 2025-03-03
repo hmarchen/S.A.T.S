@@ -13,7 +13,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     textAlign: 'center',
     color: '#333',
-    marginBottom: 20, // Added for consistency with spacing
+    marginBottom: 20,
   },
   paragraph: {
     fontSize: 20,
@@ -58,14 +58,14 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   button: {
-    backgroundColor: '#007bff', // Changed to standard blue
+    backgroundColor: '#007bff',
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderRadius: 5,
     alignItems: 'center',
     flex: 1,
     marginHorizontal: 5,
-    height: 45, // Added for consistency with height
+    height: 45,
   },
   loginButton: {
     marginVertical: 80,
@@ -82,8 +82,8 @@ const styles = StyleSheet.create({
   buttonText: {
     color: '#fff',
     fontWeight: 'bold',
-    fontSize: 20, // Standardized button text size
-    textAlign: 'center', // Added for consistent text alignment
+    fontSize: 20,
+    textAlign: 'center',
   },
   gridContainer: {
     margin: 5,
@@ -92,7 +92,7 @@ const styles = StyleSheet.create({
   },
   gridItem: {
     flex: 1,
-    height: 263,
+    height: 220,
     backgroundColor: '#0B8261',
     justifyContent: 'center',
     alignItems: 'center',
@@ -111,14 +111,25 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   messageBox: {
-    height: 300,
-    marginBottom: 12,
-    borderWidth: 1,
-    padding: 10,
-    width: '90%',
-    borderRadius: 5,
-    backgroundColor: '#fff',
-    borderColor: '#ccc',
+    height: 'auto', // Adjusts height based on content
+    marginBottom: 12, // Space below the message box
+    borderWidth: 1, // Width of the border
+    padding: 10, // Inner padding for content
+    width: '50%', // Width of the message box
+    maxWidth: 500, // Maximum width to prevent overflow
+    borderRadius: 5, // Rounded corners
+    backgroundColor: '#fff', // Background color
+    borderColor: '#ccc', // Border color
+    borderStyle: 'solid', // Ensure the border is visible
+    overflowWrap: 'break-word', // Ensures long words wrap
+    wordWrap: 'break-word', // Fallback for older browsers
+    boxSizing: 'border-box', // Includes padding and border in width calculations
+  },
+  textLink: {
+    textAlign: 'center',
+    color: 'blue',
+    fontSize: 20,
+    paddingBottom: 40,
   }
 });
 
