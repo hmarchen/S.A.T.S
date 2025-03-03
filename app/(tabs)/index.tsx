@@ -1,23 +1,21 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, Pressable } from 'react-native';
 import { useRouter } from 'expo-router';
 import styles from '../css/styles';
 
 export default function HomeScreen() {
-  const router = useRouter(); // Use the router hook for navigation
+  const router = useRouter();
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>
-        Welcome to the faculty of SEIT Portal
-      </Text>
-      <TouchableOpacity style={styles.loginButton} onPress={() => { router.push('/Login/Disclaimer') }}>
+      <Text style={styles.title}>Welcome to the Faculty of SEIT Portal</Text>
+      <Pressable
+        style={styles.loginButton}
+        onPress={() => router.push('/Login/Disclaimer')}
+        accessibilityLabel="Tap to login"
+      >
         <Text style={styles.buttonText}>Login</Text>
-      </TouchableOpacity>
-      
-      <TouchableOpacity style={styles.loginButton} onPress={() => {router.push('/Login/Reason')}}>
-        <Text style={styles.buttonText}>Reason Test</Text>
-        </TouchableOpacity>
+      </Pressable>
     </View>
   );
 }
