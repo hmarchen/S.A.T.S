@@ -130,7 +130,40 @@ const styles = StyleSheet.create({
     color: 'blue',
     fontSize: 20,
     paddingBottom: 40,
-  }
+  },
+  radioGroup: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-around',
+    marginTop: 20,
+    borderRadius: 8,
+    backgroundColor: 'white',
+    padding: 16,
+    elevation: 4,
+    shadowColor: '#000',
+    shadowOffset: {
+        width: 0,
+        height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+},
+radioButton: {
+  paddingVertical: 12,
+  paddingHorizontal: 16,
+  borderRadius: 8,
+  marginVertical: 8,
+  borderWidth: 1,
+  borderColor: '#007BFF',
+  flexDirection: 'row',
+  alignItems: 'center',
+  justifyContent: 'space-between',
+  width: 280,
+},
+radioButtonText: {
+  fontSize: 16,
+},
+
 });
 
 export default styles;
