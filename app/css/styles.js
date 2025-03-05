@@ -130,7 +130,20 @@ const styles = StyleSheet.create({
     color: 'blue',
     fontSize: 20,
     paddingBottom: 40,
-  }
+  },
+  breadcrumbContainer: {
+      flexDirection: "row", // Align items in a row
+      alignItems: "center", // Center items vertically
+      padding: 10, // Add padding around the container
+      backgroundColor: "#f8f8f8", // Light background color
+      borderRadius: 5, // Rounded corners
+      margin: 10, // Margin around the container
+      elevation: 1, // Add shadow for Android
+      shadowColor: "#000", // Shadow color for iOS
+      shadowOffset: { width: 0, height: 2 }, // Shadow offset for iOS
+      shadowOpacity: 0.1, // Shadow opacity for iOS
+      shadowRadius: 2, // Shadow radius for iOS
+    }
 });
 
 export default styles;
