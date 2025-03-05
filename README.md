@@ -2,6 +2,27 @@
 
 ---
 
+## 📅 March 5th, 2025
+
+### Changes Made
+- fixed the visuals for breadcrumb
+
+### Plan
+- Make data save to the JSON file at the end
+- ISSUE: File temporary overwrites variables but does not save it permanently
+- ISSUE: page not found after institution page
+---
+
+
+## 📅 March 3rd, 2025
+
+# Known Issues
+- submit button in Reasons page *shouldn't be*
+- buttons in Reasons page don't work
+- input fields are not aliened to themselves
+- revert breadcrumbs to how they were
+- JSON is not saving to the right user.json file where it saves to a random temp directory that disappears after the program is finished looping
+
 ## 📅 March 1st, 2025
 
 ### Changes Made
