@@ -6,6 +6,7 @@ import { Colors } from 'react-native/Libraries/NewAppScreen';
 import { TouchableOpacity } from 'react-native';
 import { useRouter } from 'expo-router';
 import * as FileSystem from 'expo-file-system';
+import Breadcrumb from "./breadcrumb";
 
 const filePath = FileSystem.documentDirectory + 'user.json';
 
@@ -20,7 +21,7 @@ export default function Reason() {
       console.log(title);
     }
 
-    const handleSubmit = async () => {
+    const HandleSubmit = async () => {
         try {
             // Read existing data or initialize if it doesn't exist
             const fileExists = await FileSystem.getInfoAsync(filePath);
@@ -53,10 +54,11 @@ export default function Reason() {
         />
           <Text style={styles.textLink} onPress={() => router.push('/Login/OtherReason')}>Didn't find what you wanted?</Text>
           <View style={styles.buttonContainer}>
-                <Pressable style={styles.button} onPress={handleSubmit}>
+                <Pressable style={styles.button} onPress={HandleSubmit}>
                     <Text style={styles.buttonText}>SUBMIT</Text>
                 </Pressable>
             </View>
+            <Breadcrumb entities={['Disclaimer', 'StudentNumber', 'Firstname', 'Lastname', 'DCMail', 'Institution', 'Program', 'Reason']} flowDepth={7} />
 </SafeAreaView>
   );
 }

@@ -6,6 +6,7 @@
 
 ### Changes Made
 - fixed the visuals for breadcrumb
+- Reordered the pages and fixed the issue with multiple input fields in one page
 
 ### Plan
 - Make data save to the JSON file at the end

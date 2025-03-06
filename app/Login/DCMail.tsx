@@ -47,7 +47,7 @@ export default function DCMail() {
             <Text style={styles.buttonText}>NEXT</Text>
           </Pressable>
         </View>
-        <Breadcrumb entities={['Disclaimer', 'Student ID', 'DCMail']} flowDepth={3} />
+        <Breadcrumb entities={['Disclaimer', 'StudentNumber', 'Firstname', 'Lastname', 'DCMail']} flowDepth={4} />
       </SafeAreaView>
     </KeyboardAvoidingView>
   );
