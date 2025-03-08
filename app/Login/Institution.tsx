@@ -5,7 +5,7 @@ import * as FileSystem from "expo-file-system";
 import Breadcrumb from "./breadcrumb";
 import styles from "../css/styles";
 import { TouchableOpacity } from "react-native";
-import { error } from "console";
+import { AutocompleteDropdown, AutocompleteDropdownItem } from 'react-native-autocomplete-dropdown'
 
 const filePath = FileSystem.documentDirectory + "user.json";
 
@@ -60,12 +60,21 @@ export default function Institution() {
     }
   };
 
-  const getData = () => {
-    FetchData('http://localhost:3000/advisors');
-     return data;
+  const getData = async() => {
+    try {
+      const response = await fetch('http://10.0.2.2:3000/advisors');
+      const json = await response.json();
+      console.log("ada: " + json);
+      return json;
+    }
+    catch(e) {
+
+      console.error(e);
+    }
   }
 
   const handleClear = () => (setInstitution(""), setProgram(""));
+  const [selectedItem, setSelectedItem] = useState<AutocompleteDropdownItem | null>(null);
 
   return (
     <KeyboardAvoidingView style={styles.container} behavior={Platform.OS === "ios" ? "padding" : "height"} keyboardVerticalOffset={20}>
@@ -85,11 +94,25 @@ export default function Institution() {
                 onSelect={() => setInstitution('Oshawa')}
             />
         </View>
-      <TextInput style={styles.input} value={program} onChangeText={getData} placeholder="Program Name" />
+          <TextInput style={styles.input} value={program} onChangeText={getData} placeholder="Program Name" />
+
+          <AutocompleteDropdown
+  clearOnFocus={false}
+  closeOnBlur={true}
+  closeOnSubmit={false}
+  initialValue={{ id: '2' }} // or just '2'
+  onSelectItem={setSelectedItem}
+  dataSet={[
+    { id: '1', title: 'Alpha' },
+    { id: '2', title: 'Beta' },
+    { id: '3', title: 'Gamma' },
+  ]}
+/>;
+      
       
 
       <View style={styles.buttonContainer}>
-        <Pressable style={[styles.button, styles.clearButton]} onPress={handleClear}>
+        <Pressable style={[styles.button, styles.clearButton]} onPress={getData}>
           <Text style={styles.buttonText}>CLEAR</Text>
         </Pressable>
         <Pressable style={styles.button} onPress={handleSubmit}>
