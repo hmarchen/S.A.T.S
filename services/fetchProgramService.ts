@@ -2,6 +2,7 @@ import express, { Request, Response } from 'express';
 import axios from 'axios';
 import { JSDOM, VirtualConsole } from 'jsdom';
 import cors from 'cors';
+import fs from 'fs/promises';
 
 const app = express();
 const PORT = process.env.FETCH_PROGRAM_SERVICE_PORT || 3000;
@@ -59,6 +60,16 @@ app.get('/advisors', async (req: Request, res: Response) => {
   }
 });
 
+app.get('/reasons', async (req: Request, res: Response) => {
+  try{
+  const data = await fs.readFile("./reasons.json", 'utf-8');
+  const reasons = JSON.parse(data);
+  res.json(reasons);
+} catch (error) {
+  console.error('Error fetching data:', error);
+  res.status(500).send('Error fetching data');
+}
+});
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
 }); 
