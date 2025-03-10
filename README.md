@@ -4,31 +4,33 @@
 
 ## 📅 March 10th, 2025
 
-### Changes Made
-- changed port number from 3000 to 3001 on fetchProgramService.ts
-- NOTE: DO NOT RUN authService.ts, that is heavily WIP with Yasir
-- Validation for STUDENT NUMBER
+### Overview of Changes
+- **Updated Port Configuration**: Changed the port number from `3000` to `3001` in `fetchProgramService.ts` to avoid conflicts.
+- **Auth Service Notice**: **IMPORTANT**: Do not run `authService.ts` as it is currently a work in progress (WIP) and needs further development with Yasir.
+- **Validation Implemented**: Added input validation for the **Student Number** field to enhance data integrity.
 
-### Tasks to be done:
-- Rami - Input validation
-- Yasir - Combine functionality of authService and main app
-- Gleb - Implement Search functionality
-- Sheizah - Design admin web-page
+### Pending Tasks
+- **Rami**: Finalize input validation across relevant components.
+- **Yasir**: Integrate the functionality of `authService` with the main application to streamline authentication processes.
+- **Gleb**: Develop and implement search functionality to improve user experience.
+- **Sheizah**: Design and prototype the admin web page for enhanced administrative management.
 
-### Plan
-- Implement input validation for each of the pages (Hlib is in charge of the reasons page)
-- Calendar Test
-  - infinite loop on submit when pushing email information
-  - port issues where there can be a potential information interception when running the authentication server
-- Input Validation
-  - STUDENT NUMBER
-  - FIRST NAME
-  - LAST NAME
-  - EMAIL
-  - CAMPUS LOCATION
-  - PROGRAM NAME
+### Upcoming Plans
+- **Comprehensive Input Validation**: Ensure input validation is implemented across all pages:
+    - **Hlib**: Responsible for implementing input validation on the Reasons page.
+
+- **Calendar Testing**:
+    - Investigate and resolve an **infinite loop** issue occurring upon submission when pushing email information.
+    - Address potential **port-related issues** that could lead to information interception during the authentication server's operation.
+
+- **Specific Input Validation Requirements**:
+    - **Student Number**
+    - **First Name**
+    - **Last Name**
+    - **Email**
+    - **Campus Location**
+    - **Program Name**
 ---
- 
 
 ## 📅 March 5th, 2025
 
