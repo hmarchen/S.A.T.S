@@ -1,8 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, FlatList, Alert, Pressable } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import styles from '../css/styles';
-import { Colors } from 'react-native/Libraries/NewAppScreen';
 import { TouchableOpacity } from 'react-native';
 import { useRouter } from 'expo-router';
 import * as FileSystem from 'expo-file-system';
@@ -10,53 +9,78 @@ import * as FileSystem from 'expo-file-system';
 const filePath = FileSystem.documentDirectory + 'user.json';
 
 export default function Reason() {
-
+// Router and State values
   const router = useRouter();
+  const [reasons, setReasons] = useState<Reason[]>([]);
+  const [reason, SetReason] = useState<Reason>();
 
-    
-    const data = Array.from({ length: 15 }).map((_, index) => ({ id: index.toString(), title: `Item ${index + 1}` }));
+  type Reason = {
+    id: number;
+    category: string;
+    details: string;
+  }
 
-    const handlePress = (title: String) => {
-      console.log(title);
+
+  const getReasons = async() => {
+    try {
+      const response = await fetch('http://10.0.2.2:3000/reasons')
+      .then(res => {return res.json()})
+      .then(data => {console.log(data.reasons); return data.reasons});
+
+      console.log(response);
+      return response;
     }
+    catch(e) {
 
-    const handleSubmit = async () => {
-        try {
-            // Read existing data or initialize if it doesn't exist
-            const fileExists = await FileSystem.getInfoAsync(filePath);
-            let existingData = fileExists.exists ? JSON.parse(await FileSystem.readAsStringAsync(filePath)) : [];
-
-            // Add the selected items or process data as needed
-            Alert.alert('Form Submitted', 'Your selections have been saved.');
-            console.log('Navigating to end...');
-            router.push('/Login/EndScreen');
-        } catch (error) {
-            console.error('Error reading or writing to file:', error);
-            Alert.alert('Error', 'Failed to save selections.');
-        }
+      console.error(e);
+    }
+  }
+  useEffect(() => {
+    const fetchReasons = async () => {
+      const data = await getReasons();
+      if (data) setReasons(data);
     };
+    fetchReasons();
+  }, []);
+    
+    const handlePress = async(item: Reason) => {
+      try{
+        SetReason(item);
+      const fileExists = await FileSystem.getInfoAsync(filePath);
+      let updatedData = fileExists.exists ? JSON.parse(await FileSystem.readAsStringAsync(filePath)) : [];
+
+      updatedData.length > 0
+        ? (updatedData[0].reason = item.category)
+        : updatedData.push({ firstname: "", lastname: "", studentID: "", DCMail: "", campus: "", program: "", reason: item.category });
+
+      await FileSystem.writeAsStringAsync(filePath, JSON.stringify(updatedData, null, 2));
+      Alert.alert("Form Submitted", `${item.category}`);
+      console.log("Navigating to EndScreen...");
+      router.push("/Login/EndScreen");
+      
+      console.log(item.category);
+    } catch (error) {
+    console.error("Error writing to file:", error);
+    Alert.alert("Error", "Failed to save data.");
+  }
+};
 
   return (
     
     <SafeAreaView style={{flex:1}}>
         <FlatList 
-            data={data}
+            data={reasons}
             renderItem={({ item }) => (
-                <TouchableOpacity style={styles.gridItem} onPress={() => handlePress(item.title)}>
-                    <Text style={styles.gridItemText}>{item.title}</Text>
+                <TouchableOpacity style={styles.gridItem} onPress={() => handlePress(item)}>
+                    <Text style={styles.gridItemText}>{item.category}</Text>
                 </TouchableOpacity>
             )}
-            keyExtractor={item => item.id}
+            keyExtractor={item => item.id.toString()}
             numColumns={3}
             contentContainerStyle={styles.gridContainer}
 
         />
           <Text style={styles.textLink} onPress={() => router.push('/Login/OtherReason')}>Didn't find what you wanted?</Text>
-          <View style={styles.buttonContainer}>
-                <Pressable style={styles.button} onPress={handleSubmit}>
-                    <Text style={styles.buttonText}>SUBMIT</Text>
-                </Pressable>
-            </View>
 </SafeAreaView>
   );
 }

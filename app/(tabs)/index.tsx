@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, Pressable } from 'react-native';
+import { View, Text, StyleSheet, Pressable, TouchableOpacity, Image } from 'react-native';
 import { useRouter } from 'expo-router';
 import styles from '../css/styles';
 
@@ -8,14 +8,9 @@ export default function HomeScreen() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Welcome to the Faculty of SEIT Portal</Text>
-      <Pressable
-        style={styles.loginButton}
-        onPress={() => router.push('/Login/Disclaimer')}
-        accessibilityLabel="Tap to login"
-      >
-        <Text style={styles.buttonText}>Login</Text>
-      </Pressable>
+      <TouchableOpacity onPress={() => router.push('/Login/Disclaimer')}>
+        <Image style={{ flex: 1, resizeMode: 'contain' }} source={require('../../assets/Greeter.png')} />
+      </TouchableOpacity>
     </View>
   );
 }

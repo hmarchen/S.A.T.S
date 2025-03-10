@@ -2,6 +2,42 @@
 
 ---
 
+## 📅 March 10th, 2025
+
+### Changes Made
+- changed port number from 3000 to 3001 on fetchProgramService.ts
+- NOTE: DO NOT RUN authService.ts, that is heavily WIP with Yasir
+
+### Plan
+- Implement input validation for each of the pages (Hlib is in charge of the reasons page)
+- Calendar Test
+  - infinite loop on submit when pushing email information
+  - port issues where there can be a potential information interception when running the authentication server
+---
+ 
+
+## 📅 March 5th, 2025
+
+### Changes Made
+- fixed the visuals for breadcrumb
+- Reordered the pages and fixed the issue with multiple input fields in one page
+
+### Plan
+- Make data save to the JSON file at the end
+- ISSUE: File temporary overwrites variables but does not save it permanently
+- ISSUE: page not found after institution page
+---
+
+
+## 📅 March 3rd, 2025
+
+# Known Issues
+- submit button in Reasons page *shouldn't be*
+- buttons in Reasons page don't work
+- input fields are not aliened to themselves
+- revert breadcrumbs to how they were
+- JSON is not saving to the right user.json file where it saves to a random temp directory that disappears after the program is finished looping
+
 ## 📅 March 1st, 2025
 
 ### Changes Made
