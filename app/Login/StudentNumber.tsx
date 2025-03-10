@@ -11,6 +11,7 @@ export default function StudentNumber() {
     const router = useRouter();
     const [studentNumber, setStudentNumber] = useState('');
 
+
     const handleSubmit = async () => {
         try {
             const fileExists = await FileSystem.getInfoAsync(filePath);

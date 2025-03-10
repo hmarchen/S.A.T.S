@@ -23,7 +23,7 @@ export default function Reason() {
 
   const getReasons = async() => {
     try {
-      const response = await fetch('http://10.0.2.2:3000/reasons')
+      const response = await fetch('http://10.0.2.2:3001/reasons')
       .then(res => {return res.json()})
       .then(data => {console.log(data.reasons); return data.reasons});
 
