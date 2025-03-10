@@ -13,7 +13,6 @@ export default function VisitReason() {
   {
       Alert.alert('Form Submitted', `${Visit}`);
       router.push('/Login/EndScreen');
-
   };
   const handleClear = () => { setVisit('')};
 

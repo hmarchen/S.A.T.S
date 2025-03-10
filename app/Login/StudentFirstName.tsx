@@ -1,15 +1,15 @@
 import React, { useState } from 'react';
 import { View, Text, SafeAreaView, TextInput, Alert, Pressable, KeyboardAvoidingView, Platform } from 'react-native';
-import Breadcrumb from './breadcrumb';
 import { useRouter } from 'expo-router';
+import Breadcrumb from './breadcrumb';
 import styles from '../css/styles';
 import * as FileSystem from 'expo-file-system';
 
 const filePath = FileSystem.documentDirectory + 'user.json';
 
-export default function StudentNumber() {
+export default function StudentName() {
     const router = useRouter();
-    const [studentNumber, setStudentNumber] = useState('');
+    const [firstName, setFirstName] = useState('');
 
     const handleSubmit = async () => {
         try {
@@ -17,33 +17,26 @@ export default function StudentNumber() {
             let updatedData = fileExists.exists ? JSON.parse(await FileSystem.readAsStringAsync(filePath)) : [];
 
             updatedData.length > 0
-                ? (updatedData[0].studentID = studentNumber)
-                : updatedData.push({ firstname: '', lastname: '', studentID: studentNumber, DCMail: '', campus: '', program: '', reason: '' });
+                ? (updatedData[0].firstname = firstName)
+                : updatedData.push({ firstname: firstName, lastname: '', studentID: '', DCMail: '', campus: '', program: '', reason: '' });
 
             await FileSystem.writeAsStringAsync(filePath, JSON.stringify(updatedData, null, 2));
-            Alert.alert('Form Submitted', `Student Number: ${studentNumber}`);
-            console.log('Navigating to StudentFirstName...');
-            router.push('/Login/StudentFirstName');
-        }
-        catch (error) {
+            Alert.alert('Form Submitted', `Firstname: ${firstName}`);
+            console.log('Navigating to StudentLastName...');
+            router.push('/Login/StudentLastName');
+        } catch (error) {
             console.error('Error writing to file:', error);
             Alert.alert('Error', 'Failed to save data.');
         }
     };
 
-    const handleClear = () => setStudentNumber('');
+    const handleClear = () => (setFirstName(''));
 
     return (
         <KeyboardAvoidingView style={styles.container} behavior={Platform.OS === 'ios' ? 'padding' : 'height'} keyboardVerticalOffset={20}>
             <SafeAreaView style={styles.container}>
-                <Text style={styles.title}>Enter your Student Number</Text>
-                <TextInput
-                    style={styles.studentNumber}
-                    value={studentNumber}
-                    onChangeText={setStudentNumber}
-                    placeholder="Student Number"
-                    keyboardType="numeric"
-                />
+                <Text style={styles.title}>Enter your Legal First Name</Text>
+                <TextInput style={styles.input} value={firstName} onChangeText={setFirstName} placeholder="First Name" />
                 <View style={styles.buttonContainer}>
                     <Pressable style={[styles.button, styles.clearButton]} onPress={handleClear}>
                         <Text style={styles.buttonText}>CLEAR</Text>
@@ -52,7 +45,7 @@ export default function StudentNumber() {
                         <Text style={styles.buttonText}>NEXT</Text>
                     </Pressable>
                 </View>
-                <Breadcrumb entities={['Disclaimer', 'StudentNumber']} flowDepth={1} />
+                <Breadcrumb entities={['Disclaimer', 'StudentNumber', 'Firstname']} flowDepth={2} />
             </SafeAreaView>
         </KeyboardAvoidingView>
     );

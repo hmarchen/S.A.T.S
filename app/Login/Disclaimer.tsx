@@ -21,7 +21,7 @@ export default function LoginScreen() {
         <Pressable style={[styles.button, styles.clearButton]} onPress={() => router.push("/")}>
           <Text style={styles.buttonText}>DISAGREE</Text>
         </Pressable>
-        <Pressable style={styles.button} onPress={() => router.push("/Login/StudentName")}>
+        <Pressable style={styles.button} onPress={() => router.push("/Login/StudentNumber")}>
           <Text style={styles.buttonText}>AGREE</Text>
         </Pressable>
       </View>

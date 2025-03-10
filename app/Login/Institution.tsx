@@ -22,13 +22,13 @@ export default function Institution() {
       let updatedData = fileExists.exists ? JSON.parse(await FileSystem.readAsStringAsync(filePath)) : [];
 
       updatedData.length > 0
-        ? (updatedData[0].campus = institution, updatedData[0].program = program)
-        : updatedData.push({ firstname: "", lastname: "", studentID: "", DCMail: "", campus: institution, program: program, reason: "" });
+        ? (updatedData[0].campus = institution)
+        : updatedData.push({ firstname: "", lastname: "", studentID: "", DCMail: "", campus: institution, program: "", reason: "" });
 
       await FileSystem.writeAsStringAsync(filePath, JSON.stringify(updatedData, null, 2));
-      Alert.alert("Form Submitted", `${institution}, ${program}`);
-      console.log("Navigating to Reason...");
-      router.push("/Login/reason");
+      Alert.alert("Form Submitted", `${institution}`);
+      console.log("Navigating to Program...");
+      router.push("/Login/Program");
     } catch (error) {
       console.error("Error writing to file:", error);
       Alert.alert("Error", "Failed to save data.");
