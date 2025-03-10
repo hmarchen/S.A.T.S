@@ -11,7 +11,7 @@ const filePath = FileSystem.documentDirectory + "user.json";
 
 export default function Institution() {
   const router = useRouter();
-  const [institution, setInstitution] = useState("");
+  const [institution, setInstitution] = useState('Oshawa');
   const [program, setProgram] = useState("");
   const [data, setData] = useState([]);
   const [error, setError] = useState(null);
@@ -84,17 +84,17 @@ export default function Institution() {
       {/* <TextInput style={styles.studentNumber} value={institution} onChangeText={setInstitution} placeholder="Campus Location" /> */}
       <View style={[{ flexDirection: 'row', justifyContent: 'space-around' }]}>
             <CustomRadioButton
-                label="Whitby"
-                selected={institution === 'Whitby'}
-                onSelect={() => setInstitution('Whitby')}
-            />
-            <CustomRadioButton
                 label="Oshawa"
                 selected={institution === 'Oshawa'}
                 onSelect={() => setInstitution('Oshawa')}
             />
+            <CustomRadioButton
+                label="Whitby"
+                selected={institution === 'Whitby'}
+                onSelect={() => setInstitution('Whitby')}
+            />
         </View>
-          <TextInput style={styles.input} value={program} placeholder="Program Name" />
+          {/* <TextInput style={styles.input} value={program} placeholder="Program Name" /> */}
 
           {/* <AutocompleteDropdown
   clearOnFocus={false}
