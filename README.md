@@ -2,6 +2,20 @@
 
 ---
 
+## 📅 March 10th, 2025
+
+### Changes Made
+- changed port number from 3000 to 3001 on fetchProgramService.ts
+- NOTE: DO NOT RUN authService.ts, that is heavily WIP with Yasir
+
+### Plan
+- Implement input validation for each of the pages (Hlib is in charge of the reasons page)
+- Calendar Test
+  - infinite loop on submit when pushing email information
+  - port issues where there can be a potential information interception when running the authentication server
+---
+ 
+
 ## 📅 March 5th, 2025
 
 ### Changes Made
