@@ -10,32 +10,71 @@ const filePath = FileSystem.documentDirectory + 'user.json';
 export default function StudentNumber() {
     const router = useRouter();
     const [studentNumber, setStudentNumber] = useState('');
+    const studentNumberREGEX = /^100\d{6}$/;
+    const handleClear = () => setStudentNumber('');
 
+    /*
+      Explanation of the regex:
+      ^       - Anchors the match to the start of the string
+      100     - Ensures the number starts with "100"
+      \d{6}   - Matches exactly six digits (0-9) after "100"
+      $       - Anchors the match to the end of the string
+
+      This ensures the student number follows the format: "100XXXXXX" (where X is any digit)
+    */
+    const validateForm = () => {
+        let errors = {};
+        if (!studentNumber) {
+            errors.studentNumber = 'Student number is required';
+            handleClear();
+        }
+        else if (!studentNumberREGEX.test(studentNumber)) {
+            errors.studentNumber = 'Invalid Student Number';
+            handleClear();
+        }
+        return errors;
+    };
 
     const handleSubmit = async () => {
-        try {
-            const fileExists = await FileSystem.getInfoAsync(filePath);
-            let updatedData = fileExists.exists ? JSON.parse(await FileSystem.readAsStringAsync(filePath)) : [];
-
-            updatedData.length > 0
-                ? (updatedData[0].studentID = studentNumber)
-                : updatedData.push({ firstname: '', lastname: '', studentID: studentNumber, DCMail: '', campus: '', program: '', reason: '' });
-
-            await FileSystem.writeAsStringAsync(filePath, JSON.stringify(updatedData, null, 2));
-            Alert.alert('Form Submitted', `Student Number: ${studentNumber}`);
-            console.log('Navigating to StudentFirstName...');
-            router.push('/Login/StudentFirstName');
+        const errors = validateForm(); // Validate before submitting
+        if (Object.keys(errors).length > 0) {
+            Alert.alert("Validation Error", Object.values(errors).join('\n'));
+            return;
         }
-        catch (error) {
-            console.error('Error writing to file:', error);
-            Alert.alert('Error', 'Failed to save data.');
+        else {
+            try {
+                // Proceed with file operations if validation passes
+                const fileExists = await FileSystem.getInfoAsync(filePath);
+                let updatedData = fileExists.exists ? JSON.parse(await FileSystem.readAsStringAsync(filePath)) : [];
+
+                updatedData.length > 0
+                    ? (updatedData[0].studentID = studentNumber)
+                    : updatedData.push(
+                        {
+                            firstname: '',
+                            lastname: '',
+                            studentID: studentNumber,
+                            DCMail: '',
+                            campus: '',
+                            program: '',
+                            reason: ''
+                        }
+                    );
+
+                await FileSystem.writeAsStringAsync(filePath, JSON.stringify(updatedData, null, 2));
+                Alert.alert('Form Submitted', `Student Number: ${studentNumber}`);
+                console.log('Navigating to StudentFirstName...');
+                router.push('/Login/StudentFirstName');
+            }
+            catch (error) {
+                Alert.alert('Error', 'Failed to save data.');
+                console.error('Error writing to file:', error);
+            }
         }
     };
 
-    const handleClear = () => setStudentNumber('');
-
     return (
-        <KeyboardAvoidingView style={styles.container} behavior={Platform.OS === 'ios' ? 'padding' : 'height'} keyboardVerticalOffset={20}>
+        <KeyboardAvoidingView style={styles.container} behavior={ Platform.OS === 'ios' ? 'padding' : 'height' } keyboardVerticalOffset={20}>
             <SafeAreaView style={styles.container}>
                 <Text style={styles.title}>Enter your Student Number</Text>
                 <TextInput

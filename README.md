@@ -7,12 +7,26 @@
 ### Changes Made
 - changed port number from 3000 to 3001 on fetchProgramService.ts
 - NOTE: DO NOT RUN authService.ts, that is heavily WIP with Yasir
+- Validation for STUDENT NUMBER
+
+### Tasks to be done:
+- Rami - Input validation
+- Yasir - Combine functionality of authService and main app
+- Gleb - Implement Search functionality
+- Sheizah - Design admin web-page
 
 ### Plan
 - Implement input validation for each of the pages (Hlib is in charge of the reasons page)
 - Calendar Test
   - infinite loop on submit when pushing email information
   - port issues where there can be a potential information interception when running the authentication server
+- Input Validation
+  - STUDENT NUMBER
+  - FIRST NAME
+  - LAST NAME
+  - EMAIL
+  - CAMPUS LOCATION
+  - PROGRAM NAME
 ---
  
 
