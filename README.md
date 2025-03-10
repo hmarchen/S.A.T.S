@@ -16,7 +16,7 @@
 - **Sheizah**: Design and prototype the admin web page for enhanced administrative management.
 
 ### Upcoming Plans
-- **Comprehensive Input Validation**: Ensure input validation is implemented across all pages:
+- **Input Validation**: Ensure input validation is implemented across all pages:
     - **Hlib**: Responsible for implementing input validation on the Reasons page.
 
 - **Calendar Testing**:
