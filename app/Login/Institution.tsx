@@ -38,7 +38,7 @@ export default function Institution() {
   const CustomRadioButton = ({ label, selected, onSelect }) => (
     <TouchableOpacity
         style={[styles.radioButton,
-        { backgroundColor: selected ? '#007BFF' : '#FFF' }]}
+        { backgroundColor: selected ? '#358f71' : '#FFF' }]}
         onPress={onSelect}
     >
         <Text style={[styles.radioButtonText,
@@ -48,17 +48,17 @@ export default function Institution() {
     </TouchableOpacity>
 );
   // TODO fetch data from end point
-  const FetchData = async(url) => {
-    try {
-      const response = await fetch(url);
-      const json = await response.json();
-      setData(json);
-      console.log("advisors: " + response)
-    }
-    catch {
-      console.log('Error: ' + error);
-    }
-  };
+  // const FetchData = async(url) => {
+  //   try {
+  //     const response = await fetch(url);
+  //     const json = await response.json();
+  //     setData(json);
+  //     console.log("advisors: " + response)
+  //   }
+  //   catch {
+  //     console.log('Error: ' + error);
+  //   }
+  // };
 
   const getData = async() => {
     try {
@@ -94,9 +94,9 @@ export default function Institution() {
                 onSelect={() => setInstitution('Oshawa')}
             />
         </View>
-          <TextInput style={styles.input} value={program} onChangeText={getData} placeholder="Program Name" />
+          <TextInput style={styles.input} value={program} placeholder="Program Name" />
 
-          <AutocompleteDropdown
+          {/* <AutocompleteDropdown
   clearOnFocus={false}
   closeOnBlur={true}
   closeOnSubmit={false}
@@ -107,12 +107,12 @@ export default function Institution() {
     { id: '2', title: 'Beta' },
     { id: '3', title: 'Gamma' },
   ]}
-/>;
+/>; */}
       
       
 
       <View style={styles.buttonContainer}>
-        <Pressable style={[styles.button, styles.clearButton]} onPress={getData}>
+        <Pressable style={[styles.button, styles.clearButton]} onPress={handleClear}>
           <Text style={styles.buttonText}>CLEAR</Text>
         </Pressable>
         <Pressable style={styles.button} onPress={handleSubmit}>

@@ -9,8 +9,10 @@ import * as FileSystem from 'expo-file-system';
 const filePath = FileSystem.documentDirectory + 'user.json';
 
 export default function Reason() {
-
+// Router and State values
   const router = useRouter();
+  const [reasons, setReasons] = useState<Reason[]>([]);
+  const [reason, SetReason] = useState<Reason>();
 
   type Reason = {
     id: number;
@@ -18,7 +20,6 @@ export default function Reason() {
     details: string;
   }
 
-  const [reason, setReason] = useState<Reason[]>([]);
 
   const getReasons = async() => {
     try {
@@ -37,25 +38,40 @@ export default function Reason() {
   useEffect(() => {
     const fetchReasons = async () => {
       const data = await getReasons();
-      if (data) setReason(data);
+      if (data) setReasons(data);
     };
     fetchReasons();
   }, []);
     
-    const handlePress = (title: String) => {
+    const handlePress = async(item: Reason) => {
+      try{
+        SetReason(item);
+      const fileExists = await FileSystem.getInfoAsync(filePath);
+      let updatedData = fileExists.exists ? JSON.parse(await FileSystem.readAsStringAsync(filePath)) : [];
 
-          console.log();
+      updatedData.length > 0
+        ? (updatedData[0].reason = item.category)
+        : updatedData.push({ firstname: "", lastname: "", studentID: "", DCMail: "", campus: "", program: "", reason: item.category });
+
+      await FileSystem.writeAsStringAsync(filePath, JSON.stringify(updatedData, null, 2));
+      Alert.alert("Form Submitted", `${item.category}`);
+      console.log("Navigating to EndScreen...");
+      router.push("/Login/EndScreen");
       
-      console.log(title);
-    }
+      console.log(item.category);
+    } catch (error) {
+    console.error("Error writing to file:", error);
+    Alert.alert("Error", "Failed to save data.");
+  }
+};
 
   return (
     
     <SafeAreaView style={{flex:1}}>
         <FlatList 
-            data={reason}
+            data={reasons}
             renderItem={({ item }) => (
-                <TouchableOpacity style={styles.gridItem} onPress={() => handlePress(item.category)}>
+                <TouchableOpacity style={styles.gridItem} onPress={() => handlePress(item)}>
                     <Text style={styles.gridItemText}>{item.category}</Text>
                 </TouchableOpacity>
             )}

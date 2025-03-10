@@ -58,7 +58,7 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   button: {
-    backgroundColor: '#007bff',
+    backgroundColor: '#358f71',
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderRadius: 5,
@@ -77,7 +77,7 @@ const styles = StyleSheet.create({
       height: 70,
   },
   clearButton: {
-    backgroundColor: '#dc3545',
+    backgroundColor: '#534044',
   },
   buttonText: {
     color: '#fff',
@@ -125,6 +125,19 @@ const styles = StyleSheet.create({
     wordWrap: 'break-word', // Fallback for older browsers
     boxSizing: 'border-box', // Includes padding and border in width calculations
   },
+  breadcrumbContainer: {
+    flexDirection: "row", // Align items in a row
+    alignItems: "center", // Center items vertically
+    padding: 10, // Add padding around the container
+    backgroundColor: "#f8f8f8", // Light background color
+    borderRadius: 5, // Rounded corners
+    margin: 10, // Margin around the container
+    elevation: 1, // Add shadow for Android
+    shadowColor: "#000", // Shadow color for iOS
+    shadowOffset: { width: 0, height: 2 }, // Shadow offset for iOS
+    shadowOpacity: 0.1, // Shadow opacity for iOS
+    shadowRadius: 2, // Shadow radius for iOS
+  },
   textLink: {
     textAlign: 'center',
     color: 'blue',
@@ -154,7 +167,7 @@ radioButton: {
   borderRadius: 8,
   marginVertical: 8,
   borderWidth: 1,
-  borderColor: '#007BFF',
+  borderColor: '#358f71',
   flexDirection: 'row',
   alignItems: 'center',
   justifyContent: 'space-between',
