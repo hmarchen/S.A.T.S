@@ -7,7 +7,7 @@
 ### Overview of Changes
 - **Updated Port Configuration**: Changed the port number from `3000` to `3001` in `fetchProgramService.ts` to avoid conflicts.
 - **Auth Service Notice**: **IMPORTANT**: Do not run `authService.ts` as it is currently a work in progress (WIP) and needs further development with Yasir.
-- **Validation Implemented**: Added input validation for the **Student Number** field to enhance data integrity.
+- **Validation Implemented**: Added input validation for the **Student Number, Firstname, and Lastname** fields to enhance data integrity.
 
 ### Pending Tasks
 - **Rami**: Finalize input validation across relevant components.
@@ -16,7 +16,7 @@
 - **Sheizah**: Design and prototype the admin web page for enhanced administrative management.
 
 ### Upcoming Plans
-- **Comprehensive Input Validation**: Ensure input validation is implemented across all pages:
+- **Input Validation**: Ensure input validation is implemented across all pages:
     - **Hlib**: Responsible for implementing input validation on the Reasons page.
 
 - **Calendar Testing**:

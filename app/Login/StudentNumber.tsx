@@ -36,7 +36,7 @@ export default function StudentNumber() {
     };
 
     const handleSubmit = async () => {
-        const errors = validateForm(); // Validate before submitting
+        const errors = validateForm();
         if (Object.keys(errors).length > 0) {
             Alert.alert("Validation Error", Object.values(errors).join('\n'));
             return;
