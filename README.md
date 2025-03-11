@@ -2,6 +2,31 @@
 
 ---
 
+## 📅 March 11th, 2025
+
+### Overview of Changes
+- Input Validation Enhancements
+  - Implemented regular expressions for robust validation of input data across most fields, ensuring data integrity and improving user experience.
+- User Interface Updates
+  - Clear Button Removal:  Removed the clear button from input fields, except on the "Other Reasons" page.
+  - Future plans include implementing navigational arrows for easier page transitions.
+- Form Structure Changes
+  - Text Field Removal: Eliminated a text field in the institution section, as its functionality is now relocated to a separate page, streamlining the form layout.
+- Splash Page Implementation
+  - Introduced a splash page that users will be redirected to upon completing the application.
+    - This enhancement resolves the issue of users being able to navigate back and view previous iterations of their data. 
+    - The splash page effectively clears existing data and starts a fresh session.
+- End Screen Redirection Fix
+  - Fixed the "Other Reasons" page to ensure proper redirection to the end screen with the user's custom entry, improving the flow of the application.
+- Character Limit Enforcement
+  - Updated the "Reasons" page to enforce character limits: a minimum of 200 characters and a maximum of 2000 characters. 
+  - All preceding data must be valid before users can navigate to this page.
+
+### Plans for the Near Future
+- Implement arrow buttons to navigate the app.
+
+---
+
 ## 📅 March 10th, 2025
 
 ### Overview of Changes
