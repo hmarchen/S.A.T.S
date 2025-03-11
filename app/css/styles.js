@@ -176,7 +176,22 @@ radioButton: {
 radioButtonText: {
   fontSize: 16,
 },
+counterContainer: {
+  flexDirection: 'row',
+  alignItems: 'center',
+  justifyContent: 'flex-end', // Aligns to the right
+  marginRight: 10,
+  marginTop: 5,
+},
 
+charCounter: {
+  fontSize: 14,
+  marginRight: 5, // Space between counter and symbol
+},
+
+statusSymbol: {
+  fontSize: 16,
+}
 });
 
 export default styles;

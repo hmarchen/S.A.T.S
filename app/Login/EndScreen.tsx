@@ -38,8 +38,9 @@ export default function EndScreen() {
       if (userData) {
         // Modify the userData object here if necessary before saving
         await FileSystem.writeAsStringAsync(filePath, JSON.stringify(userData, null, 2));
-        Alert.alert("Success", "User data saved successfully.");
-        router.push("/Login/Disclaimer");
+        Alert.alert("Success", "Your appointment has been recorded.");
+        console.log("Form Submitted: END SCREEN");
+        router.push("/(tabs)");
       }
     } catch (error) {
       console.error("Error writing to file:", error);

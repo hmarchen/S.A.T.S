@@ -31,7 +31,6 @@ export default function Reason() {
       return response;
     }
     catch(e) {
-
       console.error(e);
     }
   }
@@ -54,7 +53,7 @@ export default function Reason() {
         : updatedData.push({ firstname: "", lastname: "", studentID: "", DCMail: "", campus: "", program: "", reason: item.category });
 
       await FileSystem.writeAsStringAsync(filePath, JSON.stringify(updatedData, null, 2));
-      Alert.alert("Form Submitted", `${item.category}`);
+      console.log("Form Submitted: Reason");
       console.log("Navigating to EndScreen...");
       router.push("/Login/EndScreen");
       

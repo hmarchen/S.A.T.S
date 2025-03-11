@@ -17,21 +17,27 @@ export default function Institution() {
   const [error, setError] = useState(null);
 
   const handleSubmit = async () => {
-    try {
-      const fileExists = await FileSystem.getInfoAsync(filePath);
-      let updatedData = fileExists.exists ? JSON.parse(await FileSystem.readAsStringAsync(filePath)) : [];
+    if (institution === '') {
+        Alert.alert('Validation Error', 'Please select an option');
+        handleClear();
+    }
+    else {
+        try {
+          const fileExists = await FileSystem.getInfoAsync(filePath);
+          let updatedData = fileExists.exists ? JSON.parse(await FileSystem.readAsStringAsync(filePath)) : [];
 
-      updatedData.length > 0
-        ? (updatedData[0].campus = institution)
-        : updatedData.push({ firstname: "", lastname: "", studentID: "", DCMail: "", campus: institution, program: "", reason: "" });
+          updatedData.length > 0
+            ? (updatedData[0].campus = institution)
+            : updatedData.push({ firstname: "", lastname: "", studentID: "", DCMail: "", campus: institution, program: "", reason: "" });
 
-      await FileSystem.writeAsStringAsync(filePath, JSON.stringify(updatedData, null, 2));
-      Alert.alert("Form Submitted", `${institution}`);
-      console.log("Navigating to Program...");
-      router.push("/Login/Program");
-    } catch (error) {
-      console.error("Error writing to file:", error);
-      Alert.alert("Error", "Failed to save data.");
+          await FileSystem.writeAsStringAsync(filePath, JSON.stringify(updatedData, null, 2));
+          console.log("Form Submitted: Institution");
+          console.log("Navigating to Program...");
+          router.push("/Login/Program");
+        } catch (error) {
+          console.error("Error writing to file:", error);
+          Alert.alert("Error", "Failed to save data.");
+        }
     }
   };
   // Radio button for office selection
@@ -94,27 +100,9 @@ export default function Institution() {
                 onSelect={() => setInstitution('Oshawa')}
             />
         </View>
-          <TextInput style={styles.input} value={program} placeholder="Program Name" />
 
-          {/* <AutocompleteDropdown
-  clearOnFocus={false}
-  closeOnBlur={true}
-  closeOnSubmit={false}
-  initialValue={{ id: '2' }} // or just '2'
-  onSelectItem={setSelectedItem}
-  dataSet={[
-    { id: '1', title: 'Alpha' },
-    { id: '2', title: 'Beta' },
-    { id: '3', title: 'Gamma' },
-  ]}
-/>; */}
-      
-      
 
       <View style={styles.buttonContainer}>
-        <Pressable style={[styles.button, styles.clearButton]} onPress={handleClear}>
-          <Text style={styles.buttonText}>CLEAR</Text>
-        </Pressable>
         <Pressable style={styles.button} onPress={handleSubmit}>
           <Text style={styles.buttonText}>NEXT</Text>
         </Pressable>

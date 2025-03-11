@@ -7,6 +7,8 @@ import styles from "../css/styles";
 
 const filePath = FileSystem.documentDirectory + "user.json";
 
+
+// TODO: SEARCH FUNCTIONALITY, NO INPUT VALIDATION REQUIRED AS IT PULLS FROM A LIST
 export default function Program() {
   const router = useRouter();
   const [program, setProgram] = useState("");
@@ -21,6 +23,7 @@ export default function Program() {
       }
 
       await FileSystem.writeAsStringAsync(filePath, JSON.stringify(updatedData, null, 2));
+      console.log("Form Submitted: Program");
       console.log("Navigating to Reason...");
       router.push("/Login/Reason");
     } catch (error) {

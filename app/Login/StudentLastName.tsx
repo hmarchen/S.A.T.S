@@ -11,20 +11,25 @@ export default function StudentName() {
     const router = useRouter();
     const [lastName, setLastName] = useState('');
     const LastnameREGEX = /^[A-Z][a-zA-Z' -]+$/;
+    const REQ_ERROR = "Last name is required.";
+    const REG_ERROR = "Invalid last name: Must start with a capital letter and contain only letters.";
     const handleClear = () => (setLastName(''));
 
     const validateForm = () => {
-            let errors = {};
-            if (!lastName) {
-                errors.lastName = 'Your last name is required';
-                handleClear();
-            }
-            else if (!LastnameREGEX.test(lastName)) {
-                errors.firstName = 'Invalid lastname';
-                handleClear();
-            }
-            return errors;
+        let errors = {};
+        const trimmedLastName = lastName.trim();
+
+        if (!trimmedLastName) {
+            errors.lastName = REQ_ERROR;
+            handleClear();
         }
+        else if (!LastnameREGEX.test(trimmedLastName)) {
+            errors.lastName = REG_ERROR;
+            handleClear();
+        }
+
+        return errors;
+    };
 
     const handleSubmit = async () => {
         const errors = validateForm();
@@ -52,7 +57,7 @@ export default function StudentName() {
                      );
 
                  await FileSystem.writeAsStringAsync(filePath, JSON.stringify(updatedData, null, 2));
-                 Alert.alert('Form Submitted', `Lastname: ${lastName}`);
+                 console.log("Form Submitted: Lastname");
                  console.log('Navigating to DCMail...');
                  router.push('/Login/DCMail');
              }

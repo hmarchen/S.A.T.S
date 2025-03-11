@@ -11,6 +11,8 @@ export default function StudentNumber() {
     const router = useRouter();
     const [studentNumber, setStudentNumber] = useState('');
     const studentNumberREGEX = /^100\d{6}$/;
+    const REQ_ERROR = "Student number is required";
+    const REG_ERROR = "Invalid Student Number: Student number must start with 100 and contain 9 digits";
     const handleClear = () => setStudentNumber('');
 
     /*
@@ -24,12 +26,14 @@ export default function StudentNumber() {
     */
     const validateForm = () => {
         let errors = {};
-        if (!studentNumber) {
-            errors.studentNumber = 'Student number is required';
+        const trimmedID = studentNumber.trim();
+
+        if (!trimmedID) {
+            errors.studentNumber = REQ_ERROR;
             handleClear();
         }
-        else if (!studentNumberREGEX.test(studentNumber)) {
-            errors.studentNumber = 'Invalid Student Number';
+        else if (!studentNumberREGEX.test(trimmedID)) {
+            errors.studentNumber = REG_ERROR;
             handleClear();
         }
         return errors;
@@ -62,7 +66,7 @@ export default function StudentNumber() {
                     );
 
                 await FileSystem.writeAsStringAsync(filePath, JSON.stringify(updatedData, null, 2));
-                Alert.alert('Form Submitted', `Student Number: ${studentNumber}`);
+                console.log("Form Submitted: Student Number");
                 console.log('Navigating to StudentFirstName...');
                 router.push('/Login/StudentFirstName');
             }
