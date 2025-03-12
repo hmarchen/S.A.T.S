@@ -39,18 +39,16 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     borderColor: '#ccc',
   },
-
   studentNumber: {
-    height: 40,
-    marginBottom: 12,
-    borderWidth: 1,
-    padding: 10,
-    width: '40%',
-    borderRadius: 5,
-    backgroundColor: '#fff',
-    borderColor: '#ccc',
+      height: 40,
+      marginBottom: 12,
+      borderWidth: 1,
+      padding: 10,
+      width: 'auto',  // Adjust this value
+      borderRadius: 5,
+      backgroundColor: '#fff',
+      borderColor: '#ccc',
   },
-
   buttonContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',

@@ -80,10 +80,20 @@ export default function StudentNumber() {
 
     return (
         <KeyboardAvoidingView style={styles.container} behavior={ Platform.OS === 'ios' ? 'padding' : 'height' } keyboardVerticalOffset={20}>
+            <View style={styles.arrowContainer}>
+                <Pressable onPress={() => router.back()} style={styles.arrowButton}>
+                    <Ionicons name="arrow-back" size={75} color="black" />
+                    <Text style={styles.ArrowText}>BACK</Text>
+                </Pressable>
+                <Pressable onPress={handleSubmit} style={styles.arrowButton}>
+                    <Ionicons name="arrow-forward" size={75} color="black" />
+                    <Text style={styles.ArrowText}>NEXT</Text>
+                </Pressable>
+            </View>
             <SafeAreaView style={styles.container}>
                 <Text style={styles.title}>Enter your Student Number</Text>
                 <TextInput
-                    style={styles.studentNumber}
+                    style={ styles.input}
                     value={studentNumber}
                     onChangeText={setStudentNumber}
                     placeholder="Student Number"
@@ -91,17 +101,6 @@ export default function StudentNumber() {
                 />
                 <Breadcrumb entities={['Disclaimer', 'StudentNumber']} flowDepth={1} />
             </SafeAreaView>
-            {/* Navigation Arrows */}
-                            <View style={styles.arrowContainer}>
-                                <Pressable onPress={() => router.back()} style={styles.arrowButton}>
-                                    <Ionicons name="arrow-back" size={100} color="black" />
-                                     <Text style={styles.ArrowText}>BACK</Text>
-                                </Pressable>
-                                <Pressable onPress={handleSubmit} style={styles.arrowButton}>
-                                    <Ionicons name="arrow-forward" size={100} color="black" />
-                                    <Text style={styles.ArrowText}>NEXT</Text>
-                                </Pressable>
-                            </View>
         </KeyboardAvoidingView>
     );
 }
