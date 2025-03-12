@@ -4,6 +4,7 @@ import Breadcrumb from './breadcrumb';
 import { useRouter } from 'expo-router';
 import styles from '../css/styles';
 import * as FileSystem from 'expo-file-system';
+import { Ionicons } from '@expo/vector-icons';
 
 const filePath = FileSystem.documentDirectory + 'user.json';
 
@@ -88,16 +89,19 @@ export default function StudentNumber() {
                     placeholder="Student Number"
                     keyboardType="numeric"
                 />
-                <View style={styles.buttonContainer}>
-                    <Pressable style={[styles.button, styles.clearButton]} onPress={handleClear}>
-                        <Text style={styles.buttonText}>CLEAR</Text>
-                    </Pressable>
-                    <Pressable style={styles.button} onPress={handleSubmit}>
-                        <Text style={styles.buttonText}>NEXT</Text>
-                    </Pressable>
-                </View>
                 <Breadcrumb entities={['Disclaimer', 'StudentNumber']} flowDepth={1} />
             </SafeAreaView>
+            {/* Navigation Arrows */}
+                            <View style={styles.arrowContainer}>
+                                <Pressable onPress={() => router.back()} style={styles.arrowButton}>
+                                    <Ionicons name="arrow-back" size={100} color="black" />
+                                     <Text style={styles.ArrowText}>BACK</Text>
+                                </Pressable>
+                                <Pressable onPress={handleSubmit} style={styles.arrowButton}>
+                                    <Ionicons name="arrow-forward" size={100} color="black" />
+                                    <Text style={styles.ArrowText}>NEXT</Text>
+                                </Pressable>
+                            </View>
         </KeyboardAvoidingView>
     );
 }

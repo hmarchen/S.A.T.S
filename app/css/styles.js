@@ -85,6 +85,12 @@ const styles = StyleSheet.create({
     fontSize: 20,
     textAlign: 'center',
   },
+  ArrowText: {
+    color: '#000',
+    fontWeight: 'bold',
+    fontSize: 20,
+    textAlign: 'center',
+  },
   gridContainer: {
     margin: 5,
     width: 'auto',
@@ -191,7 +197,21 @@ charCounter: {
 
 statusSymbol: {
   fontSize: 16,
-}
+},
+arrowContainer: {
+    position: 'absolute',
+    top: '50%', // Center vertically
+    left: 0,
+    right: 0,
+    flexDirection: 'row',
+    justifyContent: 'space-between', // Push arrows to opposite sides
+    alignItems: 'center',
+    transform: [{ translateY: -25 }], // Adjust to truly center
+},
+
+arrowButton: {
+    padding: 10,
+},
 });
 
 export default styles;
