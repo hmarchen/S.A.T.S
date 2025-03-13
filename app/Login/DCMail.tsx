@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { View, Text, SafeAreaView, TextInput, Alert, Pressable, KeyboardAvoidingView, Platform } from "react-native";
 import { useRouter } from "expo-router";
 import Breadcrumb from "./breadcrumb";
+import Arrows from './arrows';
 import styles from "../css/styles";
 import * as FileSystem from "expo-file-system";
 
@@ -77,22 +78,11 @@ export default function DCMail() {
   };
 
   return (
-    <KeyboardAvoidingView
-      style={styles.container}
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
-      keyboardVerticalOffset={20}
-    >
+    <KeyboardAvoidingView style={styles.container} behavior={Platform.OS === "ios" ? "padding" : "height"} keyboardVerticalOffset={20}>
+      <Arrows handleSubmit={handleSubmit} router={router} />
       <SafeAreaView style={styles.container}>
         <Text style={styles.title}>Enter your Durham College Email Address</Text>
         <TextInput style={styles.input} value={DCMail} onChangeText={setMail} placeholder="Durham College Email Address" />
-        <View style={styles.buttonContainer}>
-          <Pressable style={[styles.button, styles.clearButton]} onPress={handleClear}>
-            <Text style={styles.buttonText}>CLEAR</Text>
-          </Pressable>
-          <Pressable style={styles.button} onPress={handleSubmit}>
-            <Text style={styles.buttonText}>NEXT</Text>
-          </Pressable>
-        </View>
         <Breadcrumb entities={['Disclaimer', 'StudentNumber', 'Firstname', 'Lastname', 'DCMail']} flowDepth={4} />
       </SafeAreaView>
     </KeyboardAvoidingView>

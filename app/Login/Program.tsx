@@ -3,6 +3,7 @@ import { View, Text, SafeAreaView, TextInput, Alert, Pressable, KeyboardAvoiding
 import { useRouter } from "expo-router";
 import * as FileSystem from "expo-file-system";
 import Breadcrumb from "./breadcrumb";
+import Arrows from './arrows';
 import styles from "../css/styles";
 
 const filePath = FileSystem.documentDirectory + "user.json";
@@ -36,17 +37,10 @@ export default function Program() {
 
   return (
     <KeyboardAvoidingView style={styles.container} behavior={Platform.OS === "ios" ? "padding" : "height"} keyboardVerticalOffset={20}>
+      <Arrows handleSubmit={HandleSubmit} router={router} />
       <SafeAreaView style={styles.container}>
         <Text style={styles.title}>Program Information</Text>
         <TextInput style={styles.input} value={program} onChangeText={setProgram} placeholder="Program Name" />
-        <View style={styles.buttonContainer}>
-                  <Pressable style={[styles.button, styles.clearButton]} onPress={handleClear}>
-                    <Text style={styles.buttonText}>CLEAR</Text>
-                  </Pressable>
-                  <Pressable style={styles.button} onPress={HandleSubmit}>
-                    <Text style={styles.buttonText}>NEXT</Text>
-                  </Pressable>
-                </View>
         <Breadcrumb entities={['Disclaimer', 'StudentNumber', 'Firstname', 'Lastname', 'DCMail', 'Institution', 'Program']} flowDepth={6} />
       </SafeAreaView>
     </KeyboardAvoidingView>

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, Pressable, Alert } from "react-native";
+import { View, Text, Pressable, Alert, ActivityIndicator } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
 import { Card } from "@rneui/themed";
@@ -10,6 +10,7 @@ import styles from "../css/styles";
 export default function EndScreen() {
   const router = useRouter();
   const [userData, setUserData] = useState(null);
+  const [loading, setLoading] = useState(true);
   const filePath = FileSystem.documentDirectory + "user.json";
 
   useEffect(() => {
@@ -24,9 +25,12 @@ export default function EndScreen() {
           console.log(`File copied to: ${filePath}`);
         }
 
-        setUserData(JSON.parse(await FileSystem.readAsStringAsync(filePath)));
+        const data = JSON.parse(await FileSystem.readAsStringAsync(filePath));
+        setUserData(data);
       } catch (error) {
         console.error("Error reading JSON file:", error);
+      } finally {
+        setLoading(false); // Set loading to false after data is fetched
       }
     };
 
@@ -48,7 +52,22 @@ export default function EndScreen() {
     }
   };
 
-  if (!userData) return <SafeAreaView style={styles.container}><Text style={styles.text}>Loading user data...</Text></SafeAreaView>;
+  if (loading) {
+    return (
+      <SafeAreaView style={styles.container}>
+        <ActivityIndicator size="large" color="#358f71" />
+        <Text style={styles.text}>Loading user data...</Text>
+      </SafeAreaView>
+    );
+  }
+
+  if (!userData) {
+    return (
+      <SafeAreaView style={styles.container}>
+        <Text style={styles.text}>No user data found.</Text>
+      </SafeAreaView>
+    );
+  }
 
   const { firstname, lastname, studentID, DCMail, campus, program, reason } = userData[0];
 
@@ -56,6 +75,7 @@ export default function EndScreen() {
     <SafeAreaView style={styles.container}>
       <Card containerStyle={{ marginTop: 15, marginBottom: 20 }}>
         <Card.Title>Thank you for your application!</Card.Title>
+        <Card.Divider />
         <Text style={styles.text}>Your Details:</Text>
         <Text style={styles.text}>First Name: {firstname}</Text>
         <Text style={styles.text}>Last Name: {lastname}</Text>

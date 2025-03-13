@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Pressable, SafeAreaView, TextInput, Alert } from 'react-native';
 import Breadcrumb from './breadcrumb';
+import Arrows from './arrows';
 import { useRouter } from 'expo-router';
 import styles from '../css/styles';
 import * as FileSystem from "expo-file-system";
@@ -81,21 +82,12 @@ export default function VisitReason() {
         placeholder="Reason for your Visit"
       />
 
-      {/* Character Counter with Status Symbol */}
+      <Arrows handleSubmit={handleSubmit} router={router} />
       <View style={styles.counterContainer}>
         <Text style={[styles.charCounter, { color: charCount >= 200 ? 'green' : 'red' }]}>
           {charCount} / 2000 characters
         </Text>
         <Text style={styles.statusSymbol}>{charCount >= 200 ? '✅' : '❌'}</Text>
-      </View>
-
-      <View style={styles.buttonContainer}>
-        <Pressable style={[styles.button, styles.clearButton]} onPress={handleClear}>
-          <Text style={styles.buttonText}>CLEAR</Text>
-        </Pressable>
-        <Pressable style={styles.button} onPress={handleSubmit}>
-          <Text style={styles.buttonText}>SUBMIT</Text>
-        </Pressable>
       </View>
       <Breadcrumb entities={['Full Name', 'Student ID', 'DCMail', 'Institution', 'Visit Reason']} flowDepth={4} />
     </SafeAreaView>

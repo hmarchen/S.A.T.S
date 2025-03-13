@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, SafeAreaView, TextInput, Alert, Pressable, KeyboardAvoidingView, Platform } from 'react-native';
 import Breadcrumb from './breadcrumb';
+import Arrows from './arrows';
 import { useRouter } from 'expo-router';
 import styles from '../css/styles';
 import * as FileSystem from 'expo-file-system';
@@ -80,16 +81,7 @@ export default function StudentNumber() {
 
     return (
         <KeyboardAvoidingView style={styles.container} behavior={ Platform.OS === 'ios' ? 'padding' : 'height' } keyboardVerticalOffset={20}>
-            <View style={styles.arrowContainer}>
-                <Pressable onPress={() => router.back()} style={styles.arrowButton}>
-                    <Ionicons name="arrow-back" size={75} color="black" />
-                    <Text style={styles.ArrowText}>BACK</Text>
-                </Pressable>
-                <Pressable onPress={handleSubmit} style={styles.arrowButton}>
-                    <Ionicons name="arrow-forward" size={75} color="black" />
-                    <Text style={styles.ArrowText}>NEXT</Text>
-                </Pressable>
-            </View>
+            <Arrows handleSubmit={handleSubmit} router={router} />
             <SafeAreaView style={styles.container}>
                 <Text style={styles.title}>Enter your Student Number</Text>
                 <TextInput

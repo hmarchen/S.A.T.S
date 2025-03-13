@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { View, Text, SafeAreaView, TextInput, Alert, Pressable, KeyboardAvoidingView, Platform } from "react-native";
 import { useRouter } from "expo-router";
 import * as FileSystem from "expo-file-system";
+import Arrows from './arrows';
 import Breadcrumb from "./breadcrumb";
 import styles from "../css/styles";
 import { TouchableOpacity } from "react-native";
@@ -16,7 +17,7 @@ export default function Institution() {
   const [data, setData] = useState([]);
   const [error, setError] = useState(null);
 
-  const handleSubmit = async () => {
+  const HandleSubmit = async () => {
     if (institution === '') {
         Alert.alert('Validation Error', 'Please select an option');
         handleClear();
@@ -73,10 +74,7 @@ export default function Institution() {
       console.log("ada: " + json);
       return json;
     }
-    catch(e) {
-
-      console.error(e);
-    }
+    catch(e) { console.error(e); }
   }
 
   const handleClear = () => (setInstitution(""), setProgram(""));
@@ -84,30 +82,13 @@ export default function Institution() {
 
   return (
     <KeyboardAvoidingView style={styles.container} behavior={Platform.OS === "ios" ? "padding" : "height"} keyboardVerticalOffset={20}>
+    <Arrows handleSubmit={HandleSubmit} router={router} />
     <SafeAreaView style={styles.container}>
       <Text style={styles.title}>Institutional Information</Text>
-      
-      {/* <TextInput style={styles.studentNumber} value={institution} onChangeText={setInstitution} placeholder="Campus Location" /> */}
       <View style={[{ flexDirection: 'row', justifyContent: 'space-around' }]}>
-            <CustomRadioButton
-                label="Whitby"
-                selected={institution === 'Whitby'}
-                onSelect={() => setInstitution('Whitby')}
-            />
-            <CustomRadioButton
-                label="Oshawa"
-                selected={institution === 'Oshawa'}
-                onSelect={() => setInstitution('Oshawa')}
-            />
-        </View>
-
-
-      <View style={styles.buttonContainer}>
-        <Pressable style={styles.button} onPress={handleSubmit}>
-          <Text style={styles.buttonText}>NEXT</Text>
-        </Pressable>
-      </View>
-
+            <CustomRadioButton label="Whitby" selected={institution === 'Whitby'} onSelect={() => setInstitution('Whitby')}/>
+            <CustomRadioButton label="Oshawa" selected={institution === 'Oshawa'} onSelect={() => setInstitution('Oshawa')}/>
+       </View>
       <Breadcrumb entities={['Disclaimer', 'Student ID', 'Full Name', 'DCMail', 'Institution']} flowDepth={4} />
     </SafeAreaView>
   </KeyboardAvoidingView>
