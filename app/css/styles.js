@@ -212,6 +212,19 @@ const styles = StyleSheet.create({
   statusSymbol: {
     fontSize: 16,
   },
+  listContainer: {
+    marginVertical: 20,
+    padding: 10,
+    backgroundColor: '#f0f0f0',
+    borderRadius: 5,
+    alignItems: 'flex-start', // Align items to the start for a cleaner look
+  },
+
+  listItem: {
+    fontSize: 18, // Increased font size for better readability
+    color: '#333', // Darker text color for better contrast
+    marginVertical: 5, // Space between list items
+  }
 });
 
 export default styles;
