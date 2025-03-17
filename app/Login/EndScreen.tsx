@@ -90,7 +90,7 @@ export default function EndScreen() {
         <Text style={styles.buttonText}>Confirm Appointment</Text>
       </Pressable>
 
-      <Breadcrumb entities={['Disclaimer', 'StudentNumber', 'Firstname', 'Lastname', 'DCMail', 'Institution', 'Program', 'Reason', 'END']} flowDepth={8} />
+      <Breadcrumb entities={['Disclaimer', 'StudentNumber', 'Firstname', 'Lastname', 'DCMail', 'Institution', 'Program', 'Reason', 'Calendar', 'Time Selection', 'END']} flowDepth={10} />
     </SafeAreaView>
   );
 }

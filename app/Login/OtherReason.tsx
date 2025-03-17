@@ -55,8 +55,8 @@ export default function VisitReason() {
 
                   await FileSystem.writeAsStringAsync(filePath, JSON.stringify(updatedData, null, 2));
                   console.log("Form Submitted: Reason");
-                  console.log("Navigating to EndScreen...");
-                  router.push("/Login/EndScreen");
+                  console.log("Navigating to Calendar...");
+                  router.push("/Login/Calendar");
               }
               catch (error) {
                   console.error('Error writing to file:', error);
@@ -89,7 +89,7 @@ export default function VisitReason() {
         </Text>
         <Text style={styles.statusSymbol}>{charCount >= 200 ? '✅' : '❌'}</Text>
       </View>
-      <Breadcrumb entities={['Full Name', 'Student ID', 'DCMail', 'Institution', 'Visit Reason']} flowDepth={4} />
+      <Breadcrumb entities={['Disclaimer', 'StudentNumber', 'Firstname', 'Lastname', 'DCMail', 'Institution', 'Program', 'Reason']} flowDepth={7} />
     </SafeAreaView>
   );
 }

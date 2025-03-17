@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, FlatList, Alert, Pressable } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import Breadcrumb from './breadcrumb';
 import styles from '../css/styles';
 import { TouchableOpacity } from 'react-native';
 import { useRouter } from 'expo-router';
@@ -55,7 +56,7 @@ export default function Reason() {
       await FileSystem.writeAsStringAsync(filePath, JSON.stringify(updatedData, null, 2));
       console.log("Form Submitted: Reason");
       console.log("Navigating to EndScreen...");
-      router.push("/Login/EndScreen");
+      router.push("/Login/Calendar");
       
       console.log(item.category);
     } catch (error) {
@@ -80,6 +81,7 @@ export default function Reason() {
 
         />
           <Text style={styles.textLink} onPress={() => router.push('/Login/OtherReason')}>Didn't find what you wanted?</Text>
+          <Breadcrumb entities={['Disclaimer', 'StudentNumber', 'Firstname', 'Lastname', 'DCMail', 'Institution', 'Program', 'Reason']} flowDepth={7} />
 </SafeAreaView>
   );
 }
