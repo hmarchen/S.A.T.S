@@ -181,7 +181,7 @@ const styles = StyleSheet.create({
   },
   radioButton: {
     paddingVertical: 16, // Increased vertical padding for a more comfortable touch target
-    paddingHorizontal: 16,
+    paddingHorizontal: 8,
     borderRadius: 10, // Slightly increased radius for a softer look
     marginVertical: 10, // Increased vertical margin for better spacing
     marginHorizontal: 10,

@@ -82,7 +82,7 @@ export default function DCMail() {
       <Arrows handleSubmit={handleSubmit} router={router} />
       <SafeAreaView style={styles.container}>
         <Text style={styles.title}>Enter your Durham College Email Address</Text>
-        <TextInput style={styles.input} value={DCMail} onChangeText={setMail} placeholder="Durham College Email Address" />
+        <TextInput style={styles.input} value={DCMail} onChangeText={setMail} autoCapitalize = "none" placeholder="Durham College Email Address" />
         <Breadcrumb entities={['Disclaimer', 'StudentNumber', 'Firstname', 'Lastname', 'DCMail']} flowDepth={4} />
       </SafeAreaView>
     </KeyboardAvoidingView>
