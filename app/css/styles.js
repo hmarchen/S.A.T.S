@@ -198,6 +198,23 @@ const styles = StyleSheet.create({
     fontSize: 18, // Increased font size for better readability
     color: '#333', // Darker text color for better contrast
   },
+  radioContainer: {
+      flexDirection: "row",
+      justifyContent: "center",
+      gap: 20,
+      marginBottom: 20,
+  },
+  timeslotContainer: {
+      flexDirection: "row",
+      flexWrap: "wrap",
+      justifyContent: "center",
+      gap: 10,
+      marginBottom: 30,
+  },
+  timeslotItem: {
+      width: "30%",
+      alignItems: "center",
+  },
   counterContainer: {
     flexDirection: 'row',
     alignItems: 'center',

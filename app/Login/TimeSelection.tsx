@@ -79,22 +79,44 @@ export default function TimeSelection() {
     <KeyboardAvoidingView style={styles.container} behavior={Platform.OS === "ios" ? "padding" : "height"} keyboardVerticalOffset={20}>
 
       <SafeAreaView style={styles.container}>
-      <Arrows handleSubmit={handleSubmit} router={router} />
-        <Text style={styles.title}>Select an Appointment Time</Text>
-        <View style={[{ flexDirection: 'row', justifyContent: 'space-around' }]}>
-            <CustomRadioButton label="Online" selected={appointmentType === 'Online'} onSelect={() => setAppointmentType('Online')}/>
-            <CustomRadioButton label="In Person" selected={appointmentType === 'In Person'} onSelect={() => setAppointmentType('In Person')}/>
-        </View>
+          <Arrows handleSubmit={handleSubmit} router={router} />
 
-        <View style={{ marginLeft: 100, flexDirection: "row", flexWrap: "wrap", gap: 2 }}>
-          {timeslots.map((time, index) => (
-            <View key={index} style={{ width: "30%" }}>
-              <CustomRadioButton label={time} selected={selectedTime === time} onSelect = {() => setSelectedTime(time)} />
-            </View>
-          ))}
-        </View>
-        <Breadcrumb entities={['Disclaimer', 'StudentNumber', 'Firstname', 'Lastname', 'DCMail', 'Institution', 'Program', 'Reason', 'Calendar']} flowDepth={8} />
+          <Text style={styles.title}>Select an Appointment Time</Text>
+
+          {/* Appointment Type Selection */}
+          <View style={styles.radioContainer}>
+              <CustomRadioButton
+                  label="Online"
+                  selected={appointmentType === 'Online'}
+                  onSelect={() => setAppointmentType('Online')}
+              />
+              <CustomRadioButton
+                  label="In Person"
+                  selected={appointmentType === 'In Person'}
+                  onSelect={() => setAppointmentType('In Person')}
+              />
+          </View>
+
+          {/* Time Slots Grid */}
+          <View style={styles.timeslotContainer}>
+              {timeslots.map((time, index) => (
+                  <View key={index} style={styles.timeslotItem}>
+                      <CustomRadioButton
+                          label={time}
+                          selected={selectedTime === time}
+                          onSelect={() => setSelectedTime(time)}
+                      />
+                  </View>
+              ))}
+          </View>
+
+          <Breadcrumb
+              entities={['Disclaimer', 'StudentNumber', 'Firstname', 'Lastname', 'DCMail', 'Institution', 'Program', 'Reason', 'Calendar']}
+              flowDepth={8}
+          />
       </SafeAreaView>
+
+
     </KeyboardAvoidingView>
   );
 }
