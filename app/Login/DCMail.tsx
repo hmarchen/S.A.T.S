@@ -52,17 +52,21 @@ export default function DCMail() {
           const fileExists = await FileSystem.getInfoAsync(filePath);
           let updatedData = fileExists.exists ? JSON.parse(await FileSystem.readAsStringAsync(filePath)) : [];
 
-          updatedData.length > 0 ? (updatedData[0].DCMail = DCMail) :
-          updatedData.push(
-              {
-                  firstname: "",
-                  lastname: "",
-                  studentID: "",
-                  DCMail: DCMail,
-                  campus: "",
-                  program: "",
-                  reason: ""
-              }
+          updatedData.length > 0
+          ? (updatedData[0].DCMail = DCMail)
+          : updatedData.push(
+            {
+                firstname: '',
+                lastname: '',
+                studentID: '',
+                DCMail: DCMail,
+                campus: '',
+                program: '',
+                reason: '',
+                AppointmentDate: '',
+                time: '',
+                appointmentType: ''
+            }
           );
 
           await FileSystem.writeAsStringAsync(filePath, JSON.stringify(updatedData, null, 2));

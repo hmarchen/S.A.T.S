@@ -15,23 +15,42 @@ export default function Program() {
   const [program, setProgram] = useState("");
 
   const HandleSubmit = async () => {
-    try {
-      const fileExists = await FileSystem.getInfoAsync(filePath);
-      let updatedData = fileExists.exists ? JSON.parse(await FileSystem.readAsStringAsync(filePath)) : [];
+      try {
+          const fileExists = await FileSystem.getInfoAsync(filePath);
+          let updatedData = fileExists.exists
+              ? JSON.parse(await FileSystem.readAsStringAsync(filePath))
+              : [];
 
-      if (updatedData.length > 0) {
-        updatedData[0].program = program;
+          if (updatedData.length > 0) {
+              updatedData[0].program = program;
+          } else {
+              updatedData.push({
+                  firstname: '',
+                  lastname: '',
+                  studentID: '',
+                  DCMail: '',
+                  campus: '',
+                  program: program,
+                  reason: '',
+                  AppointmentDate: '',
+                  time: '',
+                  appointmentType: ''
+              });
+          }
+
+          // Move this inside the try block
+          await FileSystem.writeAsStringAsync(filePath, JSON.stringify(updatedData, null, 2));
+
+          console.log("Form Submitted: Program");
+          console.log("Navigating to Reason...");
+          router.push("/Login/Reason");
+
+      } catch (error) {
+          console.error("Error writing to file:", error);
+          Alert.alert("Error", "Failed to save data.");
       }
-
-      await FileSystem.writeAsStringAsync(filePath, JSON.stringify(updatedData, null, 2));
-      console.log("Form Submitted: Program");
-      console.log("Navigating to Reason...");
-      router.push("/Login/Reason");
-    } catch (error) {
-      console.error("Error writing to file:", error);
-      Alert.alert("Error", "Failed to save data.");
-    }
   };
+
 
   const handleClear = () => (setProgram(""));
 

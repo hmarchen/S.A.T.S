@@ -53,7 +53,10 @@ export default function StudentName() {
                              DCMail: '',
                              campus: '',
                              program: '',
-                             reason: ''
+                             reason: '',
+                             AppointmentDate: '',
+                             time: '',
+                             appointmentType: ''
                          }
                      );
 

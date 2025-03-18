@@ -6,6 +6,9 @@
     "DCMail": "john.doe@dcmail.ca",
     "campus": "Oshawa",
     "program": "Computer Programming and Analysis",
-    "reason": "test reason"
+    "reason": "test reason",
+    "AppointmentDate": "11/11/2002",
+    "time": "12:00",
+    "appointmentType": "ONLINE"
   }
 ]

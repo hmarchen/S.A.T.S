@@ -46,12 +46,25 @@ export default function Reason() {
     const handlePress = async(item: Reason) => {
       try{
         SetReason(item);
-      const fileExists = await FileSystem.getInfoAsync(filePath);
-      let updatedData = fileExists.exists ? JSON.parse(await FileSystem.readAsStringAsync(filePath)) : [];
+        const fileExists = await FileSystem.getInfoAsync(filePath);
+        let updatedData = fileExists.exists ? JSON.parse(await FileSystem.readAsStringAsync(filePath)) : [];
 
       updatedData.length > 0
         ? (updatedData[0].reason = item.category)
-        : updatedData.push({ firstname: "", lastname: "", studentID: "", DCMail: "", campus: "", program: "", reason: item.category });
+        : updatedData.push(
+            {
+                firstname: '',
+                lastname: '',
+                studentID: '',
+                DCMail: '',
+                campus: '',
+                program: '',
+                reason: item.category,
+                AppointmentDate: '',
+                time: '',
+                appointmentType: ''
+            }
+        );
 
       await FileSystem.writeAsStringAsync(filePath, JSON.stringify(updatedData, null, 2));
       console.log("Form Submitted: Reason");

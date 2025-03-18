@@ -69,7 +69,7 @@ export default function EndScreen() {
     );
   }
 
-  const { firstname, lastname, studentID, DCMail, campus, program, reason } = userData[0];
+  const { firstname, lastname, studentID, DCMail, campus, program, reason, AppointmentDate, time, appointmentType } = userData[0];
 
   return (
     <SafeAreaView style={styles.container}>
@@ -84,6 +84,9 @@ export default function EndScreen() {
         <Text style={styles.text}>Campus: {campus}</Text>
         <Text style={styles.text}>Program: {program}</Text>
         <Text style={styles.text}>Reason: {reason}</Text>
+        <Text style={styles.text}>Date: {AppointmentDate}</Text>
+        <Text style={styles.text}>Time: {time}</Text>
+        <Text style={styles.text}>Appointment Type: {appointmentType}</Text>
       </Card>
 
       <Pressable style={styles.loginButton} onPress={handleConfirm} accessibilityLabel="Tap to confirm and return to the menu">

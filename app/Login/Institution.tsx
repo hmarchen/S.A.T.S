@@ -29,7 +29,20 @@ export default function Institution() {
 
           updatedData.length > 0
             ? (updatedData[0].campus = institution)
-            : updatedData.push({ firstname: "", lastname: "", studentID: "", DCMail: "", campus: institution, program: "", reason: "" });
+            : updatedData.push(
+                {
+                    firstname: '',
+                    lastname: '',
+                    studentID: '',
+                    DCMail: '',
+                    campus: institution,
+                    program: '',
+                    reason: '',
+                    AppointmentDate: '',
+                    time: '',
+                    appointmentType: ''
+                }
+            );
 
           await FileSystem.writeAsStringAsync(filePath, JSON.stringify(updatedData, null, 2));
           console.log("Form Submitted: Institution");

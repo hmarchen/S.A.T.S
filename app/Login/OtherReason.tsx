@@ -49,7 +49,10 @@ export default function VisitReason() {
                               DCMail: '',
                               campus: '',
                               program: '',
-                              reason: Visit
+                              reason: Visit,
+                              AppointmentDate: '',
+                              time: '',
+                              appointmentType: ''
                           }
                       );
 

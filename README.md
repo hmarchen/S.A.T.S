@@ -2,6 +2,20 @@
 
 ---
 
+## 📅 March 18th, 2025
+
+### Overview of Changes
+- implemented the data file system code for dealing with appointments
+  - Appointment Type
+  - Appointment Date
+  - Appointment Time
+
+### Plans for the Near Future
+- Allowing the display of the appointment date, time and type onto the end screen
+  - According to the logs, it is being recorded properly
+
+---
+
 ## 📅 March 17th, 2025
 
 ### Overview of Changes

@@ -63,7 +63,10 @@ export default function StudentNumber() {
                             DCMail: '',
                             campus: '',
                             program: '',
-                            reason: ''
+                            reason: '',
+                            AppointmentDate: '',
+                            time: '',
+                            appointmentType: ''
                         }
                     );
 
