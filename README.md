@@ -6,7 +6,7 @@
 
 ### Overview of Changes
 - Email Address input fix (no capitalization)
-- created the GUI for the calendar feature
+- created the GUI for the calendar feature6
 - created the GUI for the appointment time screen
 - fixed the breadcrumb to accommodate for two new screens
 - rewired routing for the reasons above
