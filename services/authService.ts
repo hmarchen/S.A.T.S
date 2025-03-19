@@ -37,16 +37,26 @@ transporter.verify(function(error: any, success: any) {
 });
 
 app.post('/send-invite', async (req: any, res: any) => {
-  const { name, email, studentId } = req.body;
+  const { userData } = req.body; // Expecting userData to be sent in the request body
+  
+  // Log the userData to the console
+  console.log('Received userData:', userData);
 
   try {
+    // Check if userData is an array and has at least one element
+    if (!Array.isArray(userData) || userData.length === 0) {
+      return res.status(400).send('Invalid userData format');
+    }
+
+    const studentData = userData[0]; // Access the first object in the array
+
     // Calculate the next day's date at 10 AM
     const now = new Date();
     const nextDay = new Date(now);
     nextDay.setDate(now.getDate() + 1);
     nextDay.setHours(10, 0, 0, 0); // Set time to 10:00 AM
 
-    // Define the event details
+    // Define the event details using studentData
     const event = {
       start: [
         nextDay.getFullYear(),
@@ -57,7 +67,7 @@ app.post('/send-invite', async (req: any, res: any) => {
       ] as [number, number, number, number, number], // Ensure the type is correct
       duration: { hours: 1 }, // Duration of the event
       title: `Student Advising Appointment`,
-      description: `Appointment with ${name}. Student ID: ${studentId}`,
+      description: `Appointment with ${studentData.firstname} ${studentData.lastname}. Student ID: ${studentData.studentID}`,
       location: 'Office 123',
       status: 'CONFIRMED',
       organizer: { name: 'Appointment System', email: process.env.EMAIL_USER },
@@ -71,7 +81,7 @@ VERSION:2.0
 PRODID:-//YourKiosk//Appointment System//EN
 METHOD:REQUEST
 BEGIN:VEVENT
-UID:${studentId}@dcmail.ca
+UID:${studentData.studentID}@dcmail.ca
 DTSTAMP:${now.toISOString().replace(/[-:]/g, '').split('.')[0]}Z
 DTSTART:${nextDay.toISOString().replace(/[-:]/g, '').split('.')[0]}Z
 DTEND:${new Date(nextDay.getTime() + 60 * 60 * 1000).toISOString().replace(/[-:]/g, '').split('.')[0]}Z
@@ -90,14 +100,18 @@ END:VCALENDAR
     const advisorMessage = {
       from: process.env.EMAIL_USER!,
       to: process.env.ADVISOR_EMAIL!,
-      subject: `SEIT Visit Request - ${name}`,
+      subject: `SEIT Visit Request - ${studentData.firstname} ${studentData.lastname}`,
       html: `
         <h2>SEIT Visit Request</h2>
         <p><strong>Student Details:</strong></p>
         <ul>
-          <li>Name: ${name}</li>
-          <li>Student ID: ${studentId}</li>
-          <li>Email: ${email}</li>
+          <li>First Name: ${studentData.firstname}</li>
+          <li>Last Name: ${studentData.lastname}</li>
+          <li>Student ID: ${studentData.studentID}</li>
+          <li>Email: ${studentData.DCMail}</li>
+          <li>Campus: ${studentData.campus}</li>
+          <li>Program: ${studentData.program}</li>
+          <li>Reason: ${studentData.reason}</li>
         </ul>
         <p>Please review the request and respond with your decision.</p>
       `,

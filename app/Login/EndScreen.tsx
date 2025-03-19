@@ -39,16 +39,22 @@ export default function EndScreen() {
 
   const handleConfirm = async () => {
     try {
+      
       if (userData) {
-        // Modify the userData object here if necessary before saving
-        await FileSystem.writeAsStringAsync(filePath, JSON.stringify(userData, null, 2));
-        Alert.alert("Success", "Your appointment has been recorded.");
-        console.log("Form Submitted: END SCREEN");
-        router.push("/(tabs)");
+        await fetch('http://10.150.42.108:3000/send-invite', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ userData }),
+        });
+        
+        Alert.alert("Success", "Invite sent successfully.");
+        router.push("/Login/Disclaimer");
       }
     } catch (error) {
-      console.error("Error writing to file:", error);
-      Alert.alert("Error", "Failed to save data.");
+      console.error("Error sending invite:", error);
+      Alert.alert("Error", "Failed to send invite.");
     }
   };
 
