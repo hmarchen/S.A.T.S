@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, FlatList, Alert, Pressable } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import Breadcrumb from './breadcrumb';
 import styles from '../css/styles';
 import { TouchableOpacity } from 'react-native';
 import { useRouter } from 'expo-router';
@@ -30,7 +31,6 @@ export default function Reason() {
       return response;
     }
     catch(e) {
-
       console.error(e);
     }
   }
@@ -45,19 +45,32 @@ export default function Reason() {
     const handlePress = async(item: Reason) => {
       try{
         SetReason(item);
-      const fileExists = await FileSystem.getInfoAsync(filePath);
-      let updatedData = fileExists.exists ? JSON.parse(await FileSystem.readAsStringAsync(filePath)) : [];
+        const fileExists = await FileSystem.getInfoAsync(filePath);
+        let updatedData = fileExists.exists ? JSON.parse(await FileSystem.readAsStringAsync(filePath)) : [];
 
       updatedData.length > 0
         ? (updatedData[0].reason = item.category)
-        : updatedData.push({ firstname: "", lastname: "", studentID: "", DCMail: "", campus: "", program: "", reason: item.category });
+        : updatedData.push(
+            {
+                firstname: '',
+                lastname: '',
+                studentID: '',
+                DCMail: '',
+                campus: '',
+                program: '',
+                reason: item.category,
+                appointmentDate: '',
+                appointmentTime: '',
+                appointmentType: ''
+            }
+        );
 
       await FileSystem.writeAsStringAsync(filePath, JSON.stringify(updatedData, null, 2));
-      Alert.alert("Form Submitted", `${item.category}`);
+      console.log("Form Submitted: Reason");
+      console.log("Reason:", item.category);
       console.log("Navigating to EndScreen...");
-      router.push("/Login/EndScreen");
-      
-      console.log(item.category);
+      router.push("/Login/Calendar");
+
     } catch (error) {
     console.error("Error writing to file:", error);
     Alert.alert("Error", "Failed to save data.");
@@ -80,6 +93,7 @@ export default function Reason() {
 
         />
           <Text style={styles.textLink} onPress={() => router.push('/Login/OtherReason')}>Didn't find what you wanted?</Text>
+          <Breadcrumb entities={['Disclaimer', 'StudentNumber', 'Firstname', 'Lastname', 'DCMail', 'Institution', 'Program', 'Reason']} flowDepth={7} />
 </SafeAreaView>
   );
 }
