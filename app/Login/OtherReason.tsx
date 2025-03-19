@@ -50,14 +50,15 @@ export default function VisitReason() {
                               campus: '',
                               program: '',
                               reason: Visit,
-                              AppointmentDate: '',
-                              time: '',
+                              appointmentDate: '',
+                              appointmentTime: '',
                               appointmentType: ''
                           }
                       );
 
                   await FileSystem.writeAsStringAsync(filePath, JSON.stringify(updatedData, null, 2));
                   console.log("Form Submitted: Reason");
+                  console.log("reason:", Visit);
                   console.log("Navigating to Calendar...");
                   router.push("/Login/Calendar");
               }

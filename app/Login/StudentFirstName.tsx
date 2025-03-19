@@ -54,14 +54,15 @@ export default function StudentName() {
                             campus: '',
                             program: '',
                             reason: '',
-                            AppointmentDate: '',
-                            time: '',
+                            appointmentDate: '',
+                            appointmentTime: '',
                             appointmentType: ''
                         }
                     );
 
                 await FileSystem.writeAsStringAsync(filePath, JSON.stringify(updatedData, null, 2));
                 console.log("Form Submitted: Firstname");
+                console.log("First Name:", firstName);
                 console.log('Navigating to StudentLastName...');
                 router.push('/Login/StudentLastName');
             }

@@ -34,17 +34,7 @@ const styles = StyleSheet.create({
     marginBottom: 16, // Increased margin for better spacing
     borderWidth: 1,
     padding: 12, // Increased padding for better input experience
-    width: '90%',
-    borderRadius: 8, // Increased border radius for softer edges
-    backgroundColor: '#fff',
-    borderColor: '#ccc',
-  },
-  studentNumber: {
-    height: 48, // Increased height for consistency
-    marginBottom: 16, // Increased margin for better spacing
-    borderWidth: 1,
-    padding: 12, // Increased padding for better input experience
-    width: 'auto',  // Adjust this value
+    width: 300,
     borderRadius: 8, // Increased border radius for softer edges
     backgroundColor: '#fff',
     borderColor: '#ccc',

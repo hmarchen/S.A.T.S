@@ -7,8 +7,8 @@
     "campus": "Oshawa",
     "program": "Computer Programming and Analysis",
     "reason": "test reason",
-    "AppointmentDate": "11/11/2002",
-    "time": "12:00",
+    "appointmentDate": "11/11/2002",
+    "appointmentTime": "12:00",
     "appointmentType": "ONLINE"
   }
 ]

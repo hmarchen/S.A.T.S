@@ -64,14 +64,15 @@ export default function StudentNumber() {
                             campus: '',
                             program: '',
                             reason: '',
-                            AppointmentDate: '',
-                            time: '',
+                            appointmentDate: '',
+                            appointmentTime: '',
                             appointmentType: ''
                         }
                     );
 
                 await FileSystem.writeAsStringAsync(filePath, JSON.stringify(updatedData, null, 2));
                 console.log("Form Submitted: Student Number");
+                console.log("Student Number: ", studentNumber)
                 console.log('Navigating to StudentFirstName...');
                 router.push('/Login/StudentFirstName');
             }
@@ -88,7 +89,7 @@ export default function StudentNumber() {
             <SafeAreaView style={styles.container}>
                 <Text style={styles.title}>Enter your Student Number</Text>
                 <TextInput
-                    style={ styles.input}
+                    style={styles.input}
                     value={studentNumber}
                     onChangeText={setStudentNumber}
                     placeholder="Student Number"

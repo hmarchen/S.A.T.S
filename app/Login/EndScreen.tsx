@@ -61,7 +61,7 @@ export default function EndScreen() {
     );
   }
 
-  if (!userData) {
+  if (!userData || !Array.isArray(userData) || userData.length === 0) {
     return (
       <SafeAreaView style={styles.container}>
         <Text style={styles.text}>No user data found.</Text>
@@ -69,7 +69,19 @@ export default function EndScreen() {
     );
   }
 
-  const { firstname, lastname, studentID, DCMail, campus, program, reason, AppointmentDate, time, appointmentType } = userData[0];
+  const {
+    firstname = "N/A",
+    lastname = "N/A",
+    studentID = "N/A",
+    DCMail = "N/A",
+    campus = "N/A",
+    program = "N/A",
+    reason = "N/A",
+    appointmentDate = "N/A",
+    appointmentTime = "N/A",
+    appointmentType = "N/A",
+  } = userData[0] || {};  // Ensuring safe extraction
+
 
   return (
     <SafeAreaView style={styles.container}>
@@ -84,8 +96,8 @@ export default function EndScreen() {
         <Text style={styles.text}>Campus: {campus}</Text>
         <Text style={styles.text}>Program: {program}</Text>
         <Text style={styles.text}>Reason: {reason}</Text>
-        <Text style={styles.text}>Date: {AppointmentDate}</Text>
-        <Text style={styles.text}>Time: {time}</Text>
+        <Text style={styles.text}>Date: {appointmentDate}</Text>
+        <Text style={styles.text}>Time: {appointmentTime}</Text>
         <Text style={styles.text}>Appointment Type: {appointmentType}</Text>
       </Card>
 

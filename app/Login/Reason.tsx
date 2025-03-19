@@ -60,18 +60,18 @@ export default function Reason() {
                 campus: '',
                 program: '',
                 reason: item.category,
-                AppointmentDate: '',
-                time: '',
+                appointmentDate: '',
+                appointmentTime: '',
                 appointmentType: ''
             }
         );
 
       await FileSystem.writeAsStringAsync(filePath, JSON.stringify(updatedData, null, 2));
       console.log("Form Submitted: Reason");
+      console.log("Reason:", item.category);
       console.log("Navigating to EndScreen...");
       router.push("/Login/Calendar");
-      
-      console.log(item.category);
+
     } catch (error) {
     console.error("Error writing to file:", error);
     Alert.alert("Error", "Failed to save data.");

@@ -54,14 +54,15 @@ export default function StudentName() {
                              campus: '',
                              program: '',
                              reason: '',
-                             AppointmentDate: '',
-                             time: '',
+                             appointmentDate: '',
+                             appointmentTime: '',
                              appointmentType: ''
                          }
                      );
 
                  await FileSystem.writeAsStringAsync(filePath, JSON.stringify(updatedData, null, 2));
                  console.log("Form Submitted: Lastname");
+                 console.log("Last Name:", lastName);
                  console.log('Navigating to DCMail...');
                  router.push('/Login/DCMail');
              }

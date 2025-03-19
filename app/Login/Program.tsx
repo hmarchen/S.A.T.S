@@ -32,8 +32,8 @@ export default function Program() {
                   campus: '',
                   program: program,
                   reason: '',
-                  AppointmentDate: '',
-                  time: '',
+                  appointmentDate: '',
+                  appointmentTime: '',
                   appointmentType: ''
               });
           }
@@ -42,6 +42,7 @@ export default function Program() {
           await FileSystem.writeAsStringAsync(filePath, JSON.stringify(updatedData, null, 2));
 
           console.log("Form Submitted: Program");
+          console.log("Program:", program);
           console.log("Navigating to Reason...");
           router.push("/Login/Reason");
 

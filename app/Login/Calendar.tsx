@@ -25,9 +25,8 @@ export default function AppointmentCalendar() {
          const fileExists = await FileSystem.getInfoAsync(filePath);
          let updatedData = fileExists.exists ? JSON.parse(await FileSystem.readAsStringAsync(filePath)) : [];
 
-         if (updatedData.length > 0) {
-             updatedData[0].date = selectedDate;
-         } else {
+         if (updatedData.length > 0) { updatedData[0].appointmentDate = selectedDate; }
+         else {
              updatedData.push({
                  firstname: '',
                  lastname: '',
@@ -36,8 +35,8 @@ export default function AppointmentCalendar() {
                  campus: '',
                  program: '',
                  reason: '',
-                 AppointmentDate: selectedDate,
-                 time: '',
+                 appointmentDate: selectedDate,
+                 appointmentTime: '',
                  appointmentType: ''
              });
          }

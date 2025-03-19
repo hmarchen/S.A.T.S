@@ -28,52 +28,62 @@ const CustomRadioButton = ({ label, selected, onSelect }) => (
 export default function TimeSelection() {
   const router = useRouter();
   const [selectedTime, setSelectedTime] = useState("");
-  const [appointmentType, setAppointmentType] = useState("");
+  const [selectedType, setAppointmentType] = useState("");
   const [data, setData] = useState([]);
   const [error, setError] = useState(null);
   const handleSubmit = async () => {
-    console.log("Form Submitted: Calendar");
+    console.log("Form Submitted: Time Selection");
+    console.log("Selected Type:", selectedType);
     console.log("Selected Time:", selectedTime);
     router.push("/Login/EndScreen");
   };
 
   const HandleSubmit = async () => {
-      if (selectedTime === '') {
-          Alert.alert('Validation Error', 'Please select an option');
-          handleClear();
-      }
-      else {
-          try {
-            const fileExists = await FileSystem.getInfoAsync(filePath);
-            let updatedData = fileExists.exists ? JSON.parse(await FileSystem.readAsStringAsync(filePath)) : [];
+    if (selectedTime === '' || selectedType === '') {
+      Alert.alert('Validation Error', 'Please select an appointment time and type.');
+      return;
+    }
 
-            updatedData.length > 0
-              ? (updatedData[0].time = selectedTime)
-              : updatedData.push(
-                  {
-                      firstname: '',
-                      lastname: '',
-                      studentID: '',
-                      DCMail: '',
-                      campus: '',
-                      program: '',
-                      reason: '',
-                      AppointmentDate: '',
-                      time: selectedTime,
-                      appointmentType: appointmentType
-                  }
-              );
+    try {
+      const fileExists = await FileSystem.getInfoAsync(filePath);
+      let updatedData = [];
 
-            await FileSystem.writeAsStringAsync(filePath, JSON.stringify(updatedData, null, 2));
-            console.log("Form Submitted: TimeSelection");
-            console.log("Navigating to EndScreen...");
-            router.push("/Login/EndScreen");
-          } catch (error) {
-            console.error("Error writing to file:", error);
-            Alert.alert("Error", "Failed to save data.");
-          }
+      if (fileExists.exists) {
+        const fileContent = await FileSystem.readAsStringAsync(filePath);
+        updatedData = fileContent ? JSON.parse(fileContent) : [];
       }
-    };
+
+      if (updatedData.length > 0) {
+        updatedData[0] = {
+            ...updatedData[0], // Preserve existing data
+            appointmentTime: selectedTime,
+            appointmentType: selectedType,
+          };
+      }
+       else {
+        updatedData.push({
+          firstname: '',
+          lastname: '',
+          studentID: '',
+          DCMail: '',
+          campus: '',
+          program: '',
+          reason: '',
+          appointmentDate: '',
+          appointmentTime: selectedTime,
+          appointmentType: selectedType
+        });
+      }
+
+      await FileSystem.writeAsStringAsync(filePath, JSON.stringify(updatedData, null, 2));
+      console.log("Data saved successfully:", updatedData);
+      router.push("/Login/EndScreen");
+    } catch (error) {
+      console.error("Error writing to file:", error);
+      Alert.alert("Error", "Failed to save data.");
+    }
+  };
+
 
   return (
     <KeyboardAvoidingView style={styles.container} behavior={Platform.OS === "ios" ? "padding" : "height"} keyboardVerticalOffset={20}>
@@ -87,12 +97,12 @@ export default function TimeSelection() {
           <View style={styles.radioContainer}>
               <CustomRadioButton
                   label="Online"
-                  selected={appointmentType === 'Online'}
+                  selected={selectedType === 'Online'}
                   onSelect={() => setAppointmentType('Online')}
               />
               <CustomRadioButton
                   label="In Person"
-                  selected={appointmentType === 'In Person'}
+                  selected={selectedType === 'In Person'}
                   onSelect={() => setAppointmentType('In Person')}
               />
           </View>

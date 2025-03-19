@@ -1,6 +1,17 @@
 # 📜 DEV LOGS
 
 ---
+## 📅 March 19th, 2025
+
+### Overview of Changes
+- fixed textbox sizes
+- created more internal logs for data 
+
+### Plans for the Near Future
+- Allowing the display of the appointment date, time and type onto the end screen
+  - According to the logs, it is being recorded properly
+
+---
 
 ## 📅 March 18th, 2025
 

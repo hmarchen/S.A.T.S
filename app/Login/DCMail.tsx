@@ -63,8 +63,8 @@ export default function DCMail() {
                 campus: '',
                 program: '',
                 reason: '',
-                AppointmentDate: '',
-                time: '',
+                appointmentDate: '',
+                appointmentTime: '',
                 appointmentType: ''
             }
           );
@@ -72,6 +72,7 @@ export default function DCMail() {
           await FileSystem.writeAsStringAsync(filePath, JSON.stringify(updatedData, null, 2));
           console.log("Form Submitted: Email Address");
           console.log("Navigating to Institution...");
+          console.log("Email:", DCMail);
           router.push("/Login/Institution");
         }
         catch (error) {

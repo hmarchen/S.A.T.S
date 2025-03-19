@@ -38,8 +38,8 @@ export default function Institution() {
                     campus: institution,
                     program: '',
                     reason: '',
-                    AppointmentDate: '',
-                    time: '',
+                    appointmentDate: '',
+                    appointmentTime: '',
                     appointmentType: ''
                 }
             );
@@ -47,6 +47,7 @@ export default function Institution() {
           await FileSystem.writeAsStringAsync(filePath, JSON.stringify(updatedData, null, 2));
           console.log("Form Submitted: Institution");
           console.log("Navigating to Program...");
+          console.log("Campus:", institution);
           router.push("/Login/Program");
         } catch (error) {
           console.error("Error writing to file:", error);
