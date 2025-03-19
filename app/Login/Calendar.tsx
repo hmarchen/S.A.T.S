@@ -54,8 +54,6 @@ export default function AppointmentCalendar() {
      }
  };
 
-
-
   return (
     <KeyboardAvoidingView style={styles.container} behavior={Platform.OS === "ios" ? "padding" : "height"} keyboardVerticalOffset={20}>
       <Arrows handleSubmit={handleSubmit} router={router} />
@@ -63,9 +61,7 @@ export default function AppointmentCalendar() {
         <Text style={styles.title}>Select an Appointment Date</Text>
         <Calendar
           onDayPress={handleDayPress}
-          markedDates={{
-            [selectedDate]: { selected: true, selectedColor: "#358f71" } // Highlight selected date
-          }}
+          markedDates={{ [selectedDate]: { selected: true, selectedColor: "#358f71" } }}
           style={{
             width: 1000,
             alignSelf: 'center',
@@ -97,7 +93,7 @@ export default function AppointmentCalendar() {
             textDayFontFamily: 'monospace',
             textMonthFontFamily: 'monospace',
             textDayHeaderFontFamily: 'monospace',
-            textDayFontSize: 24,
+            textDayFontSize: 18,
             textMonthFontSize: 36,
             textDayHeaderFontSize: 16,
           }}

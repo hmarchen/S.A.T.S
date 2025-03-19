@@ -11,7 +11,7 @@ const filePath = FileSystem.documentDirectory + "user.json";
 export default function DCMail() {
   const router = useRouter();
   const [DCMail, setMail] = useState("");
-  const DCMailREGEX = /^[a-z]+(\.[a-z]+)?@dcmail\.ca$/;
+  const DCMailREGEX = /^[a-z]+(\.[a-z\d]+)?@dcmail\.ca$/;
   const REQ_ERROR = "DC Mail address is required.";
   const REG_ERROR = "DC Mail address must have the following structure all lowercase: firstname.lastname@dcmail.ca";
   const handleClear = () => (setMail(''));
