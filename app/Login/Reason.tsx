@@ -24,7 +24,7 @@ export default function Reason() {
 
   const getReasons = async() => {
     try {
-      const response = await fetch(`http://10.150.42.108:3001/reasons`)
+      const response = await fetch(`http://192.168.2.29:3001/reasons`)
       .then(res => {return res.json()})
       .then(data => {console.log(data.reasons); return data.reasons});
       console.log(response);

@@ -231,6 +231,15 @@ const styles = StyleSheet.create({
     fontSize: 18, // Increased font size for better readability
     color: '#333', // Darker text color for better contrast
     marginVertical: 5, // Space between list items
+  },
+  errorText: {
+    color: '#dc3545',
+    marginTop: 10,
+    fontSize: 14,
+    textAlign: 'center',
+  },
+  timeSlotScrollContainer: {
+    width: "100%"
   }
 });
 
