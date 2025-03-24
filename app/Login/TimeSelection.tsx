@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { View, Text, SafeAreaView, KeyboardAvoidingView, Platform, TouchableOpacity } from "react-native";
+import React, { useState, useEffect } from "react";
+import { View, Text, SafeAreaView, KeyboardAvoidingView, Platform, TouchableOpacity, Alert, ScrollView } from "react-native";
 import { Calendar } from "react-native-calendars";
 import { useRouter } from "expo-router";
 import Breadcrumb from "./breadcrumb";
@@ -9,19 +9,20 @@ import * as FileSystem from "expo-file-system";
 
 const filePath = FileSystem.documentDirectory + "user.json";
 
-const timeslots = [
-  "10:00 AM", "10:30 AM", "11:00 AM", "11:30 AM",
-  "12:00 PM", "12:30 PM", "1:00 PM", "1:30 PM",
-  "2:00 PM", "2:30 PM", "3:00 PM", "3:30 PM",
-];
+interface CustomRadioButtonProps {
+  label: string;
+  selected: boolean;
+  onSelect: (label: string) => void;
+}
 
-const CustomRadioButton = ({ label, selected, onSelect }) => (
+const CustomRadioButton: React.FC<CustomRadioButtonProps> = ({ label, selected, onSelect }) => (
   <TouchableOpacity
     style={[
-      styles.radioButton, { backgroundColor: selected ? "#007BFF" : "#FFF", borderColor: "#007BFF" }
+      styles.radioButton,
+      { backgroundColor: selected ? "#358f71" : "#FFF", borderColor: "#358f71" }
     ]}
     onPress={() => onSelect(label)}>
-    <Text style={{ color: selected ? "#FFF" : "#007BFF" }}>{label}</Text>
+    <Text style={{ color: selected ? "#FFF" : "#358f71" }}>{label}</Text>
   </TouchableOpacity>
 );
 
@@ -29,13 +30,27 @@ export default function TimeSelection() {
   const router = useRouter();
   const [selectedTime, setSelectedTime] = useState("");
   const [selectedType, setAppointmentType] = useState("");
-  const [data, setData] = useState([]);
-  const [error, setError] = useState(null);
-  const handleSubmit = async () => {
-    console.log("Form Submitted: Time Selection");
-    console.log("Selected Type:", selectedType);
-    console.log("Selected Time:", selectedTime);
-    router.push("/Login/EndScreen");
+  const [availableSlots, setAvailableSlots] = useState<string[]>([]);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    loadUserData();
+  }, []);
+
+  const loadUserData = async () => {
+    try {
+      const fileExists = await FileSystem.getInfoAsync(filePath);
+      if (fileExists.exists) {
+        const fileContent = await FileSystem.readAsStringAsync(filePath);
+        const userData = JSON.parse(fileContent);
+        if (userData.length > 0 && userData[0].availableSlots) {
+          setAvailableSlots(userData[0].availableSlots);
+        }
+      }
+    } catch (error) {
+      console.error("Error loading user data:", error);
+      setError("Failed to load available time slots");
+    }
   };
 
   const HandleSubmit = async () => {
@@ -55,12 +70,11 @@ export default function TimeSelection() {
 
       if (updatedData.length > 0) {
         updatedData[0] = {
-            ...updatedData[0], // Preserve existing data
-            appointmentTime: selectedTime,
-            appointmentType: selectedType,
-          };
-      }
-       else {
+          ...updatedData[0], // Preserve existing data
+          appointmentTime: selectedTime,
+          appointmentType: selectedType,
+        };
+      } else {
         updatedData.push({
           firstname: '',
           lastname: '',
@@ -84,49 +98,57 @@ export default function TimeSelection() {
     }
   };
 
-
   return (
     <KeyboardAvoidingView style={styles.container} behavior={Platform.OS === "ios" ? "padding" : "height"} keyboardVerticalOffset={20}>
+      <SafeAreaView style={{ flex: 1, width: '100%' }}>
+        <Arrows handleSubmit={HandleSubmit} router={router} />
 
-      <SafeAreaView style={styles.container}>
-          <Arrows handleSubmit={handleSubmit} router={router} />
+        <Text style={styles.title}>Select an Appointment Time</Text>
 
-          <Text style={styles.title}>Select an Appointment Time</Text>
-
-          {/* Appointment Type Selection */}
+        {/* Fixed Appointment Type Selection */}
+        <View style={styles.fixedTypeContainer}>
           <View style={styles.radioContainer}>
-              <CustomRadioButton
-                  label="Online"
-                  selected={selectedType === 'Online'}
-                  onSelect={() => setAppointmentType('Online')}
-              />
-              <CustomRadioButton
-                  label="In Person"
-                  selected={selectedType === 'In Person'}
-                  onSelect={() => setAppointmentType('In Person')}
-              />
+            <CustomRadioButton
+              label="Online"
+              selected={selectedType === 'Online'}
+              onSelect={() => setAppointmentType('Online')}
+            />
+            <CustomRadioButton
+              label="In Person"
+              selected={selectedType === 'In Person'}
+              onSelect={() => setAppointmentType('In Person')}
+            />
           </View>
+        </View>
 
-          {/* Time Slots Grid */}
-          <View style={styles.timeslotContainer}>
-              {timeslots.map((time, index) => (
-                  <View key={index} style={styles.timeslotItem}>
-                      <CustomRadioButton
-                          label={time}
-                          selected={selectedTime === time}
-                          onSelect={() => setSelectedTime(time)}
-                      />
-                  </View>
-              ))}
-          </View>
+        {error && <Text style={styles.errorText}>{error}</Text>}
 
+        {/* Scrollable Time Slots */}
+        <View style={styles.timeSlotScrollContainer}>
+          <ScrollView 
+            style={{ width: '100%' }}
+            contentContainerStyle={styles.timeslotContainer}
+            showsVerticalScrollIndicator={true}
+          >
+            {availableSlots.map((time, index) => (
+              <View key={index} style={styles.timeslotItem}>
+                <CustomRadioButton
+                  label={time}
+                  selected={selectedTime === time}
+                  onSelect={() => setSelectedTime(time)}
+                />
+              </View>
+            ))}
+          </ScrollView>
+        </View>
+
+        <View style={{ paddingVertical: 10 }}>
           <Breadcrumb
-              entities={['Disclaimer', 'StudentNumber', 'Firstname', 'Lastname', 'DCMail', 'Institution', 'Program', 'Reason', 'Calendar']}
-              flowDepth={8}
+            entities={['Disclaimer', 'StudentNumber', 'Firstname', 'Lastname', 'DCMail', 'Institution', 'Program', 'Reason', 'Calendar']}
+            flowDepth={8}
           />
+        </View>
       </SafeAreaView>
-
-
     </KeyboardAvoidingView>
   );
 }

@@ -368,6 +368,26 @@ imap.once('error', (err: any) => {
 
 imap.connect();
 
+app.post('/download-ics', async (req: any, res: any) => {
+  const { url } = req.body; // Expecting the URL to be sent in the request body
+
+  try {
+    // Fetch the .ics file from the provided URL
+    const response = await fetch(url);
+    if (!response.ok) {
+      throw new Error('Failed to fetch calendar file');
+    }
+
+    const icsContent = await response.text();
+    // You can save the icsContent to a file or process it as needed
+    // For now, let's just return it
+    res.status(200).send(icsContent);
+  } catch (error) {
+    console.error('Error downloading ICS file:', error);
+    res.status(500).send('Failed to download ICS file');
+  }
+});
+
 app.listen(3000, () => {
   console.log('Server is running on port 3000');
 });
