@@ -72,7 +72,7 @@ export default function VisitReason() {
   return (
     <SafeAreaView style={styles.container}>
       <Text style={styles.title}>Reason for Visit</Text>
-
+      <Arrows handleSubmit={handleSubmit} router={router} />
       <TextInput
         multiline={true}
         numberOfLines={12}
@@ -85,8 +85,6 @@ export default function VisitReason() {
         }}
         placeholder="Reason for your Visit"
       />
-
-      <Arrows handleSubmit={handleSubmit} router={router} />
       <View style={styles.counterContainer}>
         <Text style={[styles.charCounter, { color: charCount >= 200 ? 'green' : 'red' }]}>
           {charCount} / 2000 characters
