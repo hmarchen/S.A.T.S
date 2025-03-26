@@ -29,7 +29,7 @@ export default function AppointmentCalendar() {
   const checkAvailability = async (date: string) => {
     try {
       setLoading(true);
-      const response = await fetch('http://192.168.2.29:3000/download-ics', {
+      const response = await fetch('http://10.0.2.2:3000/download-ics', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

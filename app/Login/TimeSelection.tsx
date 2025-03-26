@@ -58,53 +58,51 @@ export default function TimeSelection() {
       Alert.alert('Validation Error', 'Please select an appointment time and type.');
       return;
     }
+	else {
+		try {
+              const fileExists = await FileSystem.getInfoAsync(filePath);
+              let updatedData = [];
 
-    try {
-      const fileExists = await FileSystem.getInfoAsync(filePath);
-      let updatedData = [];
+              if (fileExists.exists) {
+                const fileContent = await FileSystem.readAsStringAsync(filePath);
+                updatedData = fileContent ? JSON.parse(fileContent) : [];
+              }
 
-      if (fileExists.exists) {
-        const fileContent = await FileSystem.readAsStringAsync(filePath);
-        updatedData = fileContent ? JSON.parse(fileContent) : [];
-      }
+              if (updatedData.length > 0) {
+                updatedData[0] = {
+                  ...updatedData[0], // Preserve existing data
+                  appointmentTime: selectedTime,
+                  appointmentType: selectedType,
+                };
+              } else {
+                updatedData.push({
+                  firstname: '',
+                  lastname: '',
+                  studentID: '',
+                  DCMail: '',
+                  campus: '',
+                  program: '',
+                  reason: '',
+                  appointmentDate: '',
+                  appointmentTime: selectedTime,
+                  appointmentType: selectedType
+                });
+              }
 
-      if (updatedData.length > 0) {
-        updatedData[0] = {
-          ...updatedData[0], // Preserve existing data
-          appointmentTime: selectedTime,
-          appointmentType: selectedType,
-        };
-      } else {
-        updatedData.push({
-          firstname: '',
-          lastname: '',
-          studentID: '',
-          DCMail: '',
-          campus: '',
-          program: '',
-          reason: '',
-          appointmentDate: '',
-          appointmentTime: selectedTime,
-          appointmentType: selectedType
-        });
-      }
-
-      await FileSystem.writeAsStringAsync(filePath, JSON.stringify(updatedData, null, 2));
-      console.log("Data saved successfully:", updatedData);
-      router.push("/Login/EndScreen");
-    } catch (error) {
-      console.error("Error writing to file:", error);
-      Alert.alert("Error", "Failed to save data.");
-    }
+              await FileSystem.writeAsStringAsync(filePath, JSON.stringify(updatedData, null, 2));
+              console.log("Data saved successfully:", updatedData);
+              router.push("/Login/EndScreen");
+            } catch (error) {
+              console.error("Error writing to file:", error);
+              Alert.alert("Error", "Failed to save data.");
+            }
+	}
   };
 
   return (
     <KeyboardAvoidingView style={styles.container} behavior={Platform.OS === "ios" ? "padding" : "height"} keyboardVerticalOffset={20}>
       <SafeAreaView style={{ flex: 1, width: '100%' }}>
-        <Arrows handleSubmit={HandleSubmit} router={router} />
-
         <Text style={styles.title}>Select an Appointment Time</Text>
-
         {/* Fixed Appointment Type Selection */}
         <View style={styles.fixedTypeContainer}>
           <View style={styles.radioContainer}>
@@ -125,8 +123,7 @@ export default function TimeSelection() {
 
         {/* Scrollable Time Slots */}
         <View style={styles.timeSlotScrollContainer}>
-          <ScrollView 
-            style={{ width: '100%' }}
+          <ScrollView
             contentContainerStyle={styles.timeslotContainer}
             showsVerticalScrollIndicator={true}
           >
@@ -140,9 +137,10 @@ export default function TimeSelection() {
               </View>
             ))}
           </ScrollView>
+          <Arrows handleSubmit={HandleSubmit} router={router} />
         </View>
 
-        <View style={{ paddingVertical: 10 }}>
+        <View>
           <Breadcrumb
             entities={['Disclaimer', 'StudentNumber', 'Firstname', 'Lastname', 'DCMail', 'Institution', 'Program', 'Reason', 'Calendar']}
             flowDepth={8}
