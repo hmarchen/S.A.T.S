@@ -4,13 +4,11 @@ import { useRouter } from 'expo-router';
 
 import styles from './styles/style';
 
-export default function Home() {
+export default function Admin() {
   
   // For web-specific styling or adjustments
   const isWeb = Platform.OS === 'web';
   const router = useRouter();
-
-  if (!isWeb) { return null; }
 
   return (
     <View style={styles.container}>
@@ -18,14 +16,14 @@ export default function Home() {
         source={require('./images/cat_hapy.png')} // Add your logo image here
         style={styles.logo}
       />
-      <Text style={styles.title}>Welcome to Our App!</Text>
-      <Text style={styles.subtitle}>Explore all the features and enjoy the experience.</Text>
-      
+      <Text style={styles.title}>Admin Page</Text>
+      <Text style={styles.subtitle}>Test admin page</Text>
+
       {/* Routes */}
-      <Button
-        title="Go to Admin"
-        onPress={() => {router.navigate('./admin')}} // Change to your screen name
-      />
+            <Button
+              title="Go to Home"
+              onPress={() => {router.navigate('./home')}} // Change to your screen name
+            />
 
       <Text style={styles.footerText}>
         {isWeb ? 'This is the web version.' : 'This is the mobile version.'}
