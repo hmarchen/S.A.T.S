@@ -72,11 +72,9 @@ const styles = StyleSheet.create({
       backgroundColor: '#3e2b2f',
     },
 
-    // BODY / CONTENT
+    // BODY / CONTENT (all pages)
     body: {
       flex: 1,
-      justifyContent: 'center',
-      alignItems: 'center',
       padding: 16,
     },
     logo: {
@@ -111,14 +109,99 @@ const styles = StyleSheet.create({
       fontWeight: 'bold',
       marginBottom: 10,
       textAlign: 'center',
+      fontFamily: 'Oswald',
+      color: '#007852',
     },
     subtitle: {
       fontSize: 18,
       color: '#555',
       textAlign: 'center',
-      marginBottom: 20,
+    },
+    whisper: {
+      fontSize: 12,
+      color: '#555',
+      textAlign: 'center',
+      fontStyle: 'italic',
+    },
+    horizontalLine: {
+      width: '100%',
+      height: 2,
+      backgroundColor: '#BCBBBB',
+      marginVertical: 20,
+    },
+    textInput: {
+      height: 40,
+      borderColor: '#007852',
+      borderWidth: 1,
+      borderRadius: 8,
+      paddingLeft: 10,
+      width: '100%', 
     },
 
+    // ------------------------------------------
+    // PAGES ------------------------------------
+
+    // home page
+    homeContainer: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+
+    // appointment page
+    apptContainer: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+
+    // faq page
+    faqContainer: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+
+    // login page
+    loginContainer: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    loginBox:{
+      width: '40%',
+      padding: 20,
+      borderRadius: 10,
+      backgroundColor: '#ffffff',
+      shadowColor: '#000',
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.3,
+      shadowRadius: 4,
+      elevation: 3,
+    },
+    loginBody:{
+      flexDirection: 'column',
+      justifyContent: 'center',
+      alignItems: 'center',
+      gap: 10,
+    },
+    loginButton: {
+      alignItems: 'center',
+      justifyContent: 'center',
+      width: '15%',
+      backgroundColor: '#007852',
+      padding: 10,
+      borderRadius: 4,
+    },
+    loginButtonText: {
+      fontSize: 16,
+      fontFamily: 'Oswald',
+      fontWeight: 'bold',
+      textTransform: 'uppercase',
+      color: '#ffffff',
+    },
+
+    // ------------------------------------------
     // FOOTER
     footer: {
       height: 100,
@@ -134,7 +217,7 @@ const styles = StyleSheet.create({
       textAlign: 'center',
       marginTop: 20,
     },
-  });
+});
 
 export default styles;
   

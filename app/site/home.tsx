@@ -10,12 +10,14 @@ export default function Home() {
 
   return (
     <Structure>
-      <Image
-        source={require('./images/cat_hapy.png')} // Add your logo image here
-        style={styles.logo}
-      />
-      <Text style={styles.title}>Welcome to DCSATS</Text>
-      <Text style={styles.subtitle}>Student Advisor? I hardly know her!</Text>
+      <View style={styles.homeContainer}>
+        <Image
+          source={require('./images/cat_hapy.png')} // Add your logo image here
+          style={styles.logo}
+        />
+        <Text style={styles.title}>Welcome to DCSATS</Text>
+        <Text style={styles.subtitle}>Student Advisor? I hardly know her!</Text>
+      </View>
     </Structure>
   );
 };

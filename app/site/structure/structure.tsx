@@ -24,13 +24,8 @@ const Structure: React.FC<LayoutProps> = ({ children }) => {
   if (!children) { return null; }
 
   // HANDLER FUNCTIONS
-  const handleButtonClick = (event: { nativeEvent: { locationY: any; locationX: any; }; }) => { 
-    const { locationY, locationX } = event.nativeEvent; // Get the position of the button
-    setPopupPosition({ top: locationY + 40, left: locationX + 200 });
-    setIsVisible(true); 
-};
+  const handleButtonClick = () => { setIsVisible(true); };
   const handleClose = () => { setIsVisible(false); };
-
 
   return (
     <View style={styles.page}>

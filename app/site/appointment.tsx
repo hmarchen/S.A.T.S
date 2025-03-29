@@ -10,12 +10,14 @@ export default function Appointment() {
 
   return (
     <Structure>
-      <Image
-        source={require('./images/cat_smile.png')} // Add your logo image here
-        style={styles.logo}
-      />
-      <Text style={styles.title}>Book an Appointment!</Text>
-      <Text style={styles.subtitle}>We know you need it</Text>
+      <View style={styles.apptContainer}>
+        <Image
+          source={require('./images/cat_smile.png')} // Add your logo image here
+          style={styles.logo}
+        />
+        <Text style={styles.title}>Book an Appointment!</Text>
+        <Text style={styles.subtitle}>We know you need it</Text>
+      </View>
     </Structure>
   );
 };

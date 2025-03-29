@@ -10,12 +10,14 @@ export default function FAQ() {
 
   return (
     <Structure>
-      <Image
-        source={require('./images/cat_sip.png')} // Add your logo image here
-        style={styles.logo}
-      />
-      <Text style={styles.title}>FAQ</Text>
-      <Text style={styles.subtitle}>questions ?????</Text>
+      <View style={styles.faqContainer}>
+        <Image
+          source={require('./images/cat_sip.png')} // Add your logo image here
+          style={styles.logo}
+        />
+        <Text style={styles.title}>FAQ</Text>
+        <Text style={styles.subtitle}>questions ?????</Text>
+      </View>
     </Structure>
   );
 };
