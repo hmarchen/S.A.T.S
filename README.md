@@ -9,11 +9,20 @@
 
 ---
 
+## 📅 March 21st, 2025
+
+### Overview of Changes
+- Working on an admin panel prototype
+- Fixes pertaining grabbing data for the reasons and calendar page
+
+---
+
 ## 📅 March 19th, 2025
 
 ### Overview of Changes
 - fixed textbox sizes
-- created more internal logs for data 
+- created more internal logs for data
+- working on email processing
 
 ### Plans for the Near Future
 - Allowing the display of the appointment date, time and type onto the end screen
