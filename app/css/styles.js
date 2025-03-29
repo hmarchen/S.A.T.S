@@ -78,6 +78,12 @@ const styles = StyleSheet.create({
   },
   clearButton: {
     backgroundColor: '#534044',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 5,
+    alignItems: 'center',
+    flex: 1,
+    marginHorizontal: 5,
   },
   buttonText: {
     color: '#fff',
