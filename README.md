@@ -6,7 +6,40 @@
 
 ### Overview of Changes
 - created a serializable email ID for it to display on the header
+---
 
+## 📅 March 28th, 2025
+
+### Overview of Changes
+- Admin panel actually works
+
+### Plans for the Near Future
+- Make admin panel connect to the app locally
+---
+
+## 📅 March 26th, 2025
+
+### Overview of Changes
+- Visual updates for the admin panel
+- Proper data collection on the local tablet system works now and can be transferred to an email
+- Fixed the visuals for the calendar and time selection pages and now the arrow buttons work
+
+### Plans for the Near Future
+- The confirm appointment button does not work
+- 
+---
+
+## 📅 March 22nd, 2025
+
+### Overview of Changes
+- Fixed IP address issues between servers
+  - Used 10.0.2.2 as it is a loopback address rather than our own public IP's as that will not work
+- Remaster of calendar and time selection pages for better visuals and a dynamic pull for available timeslots
+
+### Plans for the Near Future
+- Fixing overlapping buttons in the calendar and time selection pages
+- make the textbox in the program selection screen searchable
+- only make calendar selectable when it is either today's date or a future date.
 ---
 
 ## 📅 March 21st, 2025
