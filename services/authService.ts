@@ -9,6 +9,32 @@ require('dotenv').config();
 
 const app = express();
 
+// ------------------------------------------------------------------------------------------------
+// for the ID to be serializable via text file updates
+const fs = require('fs');
+const path = require('path');
+
+const counterFile = path.join(__dirname, 'assets', 'data', 'ID_Counter.txt');
+
+const dataDir = path.dirname(counterFile);
+if (!fs.existsSync(dataDir)) { fs.mkdirSync(dataDir, { recursive: true }); }
+
+function getNextEmailID() {
+  let currentID = 1;
+
+  if (fs.existsSync(counterFile)) {
+    const lastID = fs.readFileSync(counterFile, 'utf8').trim();
+    if (!isNaN(lastID)) { currentID = parseInt(lastID, 10) + 1; }
+  }
+
+  const emailID = currentID.toString().padStart(9, '0');
+  fs.writeFileSync(counterFile, emailID, 'utf8');
+
+  return emailID;
+}
+
+// ------------------------------------------------------------------------------------------------
+
 // Configure CORS to allow requests from your frontend
 app.use(cors({
   origin: '*', // Allow all origins for development
@@ -38,6 +64,7 @@ transporter.verify(function(error: any, success: any) {
 
 app.post('/send-invite', async (req: any, res: any) => {
   const { name, email, studentId } = req.body;
+  const emailID = getNextEmailID();
 
   try {
     // Calculate the next day's date at 10 AM
@@ -66,38 +93,38 @@ app.post('/send-invite', async (req: any, res: any) => {
 
     // Generate the .ics file in the required format
     const icsContent = `
-BEGIN:VCALENDAR
-VERSION:2.0
-PRODID:-//YourKiosk//Appointment System//EN
-METHOD:REQUEST
-BEGIN:VEVENT
-UID:${studentId}@dcmail.ca
-DTSTAMP:${now.toISOString().replace(/[-:]/g, '').split('.')[0]}Z
-DTSTART:${nextDay.toISOString().replace(/[-:]/g, '').split('.')[0]}Z
-DTEND:${new Date(nextDay.getTime() + 60 * 60 * 1000).toISOString().replace(/[-:]/g, '').split('.')[0]}Z
-SUMMARY:${event.title}
-DESCRIPTION:${event.description}
-LOCATION:${event.location}
-ORGANIZER;CN="${event.organizer.name}":mailto:${event.organizer.email}
-ATTENDEE;ROLE=REQ-PARTICIPANT;PARTSTAT=NEEDS-ACTION;RSVP=TRUE;CN="Advisor Name":mailto:${event.attendees[0].email}
-STATUS:${event.status}
-SEQUENCE:0
-END:VEVENT
-END:VCALENDAR
+        BEGIN:VCALENDAR
+        VERSION:2.0
+        PRODID:-//YourKiosk//Appointment System//EN
+        METHOD:REQUEST
+        BEGIN:VEVENT
+        UID:${studentId}@dcmail.ca
+        DTSTAMP:${now.toISOString().replace(/[-:]/g, '').split('.')[0]}Z
+        DTSTART:${nextDay.toISOString().replace(/[-:]/g, '').split('.')[0]}Z
+        DTEND:${new Date(nextDay.getTime() + 60 * 60 * 1000).toISOString().replace(/[-:]/g, '').split('.')[0]}Z
+        SUMMARY:${event.title}
+        DESCRIPTION:${event.description}
+        LOCATION:${event.location}
+        ORGANIZER;CN="${event.organizer.name}":mailto:${event.organizer.email}
+        ATTENDEE;ROLE=REQ-PARTICIPANT;PARTSTAT=NEEDS-ACTION;RSVP=TRUE;CN="Advisor Name":mailto:${event.attendees[0].email}
+        STATUS:${event.status}
+        SEQUENCE:0
+        END:VEVENT
+        END:VCALENDAR
     `;
 
     // Send email to advisor with .ics attachment
     const advisorMessage = {
       from: process.env.EMAIL_USER!,
       to: process.env.ADVISOR_EMAIL!,
-      subject: `SEIT Visit Request - ${name}`, // change this to include email ID, write an email ID in the server itself, not database nor email (serializable) whereas you use `${email}. MAKE THE POST REQ FROM SCRATCH
+      subject: `${emailID} - SEIT Visit Request - ${name}`, // change this to include email ID, write an email ID in the server itself, not database nor email (serializable) whereas you use `${email}. MAKE THE POST REQ FROM SCRATCH
       html: `
         <h2>SEIT Visit Request</h2>
         <p><strong>Student Details:</strong></p>
         <ul>
           <li>Name: ${name}</li>
           <li>Student ID: ${studentId}</li>
-          <li>Email: ${email}</li> 
+          <li>Email: ${email}</li>
         </ul>
         <p>Please review the request and respond with your decision.</p>
       `,
@@ -136,7 +163,7 @@ app.post('/handle-rejection', async (req: any, res: any) => {
     const studentMessage = {
       from: process.env.EMAIL_USER, // Admin email
       to: process.env.STUDENT_EMAIL, // Fixed student email
-      subject: `Appointment Declined - ${name}`,
+      subject: `${emailID} - Appointment Declined - ${name}`,
       html: `
         <h2>Appointment Declined</h2>
         <p>Dear Student,</p>
@@ -164,7 +191,7 @@ app.post('/handle-acceptance', async (req: any, res: any) => {
     const acceptanceMessage = {
       from: process.env.EMAIL_USER!,
       to: process.env.STUDENT_EMAIL!,
-      subject: `Appointment Accepted - ${name}`,
+      subject: `${emailID} - Appointment Accepted - ${name}`,
       html: `
         <h2>Appointment Accepted</h2>
         <p>Dear Advisor,</p>
@@ -191,7 +218,7 @@ app.post('/handle-tentative', async (req: any, res: any) => {
     const tentativeMessage = {
       from: process.env.EMAIL_USER!,
       to: process.env.STUDENT_EMAIL!,
-      subject: `Appointment Tentative - ${name}`,
+      subject: `${emailID} - Appointment Tentative - ${name}`,
       html: `
         <h2>Appointment Tentative</h2>
         <p>Dear Advisor,</p>
@@ -233,7 +260,7 @@ function processNewEmails() {
     // Search for unread emails
     imap.search(['UNSEEN'], (err: any, results: number[]) => {
       console.log('Found unread emails:', results.length);
-      
+
       if (!results.length) return;
 
       const f = imap.fetch(results, {
@@ -255,12 +282,12 @@ function processNewEmails() {
             // Check for acceptance response
             if (parsed.subject?.includes('Accepted:')) {
               console.log('Found acceptance response for:', parsed.subject);
-              
+
               // Extract the accept reason from the email body
               const bodyText = parsed.text || '';
               const reasonMatch = bodyText.match(/Accept reason:(.*?)(?=\n|$)/i);
               const reason = reasonMatch ? reasonMatch[1].trim() : 'No reason provided';
-              
+
               console.log('Extracted accept reason:', reason);
 
               if (studentEmail) {
@@ -285,12 +312,12 @@ function processNewEmails() {
             // Check for tentative response
             else if (parsed.subject?.includes('Tentative:')) {
               console.log('Found tentative response for:', parsed.subject);
-              
+
               // Extract the tentative reason from the email body
               const bodyText = parsed.text || '';
               const reasonMatch = bodyText.match(/Tentative Reason:(.*?)(?=\n|$)/i);
               const reason = reasonMatch ? reasonMatch[1].trim() : 'No reason provided';
-              
+
               console.log('Extracted tentative reason:', reason);
 
               if (studentEmail) {
@@ -315,12 +342,12 @@ function processNewEmails() {
             // Check for decline response
             else if (parsed.subject?.includes('Declined:')) {
               console.log('Found decline response for:', parsed.subject);
-              
+
               // Extract the decline reason from the email body
               const bodyText = parsed.text || '';
               const reasonMatch = bodyText.match(/Decline reason:(.*?)(?=\n|$)/i);
               const reason = reasonMatch ? reasonMatch[1].trim() : 'No reason provided';
-              
+
               console.log('Extracted decline reason:', reason);
 
               if (studentEmail) {
@@ -355,7 +382,7 @@ function processNewEmails() {
 imap.once('ready', () => {
   console.log('IMAP Connection ready');
   processNewEmails();
-  
+
   // Listen for new emails
   imap.on('mail', () => {
     processNewEmails();
@@ -388,6 +415,4 @@ app.post('/download-ics', async (req: any, res: any) => {
   }
 });
 
-app.listen(3000, () => {
-  console.log('Server is running on port 3000');
-});
+app.listen(3000, () => { console.log('Server is running on port 3000'); });

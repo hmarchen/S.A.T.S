@@ -1,6 +1,14 @@
 # 📜 DEV LOGS
 
 ---
+
+## 📅 March 29th, 2025
+
+### Overview of Changes
+- created a serializable email ID for it to display on the header
+
+---
+
 ## 📅 March 19th, 2025
 
 ### Overview of Changes
