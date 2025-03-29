@@ -17,11 +17,12 @@ const styles = StyleSheet.create({
       paddingHorizontal: 20,
     },
     headerNav: {
-      width: '90%',
+      flex: 1,
       flexDirection: 'row',
       justifyContent: 'center',
       alignItems: 'center',
-      gap: 20,
+      gap: 30,
+      // backgroundColor: '#EEEEEE',
     },
     navLink: {
       width: 50,
@@ -32,6 +33,40 @@ const styles = StyleSheet.create({
       textTransform: 'uppercase',
       color: '#ffffff',
     },
+    navButton: {
+      alignItems: 'center',
+      justifyContent: 'center',
+      width: 150,
+      padding: 2,
+      borderRadius: 4,
+      elevation: 3,
+      backgroundColor: '#EEEEEE',
+    },
+    navButtonText: {
+      fontSize: 16,
+      fontFamily: 'Oswald',
+      textTransform: 'uppercase',
+      color: '#525252',
+    },
+    navProfile: {
+      flexDirection: 'column',
+      justifyContent: 'center',
+      alignItems: 'center',
+      padding: 16,
+      gap: 5
+    },
+    adminButton: {
+      flexDirection: 'row',
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    adminButtonText: {
+      fontSize: 16,
+      fontFamily: 'Oswald',
+      color: '#751111',
+    },
+
+    // HEADER SEPARATOR
     headerSeparator: {
       height: 15,
       backgroundColor: '#3e2b2f',
@@ -49,6 +84,27 @@ const styles = StyleSheet.create({
       height: 80,
       marginRight: 10, 
       resizeMode: 'contain',
+    },
+    icon: {
+      width: 20,
+      height: 20,
+      marginRight: 10, 
+      resizeMode: 'contain',
+    },
+    button: {
+      alignItems: 'center',
+      justifyContent: 'center',
+      paddingVertical: 2,
+      paddingHorizontal: 20,
+      borderRadius: 4,
+      elevation: 3,
+      backgroundColor: '#EEEEEE',
+    },
+    buttonText: {
+      fontSize: 16,
+      fontFamily: 'Oswald',
+      textTransform: 'uppercase',
+      color: '#525252',
     },
     title: {
       fontSize: 30,
