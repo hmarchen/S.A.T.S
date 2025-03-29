@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, Button, FlatList, StyleSheet, Platform, ScrollView, Pressable } from 'react-native';
 import { useRouter } from 'expo-router';
 import styles from '../css/styles';
+import Structure from './structure/structure';
 
 interface Reason {
   id: number;
@@ -9,9 +10,10 @@ interface Reason {
   details: string;
 }
 
-const API_BASE_URL = 'http://localhost:3000';
 
 export default function Admin() {
+  const API_BASE_URL = window.location.host;
+
   const [reasons, setReasons] = useState<Reason[]>([]);
   const [newReason, setNewReason] = useState<Partial<Reason>>({ category: '', details: '' });
   const [editingReason, setEditingReason] = useState<Reason | null>(null);
@@ -115,7 +117,8 @@ export default function Admin() {
   if (!isWeb) { return null; }
 
   return (
-    <View style={styles2.container}>
+    <Structure>
+      <View style={styles2.container}>
       <Text style={styles2.title}>Admin Panel - Manage Reasons</Text>
       
       {error && (
@@ -209,14 +212,16 @@ export default function Admin() {
         </View>
       </View>
 
-      <Button title="Back to Home" onPress={() => router.back()} />
+      <Button title="Back to Home" onPress={() => router.navigate('./home')} />
     </View>
+    </Structure>
   );
 }
 
 const styles2 = StyleSheet.create({
   container: {
     flex: 1,
+    width: '100%',
     padding: 20,
     backgroundColor: '#1a1a1a',
   },

@@ -1,17 +1,54 @@
 import { StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
-    container: {
+    page: {
+      flex: 1,
+      backgroundColor: '#f0f0f0',
+    },
+
+    // HEADER / NAVIGATION
+    header: {
+      height: 100,
+      padding: 10,
+      backgroundColor: '#007852',
+      flexDirection: 'row',
+      justifyContent: 'flex-start',
+      alignItems: 'center',
+      paddingHorizontal: 20,
+    },
+    headerNav: {
+      width: '90%',
+      flexDirection: 'row',
+      justifyContent: 'center',
+      alignItems: 'center',
+      gap: 20,
+    },
+    navLink: {
+      width: 50,
+    },
+    navText: {
+      fontSize: 16,
+      fontFamily: 'Oswald',
+      textTransform: 'uppercase',
+      color: '#ffffff',
+    },
+    headerSeparator: {
+      height: 15,
+      backgroundColor: '#3e2b2f',
+    },
+
+    // BODY / CONTENT
+    body: {
       flex: 1,
       justifyContent: 'center',
       alignItems: 'center',
-      backgroundColor: '#f0f0f0',
       padding: 16,
     },
     logo: {
-      width: 120,
-      height: 120,
-      marginBottom: 20,
+      width: 80,
+      height: 80,
+      marginRight: 10, 
+      resizeMode: 'contain',
     },
     title: {
       fontSize: 30,
@@ -25,8 +62,15 @@ const styles = StyleSheet.create({
       textAlign: 'center',
       marginBottom: 20,
     },
-    button: {
-      marginBottom: 20,
+
+    // FOOTER
+    footer: {
+      height: 100,
+      padding: 20,
+      backgroundColor: '#007852',
+      flexDirection: 'row',
+      justifyContent: 'center',
+      alignItems: 'center',
     },
     footerText: {
       fontSize: 14,

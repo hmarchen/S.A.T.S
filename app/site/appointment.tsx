@@ -5,17 +5,17 @@ import { useRouter } from 'expo-router';
 import styles from './styles/style';
 import Structure from './structure/structure';
 
-export default function Home() {  
+export default function Appointment() {  
   const router = useRouter();
 
   return (
     <Structure>
       <Image
-        source={require('./images/cat_hapy.png')} // Add your logo image here
+        source={require('./images/cat_smile.png')} // Add your logo image here
         style={styles.logo}
       />
-      <Text style={styles.title}>Welcome to DCSATS</Text>
-      <Text style={styles.subtitle}>Student Advisor? I hardly know her!</Text>
+      <Text style={styles.title}>Book an Appointment!</Text>
+      <Text style={styles.subtitle}>We know you need it</Text>
     </Structure>
   );
 };
