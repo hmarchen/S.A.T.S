@@ -15,10 +15,16 @@ export default function StudentNumber() {
         try {
             const fileExists = await FileSystem.getInfoAsync(filePath);
             let updatedData = fileExists.exists ? JSON.parse(await FileSystem.readAsStringAsync(filePath)) : [];
+            
+            if (!Array.isArray(updatedData)) {
+                updatedData = [];
+            }
 
-            updatedData.length > 0
-                ? (updatedData[0].studentID = studentNumber)
-                : updatedData.push({ firstname: '', lastname: '', studentID: studentNumber, DCMail: '', campus: '', program: '', reason: '' });
+            if (updatedData.length > 0) {
+                updatedData[0].studentID = studentNumber;
+            } else {
+                updatedData.push({ firstname: '', lastname: '', studentID: studentNumber, DCMail: '', campus: '', program: '', reason: '' });
+            }
 
             await FileSystem.writeAsStringAsync(filePath, JSON.stringify(updatedData, null, 2));
             Alert.alert('Form Submitted', `Student Number: ${studentNumber}`);
