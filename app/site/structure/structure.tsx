@@ -33,7 +33,7 @@ const Structure: React.FC<LayoutProps> = ({ children }) => {
       <View style={styles.header}>
         <TouchableOpacity onPress={() => { router.navigate('./home'); }}>
             <Image
-                source={require(IMAGES + 'DCSATSLogoText_White.png')} // Add your logo image here
+                source={require(IMAGES + 'DCSATSLogo_White.png')} // Add your logo image here
                 style={styles.logo}
             />
         </TouchableOpacity>
@@ -54,7 +54,7 @@ const Structure: React.FC<LayoutProps> = ({ children }) => {
             <Pressable style={styles.navButton} onPress={() => { router.navigate('./login'); }}>
                 <Text style={styles.navButtonText}>Advisor Login</Text>
             </Pressable>
-            <Pressable style={styles.adminButton} onPress={() => { router.navigate('./admin'); }}>
+            <Pressable style={styles.profileButton} onPress={() => { router.navigate('./admin'); }}>
                 <Image
                     source={require(IMAGES + 'admin_logo.png')} // Add your logo image here
                     style={[
@@ -64,7 +64,7 @@ const Structure: React.FC<LayoutProps> = ({ children }) => {
                         },
                       ]}
                 />
-                <Text style={styles.adminButtonText}>View Admin Panel</Text>
+                <Text style={styles.profileButtonText}>View Admin Panel</Text>
             </Pressable>
         </View>
       </View>

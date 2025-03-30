@@ -55,12 +55,12 @@ const styles = StyleSheet.create({
       padding: 16,
       gap: 5
     },
-    adminButton: {
+    profileButton: {
       flexDirection: 'row',
       justifyContent: 'center',
       alignItems: 'center',
     },
-    adminButtonText: {
+    profileButtonText: {
       fontSize: 16,
       fontFamily: 'Oswald',
       color: '#751111',
@@ -107,7 +107,7 @@ const styles = StyleSheet.create({
     title: {
       fontSize: 30,
       fontWeight: 'bold',
-      marginBottom: 10,
+      marginBottom: 5,
       textAlign: 'center',
       fontFamily: 'Oswald',
       color: '#007852',
@@ -199,6 +199,85 @@ const styles = StyleSheet.create({
       fontWeight: 'bold',
       textTransform: 'uppercase',
       color: '#ffffff',
+    },
+
+    // admin page
+    adminContainer: {
+      flex: 1,
+      flexDirection: 'row',
+      justifyContent: 'center',
+      alignItems: 'center',
+      gap: 20,
+    },
+    adminTitle: {
+      fontSize: 24,
+      fontFamily: 'Oswald',
+      color: '#007852',
+      textTransform: 'uppercase',
+    },
+    adminSubtitle: {
+      fontSize: 24,
+      fontFamily: 'Oswald',
+      top: 20,
+      paddingBottom: 20,
+      paddingHorizontal: 20,
+      color: '#3e2b2f',
+      textTransform: 'uppercase',
+    },
+    adminButtonText: {
+      padding: 10,
+      borderRadius: 4,
+      textTransform: 'uppercase',
+      color: '#807F7F',
+      fontWeight: 'bold',
+      fontFamily: 'Lato',
+    },
+    adminNav: {
+      height: '100%',
+      width: '15%',
+      padding: 20,
+      borderRadius: 4,
+      backgroundColor: '#ffffff',
+      shadowColor: '#000',
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.3,
+      shadowRadius: 4,
+      elevation: 3,
+
+      flexDirection: 'column',
+      justifyContent: 'flex-start',
+      alignItems: 'flex-start',
+    },
+    adminMain: {
+      height: '100%',
+      width: '50%',
+      borderTopLeftRadius: 10,
+      borderTopRightRadius: 10,
+      backgroundColor: '#FAFAFA',
+      shadowColor: '#000',
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.3,
+      shadowRadius: 4,
+      elevation: 3,
+    },
+    adminHeader: {
+      height: 80,
+      width: '100%',
+      borderTopLeftRadius: 10,
+      borderTopRightRadius: 10,
+      backgroundColor: '#E8E7E7',
+      shadowColor: '#000',
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.3,
+      shadowRadius: 2,
+      elevation: 3,
+    },
+    adminTab: {
+      width: '100%',
+      padding: 20,
+    },
+    adminScroll: {
+      flex: 1,
     },
 
     // ------------------------------------------
