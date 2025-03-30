@@ -93,6 +93,7 @@ const styles = StyleSheet.create({
   gridItem: {
     flex: 1,
     height: 220,
+    height: 220,
     backgroundColor: '#0B8261',
     justifyContent: 'center',
     alignItems: 'center',
