@@ -144,7 +144,7 @@ app.post('/send-invite', async (req: any, res: any) => {
         return res.status(500).send('Failed to send email'); // Send error response
       } else {
         console.log('Email sent:', info.response);
-        return res.status(200).send('Invite sent successfully'); // Send success response
+        return res.status(200).json({ message: 'Invite sent successfully', emailID });
       }
     });
 
@@ -156,7 +156,7 @@ app.post('/send-invite', async (req: any, res: any) => {
 
 // New endpoint to handle rejections
 app.post('/handle-rejection', async (req: any, res: any) => {
-  const { name, reason } = req.body;
+  const { name, reason, emailID } = req.body;
 
   try {
     // Send notification to the fixed student email
@@ -184,7 +184,7 @@ app.post('/handle-rejection', async (req: any, res: any) => {
 
 // New endpoint to handle acceptances
 app.post('/handle-acceptance', async (req: any, res: any) => {
-  const { name, reason } = req.body;
+  const { name, reason, emailID } = req.body;
 
   try {
     // Logic to handle acceptance (e.g., notify the advisor)
@@ -211,7 +211,7 @@ app.post('/handle-acceptance', async (req: any, res: any) => {
 
 // New endpoint to handle tentatives
 app.post('/handle-tentative', async (req: any, res: any) => {
-  const { name, reason } = req.body;
+  const { name, reason, emailID } = req.body;
 
   try {
     // Logic to handle tentative (e.g., notify the advisor)

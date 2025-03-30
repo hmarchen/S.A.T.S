@@ -41,7 +41,7 @@ export default function EndScreen() {
     try {
       
       if (userData) {
-        await fetch('http://10.150.42.108:3000/send-invite', {
+        await fetch('http://10.0.2.2:3000/send-invite', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
