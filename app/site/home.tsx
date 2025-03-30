@@ -3,7 +3,7 @@ import { View, Text, Button, Image, Pressable, ScrollView } from 'react-native';
 import { useRouter } from 'expo-router';
 
 import styles from './styles/style';
-import Structure from './structure/structure';
+import Structure from './layouts/structure';
 
 export default function Home() {  
   const router = useRouter();
