@@ -82,7 +82,7 @@ app.post('/send-invite', async (req: any, res: any) => {
         0   // Minute
       ] as [number, number, number, number, number], // Ensure the type is correct
       duration: { hours: 1 }, // Duration of the event
-      title: `Student Advising Appointment`,
+      title: `${emailID} - Student Advising Appointment`,
       description: `Appointment with ${name}. Student ID: ${studentId}`,
       location: 'Office 123',
       status: 'CONFIRMED',
@@ -162,7 +162,7 @@ app.post('/handle-rejection', async (req: any, res: any) => {
     const studentMessage = {
       from: process.env.EMAIL_USER, // Admin email
       to: process.env.STUDENT_EMAIL, // Fixed student email
-      subject: `${emailID} - Appointment Declined - ${name}`,
+      subject: `Appointment Declined - ${name}`,
       html: `
         <h2>Appointment Declined</h2>
         <p>Dear Student,</p>
@@ -190,7 +190,7 @@ app.post('/handle-acceptance', async (req: any, res: any) => {
     const acceptanceMessage = {
       from: process.env.EMAIL_USER!,
       to: process.env.STUDENT_EMAIL!,
-      subject: `${emailID} - Appointment Accepted - ${name}`,
+      subject: `Appointment Accepted - ${name}`,
       html: `
         <h2>Appointment Accepted</h2>
         <p>Dear Advisor,</p>
@@ -217,7 +217,7 @@ app.post('/handle-tentative', async (req: any, res: any) => {
     const tentativeMessage = {
       from: process.env.EMAIL_USER!,
       to: process.env.STUDENT_EMAIL!,
-       subject: `${emailID} - Appointment Tentative - ${name}`,
+       subject: `Appointment Tentative - ${name}`,
       html: `
         <h2>Appointment Tentative</h2>
         <p>Dear Advisor,</p>
