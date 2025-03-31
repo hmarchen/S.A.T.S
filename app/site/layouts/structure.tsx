@@ -17,15 +17,9 @@ const Structure: React.FC<LayoutProps> = ({ children }) => {
   // CONSTANTS
   const router = useRouter();
   const IMAGES = '../images/';
-  const [isVisible, setIsVisible] = useState(false);
-  const [popupPosition, setPopupPosition] = useState({ top: 0, left: 0 });
 
   // return if nothing in body
   if (!children) { return null; }
-
-  // HANDLER FUNCTIONS
-  const handleButtonClick = () => { setIsVisible(true); };
-  const handleClose = () => { setIsVisible(false); };
 
   return (
     <View style={styles.page}>
@@ -33,7 +27,7 @@ const Structure: React.FC<LayoutProps> = ({ children }) => {
       <View style={styles.header}>
         <TouchableOpacity onPress={() => { router.navigate('./home'); }}>
             <Image
-                source={require(IMAGES + 'DCSATSLogo_White.png')} // Add your logo image here
+                source={require(IMAGES + 'logos/DCSATSLogo_White.png')} // Add your logo image here
                 style={styles.logo}
             />
         </TouchableOpacity>
@@ -56,13 +50,8 @@ const Structure: React.FC<LayoutProps> = ({ children }) => {
             </Pressable>
             <Pressable style={styles.profileButton} onPress={() => { router.navigate('./admin'); }}>
                 <Image
-                    source={require(IMAGES + 'admin_logo.png')} // Add your logo image here
-                    style={[
-                        styles.icon,
-                        {
-                          tintColor: 'rgb(117, 17, 17)'
-                        },
-                      ]}
+                    source={require(IMAGES + 'icons/admin_icon.png')} // Add your logo image here
+                    style={[ styles.icon, { tintColor: 'rgb(117, 17, 17)' } ]}
                 />
                 <Text style={styles.profileButtonText}>View Admin Panel</Text>
             </Pressable>
@@ -81,7 +70,7 @@ const Structure: React.FC<LayoutProps> = ({ children }) => {
       <View style={styles.footer}>
         <TouchableOpacity onPress={() => { window.open('https://durhamcollege.ca/', '_blank'); }}>
             <Image
-            source={require(IMAGES + 'dc_logo_white.png')} // Add your logo image here
+            source={require(IMAGES + 'logos/dc_logo_white.png')} // Add your logo image here
             style={styles.logo}
             />
         </TouchableOpacity>

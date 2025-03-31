@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, Button, FlatList, StyleSheet, Platform, ScrollView, Pressable, Modal } from 'react-native';
+import { View, Text, TextInput, FlatList, StyleSheet, ScrollView, Pressable } from 'react-native';
 import styles from '../../../css/styles';
 
 interface Reason {

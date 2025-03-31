@@ -225,12 +225,13 @@ const styles = StyleSheet.create({
       textTransform: 'uppercase',
     },
     adminButtonText: {
+      fontSize: 14,
+      fontWeight: 'bold',
+      fontFamily: 'Lato',
       padding: 10,
       borderRadius: 4,
       textTransform: 'uppercase',
       color: '#807F7F',
-      fontWeight: 'bold',
-      fontFamily: 'Lato',
     },
     adminNav: {
       height: '100%',
@@ -275,6 +276,7 @@ const styles = StyleSheet.create({
     adminTab: {
       width: '100%',
       padding: 20,
+      flex: 1,
     },
     adminScroll: {
       flex: 1,

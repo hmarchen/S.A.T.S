@@ -50,17 +50,15 @@ export default function Admin() {
           </View>
 
           <View style={styles.adminTab}>
-            <ScrollView style={styles.adminScroll}> 
-              {/* -------- MANAGE USERS --------- */}
-              {selectedTab == "Users" && (
-                <AdminUsers children={undefined} />
-              )}
-        
-              {/* -------- MANAGE REASONS --------- */}
-              {selectedTab == "Reasons" && (
-                <AdminReasons children={undefined} />
-              )}
-            </ScrollView>
+            {/* -------- MANAGE USERS --------- */}
+            {selectedTab == "Users" && (
+              <AdminUsers children={undefined} />
+            )}
+      
+            {/* -------- MANAGE REASONS --------- */}
+            {selectedTab == "Reasons" && (
+              <AdminReasons children={undefined} />
+            )}
           </View>
         </View>
       </View>
