@@ -9,7 +9,7 @@ import ICAL from "ical.js";
 import Breadcrumb from "./breadcrumb";
 
 const filePath = FileSystem.documentDirectory + "user.json";
-const calendarUrl = "https://outlook.office365.com/owa/calendar/.../calendar.ics";
+const calendarUrl = "https://outlook.office365.com/owa/calendar/b325e82263a8475588faa2bbfc361837@dcmail.ca/d981e389098149ec940733ebd78594b21905603363431473149/calendar.ics";
 
 export default function AppointmentCalendar() {
   const router = useRouter();
