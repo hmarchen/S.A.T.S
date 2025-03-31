@@ -7,6 +7,32 @@ const styles = StyleSheet.create({
         marginRight: 10, 
         resizeMode: 'contain',
     },
+    horizontalLine: {
+        width: '100%',
+        height: 2,
+        backgroundColor: '#BCBBBB',
+        marginVertical: 5,
+    },
+
+    errorContainer: {
+        width: '50%',
+        height: 50,
+        backgroundColor: '#ff4444',
+        padding: 10,
+        borderRadius: 8,
+        marginTop: 120,
+        margin: 15,
+        alignSelf: 'center',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    errorText: {
+        fontSize: 16,
+        color: '#ffffff',
+        textAlign: 'center',
+        fontWeight: 'bold',
+    },
+
     popup: {
         flex: 1,
         justifyContent: 'center',
@@ -33,9 +59,20 @@ const styles = StyleSheet.create({
         borderTopRightRadius: 10,
         backgroundColor: '#E8E7E7',
         paddingLeft: 10,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 1 },
+        shadowOpacity: 0.5,
+        shadowRadius: 3,
+        elevation: 3,
     },
     popupBody: {
+        flex: 1,
+        width: '100%',
         padding: 20,
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        gap: 10,
     },
     popupClose: {
         width: 40,
@@ -58,6 +95,14 @@ const styles = StyleSheet.create({
     popupText: {
         fontSize: 18,
     },
+    popupTextInput: {
+        height: 40,
+        borderColor: '#007852',
+        borderWidth: 1,
+        borderRadius: 8,
+        paddingLeft: 10,
+        width: '100%', 
+      },
 
     // MANAGE USERS ------------------------------------
     userContainer:{
@@ -98,9 +143,10 @@ const styles = StyleSheet.create({
     },
     userScroll: {
         flex: 1,
+        width: '100%',
         padding: 10,
     },
-    userAddButton: {
+    userButton: {
         width: 125,
         borderRadius: 8,
         padding: 5,
@@ -114,7 +160,7 @@ const styles = StyleSheet.create({
         shadowRadius: 4,
         elevation: 3,
     },
-    userAddButtonText: {
+    userButtonText: {
         fontSize: 14,
         fontFamily: 'Lato',
         color: '#E1FFED',
@@ -122,7 +168,54 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
     },
 
-    
+    newUserBox: {
+        width: '100%',
+        padding: 10,
+        borderRadius: 10,
+        flexDirection: 'column',
+        alignItems: 'flex-start',
+        justifyContent: 'flex-start',
+        gap: 5,
+        backgroundColor: '#ffffff',
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.2,
+        shadowRadius: 4,
+        elevation: 3,
+        marginBottom: 15,
+    },
+    newUserHeader: {
+        width: '100%',
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+    },
+    newUserTitle: {
+        fontSize: 20,
+        fontFamily: 'Lato',
+        color: '#000',
+    },
+    newUserButtons: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'flex-end',
+    },
+    newUserButton: {
+        width: 40,
+        height: 40,
+        padding: 5,
+    },
+    newUserButtonIcon: {
+        width: 30,
+        height: 30,
+        marginRight: 10,
+        resizeMode: 'contain',
+    },
+    newUserText: {
+        fontSize: 16,
+        fontFamily: 'Lato',
+        color: '#000',
+    },
 
 
     // MANAGE REASONS ----------------------------------

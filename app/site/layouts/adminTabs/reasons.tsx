@@ -14,7 +14,7 @@ interface LayoutProps {
 }
 
 const AdminReasons: React.FC<LayoutProps> = () => {
-    const API_BASE_URL = window.location.host;
+    const API_BASE_URL = 'http://localhost:3000';
     
     const [reasons, setReasons] = useState<Reason[]>([]);
     const [newReason, setNewReason] = useState<Partial<Reason>>({ category: '', details: '' });

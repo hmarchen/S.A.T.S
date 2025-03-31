@@ -5,7 +5,11 @@ import { useRouter } from "expo-router";
 import Breadcrumb from "./breadcrumb";
 import styles from "../css/styles";
 
-export default function LoginScreen() {
+interface LayoutProps {
+  children: React.ReactNode; // This will hold the child content passed from the screen
+}
+
+const Disclaimer: React.FC<LayoutProps> = () => {
   const router = useRouter();
 
   return (
@@ -29,3 +33,5 @@ export default function LoginScreen() {
     </SafeAreaView>
   );
 }
+
+export default Disclaimer;
