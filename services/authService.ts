@@ -291,7 +291,7 @@ function processNewEmails() {
 
               if (studentEmail) {
                 try {
-                  await fetch('http://localhost:3000/handle-acceptance', {
+                  await fetch('http://localhost:3001/handle-acceptance', {
                     method: 'POST',
                     headers: {
                       'Content-Type': 'application/json',
@@ -321,7 +321,7 @@ function processNewEmails() {
 
               if (studentEmail) {
                 try {
-                  await fetch('http://localhost:3000/handle-tentative', {
+                  await fetch('http://localhost:3001/handle-tentative', {
                     method: 'POST',
                     headers: {
                       'Content-Type': 'application/json',
@@ -351,7 +351,7 @@ function processNewEmails() {
 
               if (studentEmail) {
                 try {
-                  await fetch('http://localhost:3000/handle-rejection', {
+                  await fetch('http://localhost:3001/handle-rejection', {
                     method: 'POST',
                     headers: {
                       'Content-Type': 'application/json',
@@ -414,6 +414,6 @@ app.post('/download-ics', async (req: any, res: any) => {
   }
 });
 
-app.listen(3000, () => {
-  console.log('Server is running on port 3000');
+app.listen(3001, () => {
+  console.log('Server is running on port 3001');
 });

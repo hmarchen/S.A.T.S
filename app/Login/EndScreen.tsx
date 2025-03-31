@@ -83,6 +83,7 @@ export default function EndScreen() {
     campus = "N/A",
     program = "N/A",
     reason = "N/A",
+    advisor = "N/A",
     appointmentDate = "N/A",
     appointmentTime = "N/A",
     appointmentType = "N/A",
