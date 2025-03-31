@@ -1,13 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {
-  View,
-  Text,
-  Pressable,
-  Alert,
-  ActivityIndicator,
-  ImageBackground,
-  ScrollView
-} from "react-native";
+import { View, Text, Pressable, Alert, ActivityIndicator, ImageBackground, ScrollView } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
@@ -25,16 +17,17 @@ export default function EndScreen() {
     const loadJsonFile = async () => {
       try {
         const fileInfo = await FileSystem.getInfoAsync(filePath);
-        console.log(fileInfo.exists ? `File exists at: ${filePath}` : "File does not exist. Copying from assets...");
 
         if (!fileInfo.exists) {
-          const userJson = require("../../assets/data/user.json");
-          await FileSystem.writeAsStringAsync(filePath, JSON.stringify(userJson));
+          await FileSystem.copyAsync({
+            from: FileSystem.bundleDirectory + "assets/data/user.json",
+            to: filePath,
+          });
           console.log(`File copied to: ${filePath}`);
         }
 
         const data = JSON.parse(await FileSystem.readAsStringAsync(filePath));
-        setUserData(data);
+        setUserData(data.length > 0 ? data[0] : {});
       } catch (error) {
         console.error("Error reading JSON file:", error);
       } finally {
@@ -48,12 +41,10 @@ export default function EndScreen() {
   const handleConfirm = async () => {
     try {
       if (userData) {
-        await fetch('http://10.0.2.2:3000/send-invite', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ userData }),
+        await fetch("http://10.0.2.2:3000/send-invite", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(userData),
         });
 
         Alert.alert("Success", "Invite sent successfully.");
@@ -74,7 +65,7 @@ export default function EndScreen() {
     );
   }
 
-  if (!userData || !Array.isArray(userData) || userData.length === 0) {
+  if (!userData || Object.keys(userData).length === 0) {
     return (
       <SafeAreaView style={styles.container}>
         <Text style={styles.text}>No user data found.</Text>
@@ -82,26 +73,8 @@ export default function EndScreen() {
     );
   }
 
-  const {
-    firstname = "N/A",
-    lastname = "N/A",
-    studentID = "N/A",
-    DCMail = "N/A",
-    campus = "N/A",
-    program = "N/A",
-    reason = "N/A",
-    advisor = "N/A",
-    appointmentDate = "N/A",
-    appointmentTime = "N/A",
-    appointmentType = "N/A",
-  } = userData[0] || {};
-
   return (
-    <ImageBackground
-      source={require("../../assets/background.jpg")}
-      style={styles.background}
-      resizeMode="cover"
-    >
+    <ImageBackground source={require("../../assets/background.jpg")} style={styles.background} resizeMode="cover">
       <View style={styles.arrowContainer}>
         <Pressable style={styles.arrowButton} onPress={() => router.back()}>
           <Ionicons name="arrow-back" size={32} color="white" />
@@ -110,76 +83,19 @@ export default function EndScreen() {
 
       <View style={styles.transparentContainer}>
         <Text style={styles.whiteTitle}>Thank You for Your Application!</Text>
-
-        <ScrollView
-          contentContainerStyle={{
-            alignItems: "center",
-            justifyContent: "center",
-            paddingHorizontal: 20,
-            width: "100%",
-          }}
-        >
-          <View
-            style={{
-              borderWidth: 1,
-              borderColor: "white",
-              borderRadius: 10,
-              padding: 20,
-              marginVertical: 20,
-              width: "100%",
-              backgroundColor: "rgba(255,255,255,0.05)"
-            }}
-          >
-            <Text style={{ color: "white", fontSize: 22, fontWeight: "bold", marginBottom: 10 }}>
-              Your Details:
-            </Text>
-            <Text style={{ color: "white", fontSize: 16 }}>First Name: {firstname}</Text>
-            <Text style={{ color: "white", fontSize: 16 }}>Last Name: {lastname}</Text>
-            <Text style={{ color: "white", fontSize: 16 }}>Student ID: {studentID}</Text>
-            <Text style={{ color: "white", fontSize: 16 }}>Email: {DCMail}</Text>
-            <Text style={{ color: "white", fontSize: 16 }}>Campus: {campus}</Text>
-            <Text style={{ color: "white", fontSize: 16 }}>Program: {program}</Text>
-            <Text style={{ color: "white", fontSize: 16 }}>Reason: {reason}</Text>
-            <Text style={{ color: "white", fontSize: 16 }}>Advisor: {advisor}</Text>
-            <Text style={{ color: "white", fontSize: 16 }}>Date: {appointmentDate}</Text>
-            <Text style={{ color: "white", fontSize: 16 }}>Time: {appointmentTime}</Text>
-            <Text style={{ color: "white", fontSize: 16 }}>Appointment Type: {appointmentType}</Text>
+        <ScrollView contentContainerStyle={styles.scrollContainer}>
+          <View style={styles.detailsContainer}>
+            <Text style={styles.detailsTitle}>Your Details:</Text>
+            {Object.entries(userData).map(([key, value]) => (
+              <Text key={key} style={styles.detailsText}>{`${key.replace(/([A-Z])/g, " $1").trim()}: ${value || "N/A"}`}</Text>
+            ))}
           </View>
-
-          <Pressable
-            onPress={handleConfirm}
-            style={{
-              backgroundColor: "#007C41",
-              paddingVertical: 20,
-              paddingHorizontal: 50,
-              borderRadius: 10,
-              marginBottom: 25,
-              elevation: 4,
-            }}
-          >
-            <Text style={{ color: "white", fontWeight: "bold", fontSize: 18 }}>
-              Confirm Appointment
-            </Text>
+          <Pressable onPress={handleConfirm} style={styles.confirmButton}>
+            <Text style={styles.confirmText}>Confirm Appointment</Text>
           </Pressable>
         </ScrollView>
-
         <View style={styles.breadcrumbContainer}>
-          <Breadcrumb
-            entities={[
-              "Disclaimer",
-              "StudentNumber",
-              "Firstname",
-              "Lastname",
-              "DCMail",
-              "Institution",
-              "Program",
-              "Reason",
-              "Calendar",
-              "Time Selection",
-              "END"
-            ]}
-            flowDepth={10}
-          />
+          <Breadcrumb entities={["Disclaimer", "StudentNumber", "Firstname", "Lastname", "DCMail", "Institution", "Program", "Reason", "Calendar", "Time Selection", "END"]} flowDepth={10} />
         </View>
       </View>
     </ImageBackground>

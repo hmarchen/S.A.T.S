@@ -15,21 +15,10 @@ export default function AppConfirmation() {
     >
       <View style={styles.transparentContainer}>
         <Ionicons name="checkmark-circle-outline" size={100} color="#4CAF50" style={{ marginBottom: 20 }} />
-
         <Text style={styles.whiteTitle}>Your Appointment is Scheduled!</Text>
-
-        <Text style={[styles.paragraph, { marginTop: 10 }]}>
-          Thank you for submitting your request. Your appointment with the SEIT office has been scheduled.
-        </Text>
-
-        <Text style={[styles.paragraph, { color: '#9AE6B4' }]}>
-          You will receive an email confirmation with your appointment details. Please arrive on time and bring any necessary documents.
-        </Text>
-
-        <Text style={[styles.paragraph, { color: '#FFD700' }]}>
-          If you need further assistance, visit the SEIT office during working hours.
-        </Text>
-
+        <Text style={[styles.paragraph, { marginTop: 10 }]}>Thank you for submitting your request. Your appointment with the SEIT office has been scheduled.</Text>
+        <Text style={[styles.paragraph, { color: '#9AE6B4' }]}>You will receive an email confirmation with your appointment details. Please arrive on time and bring any necessary documents.</Text>
+        <Text style={[styles.paragraph, { color: '#FFD700' }]}> If you need further assistance, visit the SEIT office during working hours.</Text>
         <Pressable
           style={[styles.loginButton, { backgroundColor: '#4CAF50', marginTop: 30, paddingVertical: 14 }]}
           onPress={() => router.push('/')}

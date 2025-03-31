@@ -1,12 +1,5 @@
 import React, { useState } from 'react';
-import {
-  View,
-  Text,
-  TextInput,
-  Alert,
-  Pressable,
-  ImageBackground
-} from 'react-native';
+import { View, Text, TextInput, Alert, Pressable, ImageBackground } from 'react-native';
 import { useRouter } from 'expo-router';
 import Breadcrumb from './breadcrumb';
 import { Ionicons } from '@expo/vector-icons';
@@ -18,55 +11,46 @@ const filePath = FileSystem.documentDirectory + 'user.json';
 export default function StudentFirstName() {
   const router = useRouter();
   const [firstName, setFirstName] = useState('');
-  const FirstnameREGEX = /^[A-Z][a-zA-Z' -]+$/;
-  const isValid = firstName.length > 0 && FirstnameREGEX.test(firstName.trim());
 
-  const REQ_ERROR = "First name is required.";
-  const REG_ERROR = "Invalid first name: Must start with a capital letter and contain only letters.";
-  const handleClear = () => setFirstName('');
+  const FirstnameREGEX = /^[A-Z][a-zA-Z' -]+$/; // Regex for valid first names
+  const isValid = FirstnameREGEX.test(firstName.trim());
 
   const validateForm = () => {
-    let errors = {};
     const trimmedFirstName = firstName.trim();
-
-    if (!trimmedFirstName) {
-      errors.firstName = REQ_ERROR;
-      handleClear();
-    } else if (!FirstnameREGEX.test(trimmedFirstName)) {
-      errors.firstName = REG_ERROR;
-      handleClear();
-    }
-
-    return errors;
+    if (!trimmedFirstName) return "First name is required.";
+    if (!FirstnameREGEX.test(trimmedFirstName)) return "Invalid first name: Must start with a capital letter and contain only letters.";
+    return null; // No error
   };
 
   const handleSubmit = async () => {
-    const errors = validateForm();
-    if (Object.keys(errors).length > 0) {
-      Alert.alert("Validation Error", Object.values(errors).join('\n'));
+    const error = validateForm();
+    if (error) {
+      Alert.alert("Validation Error", error);
       return;
     }
 
     try {
       const fileExists = await FileSystem.getInfoAsync(filePath);
-      let updatedData = fileExists.exists
+      const updatedData = fileExists.exists
         ? JSON.parse(await FileSystem.readAsStringAsync(filePath))
         : [];
 
-      updatedData.length > 0
-        ? (updatedData[0].firstname = firstName)
-        : updatedData.push({
-            firstname: firstName,
-            lastname: '',
-            studentID: '',
-            DCMail: '',
-            campus: '',
-            program: '',
-            reason: '',
-            appointmentDate: '',
-            appointmentTime: '',
-            appointmentType: ''
-          });
+      if (updatedData.length > 0) {
+        updatedData[0].firstname = firstName; // Update existing data
+      } else {
+        updatedData.push({
+          firstname: firstName,
+          lastname: '',
+          studentID: '',
+          DCMail: '',
+          campus: '',
+          program: '',
+          reason: '',
+          appointmentDate: '',
+          appointmentTime: '',
+          appointmentType: '',
+        });
+      }
 
       await FileSystem.writeAsStringAsync(filePath, JSON.stringify(updatedData, null, 2));
       console.log("✅ Form Submitted: First Name:", firstName);
@@ -85,10 +69,7 @@ export default function StudentFirstName() {
     >
       {/* Arrow navigation */}
       <View style={styles.arrowContainer}>
-        <Pressable
-          style={styles.arrowButton}
-          onPress={() => router.back()}
-        >
+        <Pressable style={styles.arrowButton} onPress={() => router.back()}>
           <Ionicons name="arrow-back" size={32} color="white" />
         </Pressable>
 

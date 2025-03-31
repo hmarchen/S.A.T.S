@@ -1,12 +1,5 @@
 import React, { useState } from "react";
-import {
-  View,
-  Text,
-  TextInput,
-  Alert,
-  Pressable,
-  ImageBackground
-} from "react-native";
+import { View, Text, TextInput, Alert, Pressable, ImageBackground } from "react-native";
 import { useRouter } from "expo-router";
 import Breadcrumb from "./breadcrumb";
 import { Ionicons } from "@expo/vector-icons";
@@ -21,51 +14,41 @@ export default function DCMail() {
   const DCMailREGEX = /^[a-z]+(\.[a-z\d]+)?@dcmail\.ca$/;
   const isValid = DCMailREGEX.test(DCMail.trim());
 
-  const REQ_ERROR = "DC Mail address is required.";
-  const REG_ERROR = "Email must be lowercase and follow: firstname.lastname@dcmail.ca";
-  const handleClear = () => setMail("");
-
-  const validateForm = () => {
-    let errors = {};
+  const validateEmail = () => {
     const trimmedMail = DCMail.trim();
-
-    if (!trimmedMail) {
-      errors.DCMail = REQ_ERROR;
-      handleClear();
-    } else if (!DCMailREGEX.test(trimmedMail)) {
-      errors.DCMail = REG_ERROR;
-      handleClear();
-    }
-    return errors;
+    if (!trimmedMail) return "DC Mail address is required.";
+    if (!DCMailREGEX.test(trimmedMail))
+      return "Email must be lowercase and follow: firstname.lastname@dcmail.ca";
+    return null;
   };
 
   const handleSubmit = async () => {
-    const errors = validateForm();
-    if (Object.keys(errors).length > 0) {
-      Alert.alert("Validation Error", Object.values(errors).join("\n"));
+    const error = validateEmail();
+    if (error) {
+      Alert.alert("Validation Error", error);
       return;
     }
 
     try {
-      const fileExists = await FileSystem.getInfoAsync(filePath);
-      let updatedData = fileExists.exists
-        ? JSON.parse(await FileSystem.readAsStringAsync(filePath))
-        : [];
+      const fileContent = await FileSystem.readAsStringAsync(filePath).catch(() => "[]");
+      const updatedData = JSON.parse(fileContent);
 
-      updatedData.length > 0
-        ? (updatedData[0].DCMail = DCMail)
-        : updatedData.push({
-            firstname: "",
-            lastname: "",
-            studentID: "",
-            DCMail: DCMail,
-            campus: "",
-            program: "",
-            reason: "",
-            appointmentDate: "",
-            appointmentTime: "",
-            appointmentType: ""
-          });
+      if (updatedData.length > 0) {
+        updatedData[0].DCMail = DCMail;
+      } else {
+        updatedData.push({
+          firstname: "",
+          lastname: "",
+          studentID: "",
+          DCMail,
+          campus: "",
+          program: "",
+          reason: "",
+          appointmentDate: "",
+          appointmentTime: "",
+          appointmentType: "",
+        });
+      }
 
       await FileSystem.writeAsStringAsync(filePath, JSON.stringify(updatedData, null, 2));
       console.log("✅ Form Submitted: Email:", DCMail);
@@ -82,12 +65,9 @@ export default function DCMail() {
       style={styles.background}
       resizeMode="cover"
     >
-      {/* Arrows */}
+      {/* Navigation Arrows */}
       <View style={styles.arrowContainer}>
-        <Pressable
-          style={styles.arrowButton}
-          onPress={() => router.back()}
-        >
+        <Pressable style={styles.arrowButton} onPress={() => router.back()}>
           <Ionicons name="arrow-back" size={32} color="white" />
         </Pressable>
 
@@ -115,7 +95,7 @@ export default function DCMail() {
         />
 
         <View style={styles.breadcrumbContainer}>
-          <Breadcrumb entities={['Disclaimer', 'StudentNumber', 'Firstname', 'Lastname', 'DCMail']} flowDepth={4} />
+          <Breadcrumb entities={["Disclaimer", "StudentNumber", "Firstname", "Lastname", "DCMail"]} flowDepth={4} />
         </View>
       </View>
     </ImageBackground>
