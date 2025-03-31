@@ -65,7 +65,6 @@ transporter.verify(function(error: any, success: any) {
 app.post('/send-invite', async (req: any, res: any) => {
   const { name, email, studentId } = req.body;
   const emailID = getNextEmailID();
-
   try {
     // Calculate the next day's date at 10 AM
     const now = new Date();
@@ -93,24 +92,24 @@ app.post('/send-invite', async (req: any, res: any) => {
 
     // Generate the .ics file in the required format
     const icsContent = `
-        BEGIN:VCALENDAR
-        VERSION:2.0
-        PRODID:-//YourKiosk//Appointment System//EN
-        METHOD:REQUEST
-        BEGIN:VEVENT
-        UID:${studentId}@dcmail.ca
-        DTSTAMP:${now.toISOString().replace(/[-:]/g, '').split('.')[0]}Z
-        DTSTART:${nextDay.toISOString().replace(/[-:]/g, '').split('.')[0]}Z
-        DTEND:${new Date(nextDay.getTime() + 60 * 60 * 1000).toISOString().replace(/[-:]/g, '').split('.')[0]}Z
-        SUMMARY:${event.title}
-        DESCRIPTION:${event.description}
-        LOCATION:${event.location}
-        ORGANIZER;CN="${event.organizer.name}":mailto:${event.organizer.email}
-        ATTENDEE;ROLE=REQ-PARTICIPANT;PARTSTAT=NEEDS-ACTION;RSVP=TRUE;CN="Advisor Name":mailto:${event.attendees[0].email}
-        STATUS:${event.status}
-        SEQUENCE:0
-        END:VEVENT
-        END:VCALENDAR
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//YourKiosk//Appointment System//EN
+METHOD:REQUEST
+BEGIN:VEVENT
+UID:${studentId}@dcmail.ca
+DTSTAMP:${now.toISOString().replace(/[-:]/g, '').split('.')[0]}Z
+DTSTART:${nextDay.toISOString().replace(/[-:]/g, '').split('.')[0]}Z
+DTEND:${new Date(nextDay.getTime() + 60 * 60 * 1000).toISOString().replace(/[-:]/g, '').split('.')[0]}Z
+SUMMARY:${event.title}
+DESCRIPTION:${event.description}
+LOCATION:${event.location}
+ORGANIZER;CN="${event.organizer.name}":mailto:${event.organizer.email}
+ATTENDEE;ROLE=REQ-PARTICIPANT;PARTSTAT=NEEDS-ACTION;RSVP=TRUE;CN="Advisor Name":mailto:${event.attendees[0].email}
+STATUS:${event.status}
+SEQUENCE:0
+END:VEVENT
+END:VCALENDAR
     `;
 
     // Send email to advisor with .ics attachment
@@ -144,7 +143,7 @@ app.post('/send-invite', async (req: any, res: any) => {
         return res.status(500).send('Failed to send email'); // Send error response
       } else {
         console.log('Email sent:', info.response);
-        return res.status(200).json({ message: 'Invite sent successfully', emailID });
+        return res.status(200).send('Invite sent successfully'); // Send success response
       }
     });
 
@@ -218,7 +217,7 @@ app.post('/handle-tentative', async (req: any, res: any) => {
     const tentativeMessage = {
       from: process.env.EMAIL_USER!,
       to: process.env.STUDENT_EMAIL!,
-      subject: `${emailID} - Appointment Tentative - ${name}`,
+       subject: `${emailID} - Appointment Tentative - ${name}`,
       html: `
         <h2>Appointment Tentative</h2>
         <p>Dear Advisor,</p>
@@ -415,4 +414,6 @@ app.post('/download-ics', async (req: any, res: any) => {
   }
 });
 
-app.listen(3000, () => { console.log('Server is running on port 3000'); });
+app.listen(3000, () => {
+  console.log('Server is running on port 3000');
+});

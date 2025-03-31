@@ -86,7 +86,7 @@ export default function EndScreen() {
     appointmentDate = "N/A",
     appointmentTime = "N/A",
     appointmentType = "N/A",
-  } = userData[0] || {};  // Ensuring safe extraction
+  } = userData[0] || {};
 
 
   return (
