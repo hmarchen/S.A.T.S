@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, Pressable, Alert } from "react-native";
+import { View, Text, Pressable, Alert, ActivityIndicator } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
 import { Card } from "@rneui/themed";
@@ -10,6 +10,7 @@ import styles from "../css/styles";
 export default function EndScreen() {
   const router = useRouter();
   const [userData, setUserData] = useState(null);
+  const [loading, setLoading] = useState(true);
   const filePath = FileSystem.documentDirectory + "user.json";
 
   useEffect(() => {
@@ -24,9 +25,12 @@ export default function EndScreen() {
           console.log(`File copied to: ${filePath}`);
         }
 
-        setUserData(JSON.parse(await FileSystem.readAsStringAsync(filePath)));
+        const data = JSON.parse(await FileSystem.readAsStringAsync(filePath));
+        setUserData(data);
       } catch (error) {
         console.error("Error reading JSON file:", error);
+      } finally {
+        setLoading(false); // Set loading to false after data is fetched
       }
     };
 
@@ -35,27 +39,61 @@ export default function EndScreen() {
 
   const handleConfirm = async () => {
     try {
+      
       if (userData) {
-        // Modify the userData object here if necessary before saving
-        console.log(userData);
-        await FileSystem.writeAsStringAsync(filePath, JSON.stringify(userData, null, 2));
-        Alert.alert("Success", "User data saved successfully.");
+        await fetch('http://10.0.2.2:3000/send-invite', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ userData }),
+        });
+        
+        Alert.alert("Success", "Invite sent successfully.");
         router.push("/Login/Disclaimer");
       }
     } catch (error) {
-      console.error("Error writing to file:", error);
-      Alert.alert("Error", "Failed to save data.");
+      console.error("Error sending invite:", error);
+      Alert.alert("Error", "Failed to send invite.");
     }
   };
 
-  if (!userData) return <SafeAreaView style={styles.container}><Text style={styles.text}>Loading user data...</Text></SafeAreaView>;
+  if (loading) {
+    return (
+      <SafeAreaView style={styles.container}>
+        <ActivityIndicator size="large" color="#358f71" />
+        <Text style={styles.text}>Loading user data...</Text>
+      </SafeAreaView>
+    );
+  }
 
-  const { firstname, lastname, studentID, DCMail, campus, program, reason, advisor } = userData[0];
+  if (!userData || !Array.isArray(userData) || userData.length === 0) {
+    return (
+      <SafeAreaView style={styles.container}>
+        <Text style={styles.text}>No user data found.</Text>
+      </SafeAreaView>
+    );
+  }
+
+  const {
+    firstname = "N/A",
+    lastname = "N/A",
+    studentID = "N/A",
+    DCMail = "N/A",
+    campus = "N/A",
+    program = "N/A",
+    reason = "N/A",
+    appointmentDate = "N/A",
+    appointmentTime = "N/A",
+    appointmentType = "N/A",
+  } = userData[0] || {};
+
 
   return (
     <SafeAreaView style={styles.container}>
       <Card containerStyle={{ marginTop: 15, marginBottom: 20 }}>
         <Card.Title>Thank you for your application!</Card.Title>
+        <Card.Divider />
         <Text style={styles.text}>Your Details:</Text>
         <Text style={styles.text}>First Name: {firstname}</Text>
         <Text style={styles.text}>Last Name: {lastname}</Text>
@@ -65,13 +103,16 @@ export default function EndScreen() {
         <Text style={styles.text}>Program: {program}</Text>
         <Text style={styles.text}>Advisor: {advisor}</Text>
         <Text style={styles.text}>Reason: {reason}</Text>
+        <Text style={styles.text}>Date: {appointmentDate}</Text>
+        <Text style={styles.text}>Time: {appointmentTime}</Text>
+        <Text style={styles.text}>Appointment Type: {appointmentType}</Text>
       </Card>
 
       <Pressable style={styles.loginButton} onPress={handleConfirm} accessibilityLabel="Tap to confirm and return to the menu">
         <Text style={styles.buttonText}>Confirm Appointment</Text>
       </Pressable>
 
-      <Breadcrumb entities={['Disclaimer', 'StudentNumber', 'Firstname', 'Lastname', 'DCMail', 'Institution', 'Program', 'Reason', 'END']} flowDepth={8} />
+      <Breadcrumb entities={['Disclaimer', 'StudentNumber', 'Firstname', 'Lastname', 'DCMail', 'Institution', 'Program', 'Reason', 'Calendar', 'Time Selection', 'END']} flowDepth={10} />
     </SafeAreaView>
   );
 }

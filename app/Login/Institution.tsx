@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { View, Text, SafeAreaView, TextInput, Alert, Pressable, KeyboardAvoidingView, Platform } from "react-native";
 import { useRouter } from "expo-router";
 import * as FileSystem from "expo-file-system";
+import Arrows from './arrows';
 import Breadcrumb from "./breadcrumb";
 import styles from "../css/styles";
 import { TouchableOpacity } from "react-native";
@@ -16,22 +17,42 @@ export default function Institution() {
   const [data, setData] = useState([]);
   const [error, setError] = useState(null);
 
-  const handleSubmit = async () => {
-    try {
-      const fileExists = await FileSystem.getInfoAsync(filePath);
-      let updatedData = fileExists.exists ? JSON.parse(await FileSystem.readAsStringAsync(filePath)) : [];
+  const HandleSubmit = async () => {
+    if (institution === '') {
+        Alert.alert('Validation Error', 'Please select an option');
+        handleClear();
+    }
+    else {
+        try {
+          const fileExists = await FileSystem.getInfoAsync(filePath);
+          let updatedData = fileExists.exists ? JSON.parse(await FileSystem.readAsStringAsync(filePath)) : [];
 
-      updatedData.length > 0
-        ? (updatedData[0].campus = institution)
-        : updatedData.push({ firstname: "", lastname: "", studentID: "", DCMail: "", campus: institution, program: "", reason: "" });
+          updatedData.length > 0
+            ? (updatedData[0].campus = institution)
+            : updatedData.push(
+                {
+                    firstname: '',
+                    lastname: '',
+                    studentID: '',
+                    DCMail: '',
+                    campus: institution,
+                    program: '',
+                    reason: '',
+                    appointmentDate: '',
+                    appointmentTime: '',
+                    appointmentType: ''
+                }
+            );
 
-      await FileSystem.writeAsStringAsync(filePath, JSON.stringify(updatedData, null, 2));
-      Alert.alert("Form Submitted", `${institution}`);
-      console.log("Navigating to Program...");
-      router.push("/Login/Program");
-    } catch (error) {
-      console.error("Error writing to file:", error);
-      Alert.alert("Error", "Failed to save data.");
+          await FileSystem.writeAsStringAsync(filePath, JSON.stringify(updatedData, null, 2));
+          console.log("Form Submitted: Institution");
+          console.log("Navigating to Program...");
+          console.log("Campus:", institution);
+          router.push("/Login/Program");
+        } catch (error) {
+          console.error("Error writing to file:", error);
+          Alert.alert("Error", "Failed to save data.");
+        }
     }
   };
   // Radio button for office selection
@@ -67,10 +88,7 @@ export default function Institution() {
       console.log("ada: " + json);
       return json;
     }
-    catch(e) {
-
-      console.error(e);
-    }
+    catch(e) { console.error(e); }
   }
 
   const handleClear = () => (setInstitution(""), setProgram(""));
@@ -78,48 +96,13 @@ export default function Institution() {
 
   return (
     <KeyboardAvoidingView style={styles.container} behavior={Platform.OS === "ios" ? "padding" : "height"} keyboardVerticalOffset={20}>
+    <Arrows handleSubmit={HandleSubmit} router={router} />
     <SafeAreaView style={styles.container}>
       <Text style={styles.title}>Institutional Information</Text>
-      
-      {/* <TextInput style={styles.studentNumber} value={institution} onChangeText={setInstitution} placeholder="Campus Location" /> */}
       <View style={[{ flexDirection: 'row', justifyContent: 'space-around' }]}>
-            <CustomRadioButton
-                label="Oshawa"
-                selected={institution === 'Oshawa'}
-                onSelect={() => setInstitution('Oshawa')}
-            />
-            <CustomRadioButton
-                label="Whitby"
-                selected={institution === 'Whitby'}
-                onSelect={() => setInstitution('Whitby')}
-            />
-        </View>
-          {/* <TextInput style={styles.input} value={program} placeholder="Program Name" /> */}
-
-          {/* <AutocompleteDropdown
-  clearOnFocus={false}
-  closeOnBlur={true}
-  closeOnSubmit={false}
-  initialValue={{ id: '2' }} // or just '2'
-  onSelectItem={setSelectedItem}
-  dataSet={[
-    { id: '1', title: 'Alpha' },
-    { id: '2', title: 'Beta' },
-    { id: '3', title: 'Gamma' },
-  ]}
-/>; */}
-      
-      
-
-      <View style={styles.buttonContainer}>
-        <Pressable style={[styles.button, styles.clearButton]} onPress={handleClear}>
-          <Text style={styles.buttonText}>CLEAR</Text>
-        </Pressable>
-        <Pressable style={styles.button} onPress={handleSubmit}>
-          <Text style={styles.buttonText}>NEXT</Text>
-        </Pressable>
-      </View>
-
+            <CustomRadioButton label="Whitby" selected={institution === 'Whitby'} onSelect={() => setInstitution('Whitby')}/>
+            <CustomRadioButton label="Oshawa" selected={institution === 'Oshawa'} onSelect={() => setInstitution('Oshawa')}/>
+       </View>
       <Breadcrumb entities={['Disclaimer', 'Student ID', 'Full Name', 'DCMail', 'Institution']} flowDepth={4} />
     </SafeAreaView>
   </KeyboardAvoidingView>

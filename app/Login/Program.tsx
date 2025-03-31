@@ -3,6 +3,7 @@ import { View, Text, TextInput, StyleSheet, FlatList, TouchableOpacity, SafeArea
 import { useRouter } from "expo-router";
 import * as FileSystem from "expo-file-system";
 import Breadcrumb from "./breadcrumb";
+import Arrows from './arrows';
 import styles from "../css/styles";
 
 const filePath = FileSystem.documentDirectory + "user.json";
