@@ -25,9 +25,7 @@ export default function Reason() {
     try {
       const response = await fetch('http://10.0.2.2:3000/reasons')
       .then(res => {return res.json()})
-      .then(data => {console.log(data.reasons); return data.reasons});
-
-      console.log(response);
+      .then(data => {return data.reasons});
       return response;
     }
     catch(e) {

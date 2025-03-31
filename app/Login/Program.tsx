@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, StyleSheet, FlatList, TouchableOpacity, SafeAreaView, Pressable, KeyboardAvoidingView, Platform, Alert } from 'react-native';
+import { View, Text, TextInput, StyleSheet, FlatList, TouchableOpacity, SafeAreaView, Pressable, KeyboardAvoidingView, Platform, Alert, ActivityIndicator } from 'react-native';
 import { useRouter } from "expo-router";
 import * as FileSystem from "expo-file-system";
 import Breadcrumb from "./breadcrumb";
@@ -19,6 +19,9 @@ export default function Program() {
   const [searchQuery, setSearchQuery] = useState('');
   const [programs, setPrograms] = useState<string[]>([]);
   const [filteredPrograms, setFilteredPrograms] = useState<string[]>([]);
+  const [advisor, setAdvisor] = useState<string>("");
+  const [isLoading, setIsLoading] = useState(true);
+  const [email, setEmail] = useState<string>("");
 
   useEffect(() => {
     fetchPrograms();
@@ -36,6 +39,7 @@ export default function Program() {
 
   const fetchPrograms = async () => {
     try {
+      setIsLoading(true);
       const response = await fetch('http://10.0.2.2:3000/advisors');
       if (!response.ok) throw new Error('Failed to fetch programs');
       const data: Advisor[] = await response.json();
@@ -45,10 +49,14 @@ export default function Program() {
         data.map(advisor => advisor.programs.split('\n')).flat()
       )).filter(program => program !== 'PROGRAMS:' && program !== '');
       
+      setAdvisor(data[0].advisor);
+      setEmail(data[0].email);
       setPrograms(uniquePrograms);
       setFilteredPrograms(uniquePrograms);
     } catch (error) {
       console.error('Error fetching programs:', error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -78,6 +86,8 @@ export default function Program() {
 
       if (updatedData.length > 0) {
         updatedData[0].program = program;
+        updatedData[0].advisor = advisor;
+        updatedData[0].email = email;
       }
       
       await FileSystem.writeAsStringAsync(filePath, JSON.stringify(updatedData, null, 2));
@@ -106,19 +116,23 @@ export default function Program() {
             placeholder="Search for a program..."
           />
           <View style={[styles.container, { maxHeight: 200, width: '100%' }]}>
-            <FlatList
-              data={filteredPrograms}
-              keyExtractor={(item) => item}
-              renderItem={({ item }) => (
-                <TouchableOpacity
-                  style={[styles.button, { marginVertical: 2 }]}
-                  onPress={() => handleSelectProgram(item)}
-                >
-                  <Text style={styles.buttonText}>{item}</Text>
-                </TouchableOpacity>
-              )}
-              style={{ width: '100%' }}
-            />
+            {isLoading ? (
+              <ActivityIndicator size="large" color="#358f71" />
+            ) : (
+              <FlatList
+                data={filteredPrograms}
+                keyExtractor={(item) => item}
+                renderItem={({ item }) => (
+                  <TouchableOpacity
+                    style={[styles.button, { marginVertical: 2 }]}
+                    onPress={() => handleSelectProgram(item)}
+                  >
+                    <Text style={styles.buttonText}>{item}</Text>
+                  </TouchableOpacity>
+                )}
+                style={{ width: '100%' }}
+              />
+            )}
           </View>
         </View>
 

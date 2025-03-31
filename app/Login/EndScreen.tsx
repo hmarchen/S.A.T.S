@@ -37,6 +37,7 @@ export default function EndScreen() {
     try {
       if (userData) {
         // Modify the userData object here if necessary before saving
+        console.log(userData);
         await FileSystem.writeAsStringAsync(filePath, JSON.stringify(userData, null, 2));
         Alert.alert("Success", "User data saved successfully.");
         router.push("/Login/Disclaimer");
@@ -49,7 +50,7 @@ export default function EndScreen() {
 
   if (!userData) return <SafeAreaView style={styles.container}><Text style={styles.text}>Loading user data...</Text></SafeAreaView>;
 
-  const { firstname, lastname, studentID, DCMail, campus, program, reason } = userData[0];
+  const { firstname, lastname, studentID, DCMail, campus, program, reason, advisor } = userData[0];
 
   return (
     <SafeAreaView style={styles.container}>
@@ -62,6 +63,7 @@ export default function EndScreen() {
         <Text style={styles.text}>Email: {DCMail}</Text>
         <Text style={styles.text}>Campus: {campus}</Text>
         <Text style={styles.text}>Program: {program}</Text>
+        <Text style={styles.text}>Advisor: {advisor}</Text>
         <Text style={styles.text}>Reason: {reason}</Text>
       </Card>
 
