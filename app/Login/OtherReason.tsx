@@ -132,6 +132,26 @@ export default function VisitReason() {
             'Lastname', 'DCMail', 'Institution', 'Program', 'Reason'
           ]} flowDepth={7} />
         </View>
+    <SafeAreaView style={styles.container}>
+      <Text style={styles.title}>Reason for Visit</Text>
+      <Arrows handleSubmit={handleSubmit} router={router} />
+      <TextInput
+        multiline={true}
+        numberOfLines={12}
+        maxLength={2000}
+        style={styles.messageBox}
+        value={Visit}
+        onChangeText={(text) => {
+          setVisit(text);
+          setCharCount(text.length); // Update character count
+        }}
+        placeholder="Reason for your Visit"
+      />
+      <View style={styles.counterContainer}>
+        <Text style={[styles.charCounter, { color: charCount >= 200 ? 'green' : 'red' }]}>
+          {charCount} / 2000 characters
+        </Text>
+        <Text style={styles.statusSymbol}>{charCount >= 200 ? '✅' : '❌'}</Text>
       </View>
     </ImageBackground>
   );

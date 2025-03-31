@@ -362,9 +362,7 @@ activeArrow: {
 
 disabledArrow: {
   opacity: 0.3,
-},
-
-
+}
 });
 
 export default styles;

@@ -1,13 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import {
-  View,
-  Text,
-  FlatList,
-  Alert,
-  ImageBackground,
-  TouchableOpacity,
-  Dimensions
-} from 'react-native';
+import { View, Text, FlatList, Alert, ImageBackground, TouchableOpacity, Dimensions } from 'react-native';
 import Breadcrumb from './breadcrumb';
 import styles from '../css/styles';
 import { useRouter } from 'expo-router';
@@ -28,10 +20,13 @@ export default function Reason() {
 
   const getReasons = async () => {
     try {
-      const response = await fetch(`http://10.0.2.2:3001/reasons`);
-      const json = await response.json();
-      return json.reasons;
-    } catch (e) {
+      const response = await fetch(`http://10.0.2.2:3001/reasons`)
+      .then(res => {return res.json()})
+      .then(data => {console.log(data.reasons); return data.reasons});
+      console.log(response);
+      return response;
+    }
+    catch(e) {
       console.error(e);
     }
   };

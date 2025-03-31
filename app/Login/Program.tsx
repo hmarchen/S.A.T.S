@@ -1,18 +1,5 @@
-import React, { useState, useEffect } from "react";
-import {
-  View,
-  Text,
-  SafeAreaView,
-  TextInput,
-  Alert,
-  Pressable,
-  KeyboardAvoidingView,
-  Platform,
-  FlatList,
-  TouchableOpacity,
-  ActivityIndicator,
-  ImageBackground,
-} from "react-native";
+import React, { useState, useEffect } from "react"
+import { View, Text, SafeAreaView, TextInput, Alert, Pressable, KeyboardAvoidingView, Platform, FlatList, TouchableOpacity, ActivityIndicator, ImageBackground} from "react-native";
 import { useRouter } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import * as FileSystem from "expo-file-system";
@@ -31,6 +18,7 @@ export default function Program() {
   const router = useRouter();
   const [program, setProgram] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
+  const [searchQuery, setSearchQuery] = useState('');
   const [programs, setPrograms] = useState<string[]>([]);
   const [filteredPrograms, setFilteredPrograms] = useState<string[]>([]);
   const [advisor, setAdvisor] = useState<string>("");
@@ -50,26 +38,25 @@ export default function Program() {
           p.toLowerCase().includes(searchQuery.toLowerCase())
         )
       );
-    }
   }, [searchQuery, programs]);
 
   const fetchPrograms = async () => {
     try {
       setIsLoading(true);
-      const response = await fetch("http://10.0.2.2:3001/advisors");
-      if (!response.ok) throw new Error("Failed to fetch programs");
+      const response = await fetch('http://10.0.2.2:3001/advisors');
+      if (!response.ok) throw new Error('Failed to fetch programs');
       const data: Advisor[] = await response.json();
 
-      const uniquePrograms = Array.from(
-        new Set(data.map((advisor) => advisor.programs.split("\n")).flat())
-      ).filter((program) => program !== "PROGRAMS:" && program !== "");
+      const uniquePrograms = Array.from(new Set(
+        data.map(advisor => advisor.programs.split('\n')).flat()
+      )).filter(program => program !== 'PROGRAMS:' && program !== '');
 
       setAdvisor(data[0].advisor);
       setEmail(data[0].email);
       setPrograms(uniquePrograms);
       setFilteredPrograms(uniquePrograms);
     } catch (error) {
-      console.error("Error fetching programs:", error);
+      console.error('Error fetching programs:', error);
     } finally {
       setIsLoading(false);
     }
@@ -126,6 +113,13 @@ export default function Program() {
         filePath,
         JSON.stringify(updatedData, null, 2)
       );
+          firstname: '', lastname: '', studentID: '', DCMail: '', campus: '',
+          program, reason: '', appointmentDate: '', appointmentTime: '', appointmentType: '',
+          advisor, email
+        });
+      }
+
+      await FileSystem.writeAsStringAsync(filePath, JSON.stringify(updatedData, null, 2));
       router.push("/Login/Reason");
     } catch (error) {
       console.error("Error saving program:", error);
@@ -209,5 +203,24 @@ export default function Program() {
         </View>
       </View>
     </ImageBackground>
+    <KeyboardAvoidingView style={styles.container} behavior={Platform.OS === "ios" ? "padding" : "height"} keyboardVerticalOffset={20}>
+      <Arrows handleSubmit={HandleSubmit} router={router} />
+      <SafeAreaView style={styles.container}>
+        <Text style={styles.title}>Program Information</Text>
+        <TextInput style={styles.input} value={searchQuery} onChangeText={(text) => { setSearchQuery(text); setProgram(text); }} placeholder="Search for a program..." />
+        <View style={[styles.container, { maxHeight: 200, width: '100%' }]}>
+          {isLoading ? (
+            <ActivityIndicator size="large" color="#358f71" />
+          ) : (
+            <FlatList data={filteredPrograms} keyExtractor={(item) => item} renderItem={({ item }) => (
+              <TouchableOpacity style={[styles.button, { marginVertical: 2 }]} onPress={() => handleSelectProgram(item)}>
+                <Text style={styles.buttonText}>{item}</Text>
+              </TouchableOpacity>
+            )} style={{ width: '100%' }} />
+          )}
+        </View>
+        <Breadcrumb entities={['Disclaimer', 'StudentNumber', 'Firstname', 'Lastname', 'DCMail', 'Institution', 'Program']} flowDepth={6} />
+      </SafeAreaView>
+    </KeyboardAvoidingView>
   );
 }
