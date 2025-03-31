@@ -11,7 +11,7 @@ export default function Home() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const loginButtonClick = (event: { nativeEvent: { locationY: any; locationX: any; }; }) => {
+  const loginButtonClick = () => {
     // Handle login logic here
     router.push('./home');
   };

@@ -13,26 +13,6 @@ const styles = StyleSheet.create({
         backgroundColor: '#BCBBBB',
         marginVertical: 5,
     },
-
-    errorContainer: {
-        width: '50%',
-        height: 50,
-        backgroundColor: '#ff4444',
-        padding: 10,
-        borderRadius: 8,
-        marginTop: 120,
-        margin: 15,
-        alignSelf: 'center',
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-    errorText: {
-        fontSize: 16,
-        color: '#ffffff',
-        textAlign: 'center',
-        fontWeight: 'bold',
-    },
-
     popup: {
         flex: 1,
         justifyContent: 'center',
@@ -41,7 +21,7 @@ const styles = StyleSheet.create({
     },
     popupBox: {
         width: '40%',
-        height: '40%',
+        height: '45%',
         backgroundColor: 'white',
         borderRadius: 10,
         flexDirection: 'column',
@@ -74,6 +54,13 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         gap: 10,
     },
+    popupBodyRow: {
+        width: '100%',
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+        gap: 10,
+    },
     popupClose: {
         width: 40,
         height: 40,
@@ -92,17 +79,28 @@ const styles = StyleSheet.create({
         textTransform: 'uppercase',
         color: '#3e2b2f',
     },
-    popupText: {
+    popupSubtitle: {
         fontSize: 18,
     },
+    popupText: {
+        fontSize: 16,
+    },
     popupTextInput: {
+        width: '100%', 
         height: 40,
         borderColor: '#007852',
         borderWidth: 1,
         borderRadius: 8,
         paddingLeft: 10,
+    },
+    picker: {
         width: '100%', 
-      },
+        height: 40,
+        borderColor: '#007852',
+        borderWidth: 1,
+        borderRadius: 8,
+        paddingLeft: 10,
+    },
 
     // MANAGE USERS ------------------------------------
     userContainer:{

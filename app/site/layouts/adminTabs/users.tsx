@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, Button, Image, Pressable, ScrollView, TouchableOpacity, Modal, TextInput } from 'react-native';
+import { Picker } from '@react-native-picker/picker';
 import { useRouter } from 'expo-router';
 import styles from '../../styles/tabStyles';
 import NewUser from './designs/NewUser';
@@ -7,63 +8,59 @@ import NewUser from './designs/NewUser';
 // MAIN LAYOUT COMPONENT
 interface LayoutProps {
   children: React.ReactNode; // This will hold the child content passed from the screen
+  onError: (error: string) => void;
 }
 
 
-const AdminUsers: React.FC<LayoutProps> = () => {
+const AdminUsers: React.FC<LayoutProps> = ({ onError }) => {
   // CONSTANTS
   const router = useRouter();
   const IMAGES = '../../images/';
   const [isAddVisible, setIsAddVisible] = useState(false);
   const [isEditVisible, setIsEditVisible] = useState(false);
-  const [isErrorVisible, setIsErrorVisible] = useState(false);
 
   // EVENT HANDLER
-  const handleAddPopupClick = () => { setIsAddVisible(true); };
+  const handleAddPopupClick = () => { 
+    setFirstName('');
+    setLastName('');
+    setEmail('');
+    setPassword('');
+    setSelectedRole('advisor');
+
+    setIsAddVisible(true); 
+  };
   const handleEditPopupClick = () => { setIsEditVisible(true); };
   const handlePopupClose = () => { setIsAddVisible(false); setIsEditVisible(false); };
-  const [error, setError] = useState<string | null>(null);
 
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [selectedRole, setSelectedRole] = useState('advisor');
 
-  const addUserClick = (event: { nativeEvent: { locationY: any; locationX: any; }; }) => {
+  const addUserClick = () => {
     // Handle login logic here
     handlePopupClose();
   };
 
-  const editUserClick = (event: { nativeEvent: { locationY: any; locationX: any; }; }) => {
+  const editUserClick = (firstName: string, lastName: string, email: string, password: string, role: string) => {
     // Handle login logic here
+    setFirstName(firstName);
+    setLastName(lastName);
+    setEmail(email);
+    setPassword(password);
+    setSelectedRole(role);
+
     handleEditPopupClick();
   };
 
-  const deleteUserClick = (event: { nativeEvent: { locationY: any; locationX: any; }; }) => {
+  const deleteUserClick = () => {
     // Handle login logic here
-    setError('Delete functionality not implemented yet...');
-
-    setIsErrorVisible(true);
-
-    setTimeout(() => {
-      setIsErrorVisible(false);
-    }, 5000);
-  };
-
-  const closeErrorClick = (event: { nativeEvent: { locationY: any; locationX: any; }; }) => {
-      setIsErrorVisible(false);
+    onError('Delete functionality not implemented yet...');
   };
 
   return (
     <View style={styles.userContainer}>
-      <Modal
-        animationType="fade"
-        transparent={true}
-        visible={isErrorVisible}
-      >
-        <Pressable style={styles.errorContainer} onPress={closeErrorClick}>
-          <Text style={styles.errorText}>{error}</Text>
-        </Pressable>
-      </Modal>
-
       {/* Header */}
       <View style={styles.userHeader}>
         <Pressable style={styles.userButton} onPress={handleAddPopupClick}>
@@ -80,23 +77,23 @@ const AdminUsers: React.FC<LayoutProps> = () => {
         {/* ALL USERS */}
         <ScrollView style={styles.userScroll}>
           <NewUser 
-            name={'NEW USER'} email={'test.test@durhamcollege.ca'} password={'somepassword'}
+            firstName={'NEW'} lastName={'USER'} email={'test.test@durhamcollege.ca'} password={'somepassword'} role={'admin'}
             onEditPress={editUserClick} onDeletePress={deleteUserClick} children={undefined} 
           />
           <NewUser 
-            name={'Another User'} email={'another.user@durhamcollege.ca'} password={'somepassword'}
+            firstName={'Another'} lastName={'User'} email={'another.user@durhamcollege.ca'} password={'somepassword'} role={'advisor'}
             onEditPress={editUserClick} onDeletePress={deleteUserClick} children={undefined} 
           />
           <NewUser 
-            name={'Hi There'} email={'hi.there@durhamcollege.ca'} password={'somepassword'}
+            firstName={'Hi'} lastName={'There'} email={'hi.there@durhamcollege.ca'} password={'somepassword'} role={'advisor'}
             onEditPress={editUserClick} onDeletePress={deleteUserClick} children={undefined} 
           />
           <NewUser 
-            name={':33333'} email={'cat.face@durhamcollege.ca'} password={'somepassword'}
+            firstName={':'} lastName={'33333'} email={'cat.face@durhamcollege.ca'} password={'somepassword'} role={'admin'}
             onEditPress={editUserClick} onDeletePress={deleteUserClick} children={undefined} 
           />
           <NewUser 
-            name={'YAYAYAYY'} email={'yipppeee.yahoooo@durhamcollege.ca'} password={'somepassword'}
+            firstName={'YAYAYAYY'} lastName={'YAAAAA'} email={'yipppeee.yahoooo@durhamcollege.ca'} password={'somepassword'} role={'advisor'}
             onEditPress={editUserClick} onDeletePress={deleteUserClick} children={undefined} 
           />
         </ScrollView>
@@ -112,7 +109,12 @@ const AdminUsers: React.FC<LayoutProps> = () => {
             <View style={styles.popup}>
               <View style={styles.popupBox}>
                 <View style={styles.popupHeader}>
-                  <Text style={styles.popupTitle}>Add User</Text>
+                  {isAddVisible && (
+                    <Text style={styles.popupTitle}>Add User</Text>
+                  )}
+                  {isEditVisible && (
+                    <Text style={styles.popupTitle}>Edit User</Text>
+                  )}
                   <Pressable style={styles.popupClose} onPress={handlePopupClose}>
                     <Image
                       source={require(IMAGES + 'icons/close_icon.png')} // Add your logo image here
@@ -122,27 +124,60 @@ const AdminUsers: React.FC<LayoutProps> = () => {
                 </View>
 
                 <View style={styles.popupBody}>
-                  <Text style={styles.popupText}>Enter new user information:</Text>
-                  <TextInput
-                    style={styles.popupTextInput}
-                    onChangeText={setEmail}
-                    value={email}  
-                    placeholder="Enter full name here" 
-                  />
-                  <TextInput
-                    style={styles.popupTextInput}
-                    onChangeText={setEmail}
-                    value={email}  
-                    placeholder="Enter new email here" 
-                  />
-                  <TextInput
-                    style={styles.popupTextInput}
-                    onChangeText={setPassword}
-                    value={password}  
-                    placeholder="Enter new password here" 
-                  />
+                  {isAddVisible && (
+                    <Text style={styles.popupSubtitle}>Enter new user information:</Text>
+                  )}
+                  {isEditVisible && (
+                    <Text style={styles.popupSubtitle}>Edit user information:</Text>
+                  )}
+                  <View style={styles.popupBodyRow}>
+                    <TextInput
+                      style={styles.popupTextInput}
+                      onChangeText={setFirstName}
+                      value={firstName}  
+                      placeholder="Enter first name here" 
+                    />
+                    <TextInput
+                      style={styles.popupTextInput}
+                      onChangeText={setLastName}
+                      value={lastName}  
+                      placeholder="Enter last name here" 
+                    />
+                  </View>
+                  <View style={styles.popupBodyRow}>
+                    <TextInput
+                      style={styles.popupTextInput}
+                      onChangeText={setEmail}
+                      value={email}  
+                      placeholder="Enter new email here" 
+                    />
+                  </View>
+                  <View style={styles.popupBodyRow}>
+                    <TextInput
+                      style={styles.popupTextInput}
+                      onChangeText={setPassword}
+                      value={password}  
+                      placeholder="Enter new password here" 
+                    />
+                  </View>
+                  <View style={styles.popupBodyRow}>
+                    <Text style={styles.popupText}>Role:</Text>
+                    <Picker
+                      selectedValue={selectedRole}
+                      onValueChange={(itemValue) => setSelectedRole(itemValue)}
+                      style={styles.picker}
+                    >
+                      <Picker.Item label="Advisor" value="advisor" />
+                      <Picker.Item label="Admin" value="admin" />
+                    </Picker>
+                  </View>
                   <Pressable style={styles.userButton} onPress={addUserClick}>
-                    <Text style={styles.userButtonText}>Add</Text>
+                    {isAddVisible && (
+                      <Text style={styles.userButtonText}>Add</Text>
+                    )}
+                    {isEditVisible && (
+                      <Text style={styles.userButtonText}>Update</Text>
+                    )}
                   </Pressable>
                 </View>
                 

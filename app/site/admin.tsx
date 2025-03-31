@@ -17,11 +17,34 @@ export default function Admin() {
 
   const usersTabClick = () => { setSelectedTab('Users'); };
   const reasonsTabClick = () => { setSelectedTab('Reasons'); };
+  const [isErrorVisible, setIsErrorVisible] = useState(false);
+
+  const [error, setError] = useState('');
 
   if (!isWeb) { return null; }
 
+  // EVENT HANDLERS
+  const showErrorClick = (error: string) => {
+    setError(error);
+    setIsErrorVisible(true);
+
+    setTimeout(() => {
+      setIsErrorVisible(false);
+    }, 5000);
+  };
+
+  const closeErrorClick = () => {
+      setIsErrorVisible(false);
+  };
+
   return (
     <Structure>
+      {isErrorVisible && (
+        <Pressable style={styles.errorContainer} onPress={closeErrorClick}>
+          <Text style={styles.errorText}>{error}</Text>
+        </Pressable>
+      )}
+
       <View style={styles.adminContainer}>
         {/* Left Pane - Navigation */}
         <View style={styles.adminNav}>
@@ -52,7 +75,7 @@ export default function Admin() {
           <View style={styles.adminTab}>
             {/* -------- MANAGE USERS --------- */}
             {selectedTab == "Users" && (
-              <AdminUsers children={undefined} />
+              <AdminUsers onError={(error) => {showErrorClick(error)}} children={undefined} />
             )}
       
             {/* -------- MANAGE REASONS --------- */}

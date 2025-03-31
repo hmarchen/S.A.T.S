@@ -6,24 +6,26 @@ import styles from '../../../styles/tabStyles';
 // MAIN LAYOUT COMPONENT
 interface LayoutProps {
   children: React.ReactNode; // This will hold the child content passed from the screen
-  name: string;
+  firstName: string;
+  lastName: string;
   email: string;
   password: string;
-  onEditPress: (event: { nativeEvent: { locationY: any; locationX: any; } }) => void;
-  onDeletePress: (event: { nativeEvent: { locationY: any; locationX: any; } }) => void;
+  role: string;
+  onEditPress: (firstName: string, lastName: string, email: string, password: string, role: string) => void;
+  onDeletePress: () => void;
 }
 
 
-const NewUser: React.FC<LayoutProps> = ({ name, email, password, onEditPress, onDeletePress }) => {
+const NewUser: React.FC<LayoutProps> = ({ firstName, lastName, email, password, role, onEditPress, onDeletePress }) => {
     const router = useRouter();
     const IMAGES = '../../../images/';
 
     return (
         <View style={styles.newUserBox}>
             <View style={styles.newUserHeader}>
-                <Text style={styles.newUserTitle}>{name}</Text>
+                <Text style={styles.newUserTitle}>{`${firstName} ${lastName}`}</Text>
                 <View style={styles.newUserButtons}>
-                <Pressable style={styles.newUserButton} onPress={onEditPress}>
+                <Pressable style={styles.newUserButton} onPress={() => {onEditPress(firstName, lastName, email, password, role);}}>
                     <Image
                     source={require(IMAGES + 'icons/edit_icon.png')} 
                     style={[ styles.newUserButtonIcon, { tintColor: '#2A56CE' } ]}
@@ -40,6 +42,7 @@ const NewUser: React.FC<LayoutProps> = ({ name, email, password, onEditPress, on
             <View style={styles.horizontalLine}/>
             <Text style={styles.newUserText}>Email: {email}</Text>
             <Text style={styles.newUserText}>Password: {password}</Text>
+            <Text style={styles.newUserText}>Role: {role}</Text>
         </View>
     );
 }
