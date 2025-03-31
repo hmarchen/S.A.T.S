@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from "react";
-import { View, Text, SafeAreaView, TextInput, Alert, Pressable, KeyboardAvoidingView, Platform, FlatList, TouchableOpacity, ActivityIndicator } from "react-native";
+import React, { useState, useEffect } from "react"
+import { View, Text, SafeAreaView, TextInput, Alert, Pressable, KeyboardAvoidingView, Platform, FlatList, TouchableOpacity, ActivityIndicator, ImageBackground} from "react-native";
 import { useRouter } from "expo-router";
+import { Ionicons } from "@expo/vector-icons";
 import * as FileSystem from "expo-file-system";
 import Breadcrumb from "./breadcrumb";
-import Arrows from './arrows';
 import styles from "../css/styles";
 
 const filePath = FileSystem.documentDirectory + "user.json";
@@ -17,6 +17,7 @@ interface Advisor {
 export default function Program() {
   const router = useRouter();
   const [program, setProgram] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
   const [searchQuery, setSearchQuery] = useState('');
   const [programs, setPrograms] = useState<string[]>([]);
   const [filteredPrograms, setFilteredPrograms] = useState<string[]>([]);
@@ -29,11 +30,14 @@ export default function Program() {
   }, []);
 
   useEffect(() => {
-    if (searchQuery.trim() === '') {
+    if (searchQuery.trim() === "") {
       setFilteredPrograms(programs);
     } else {
-      setFilteredPrograms(programs.filter(p => p.toLowerCase().includes(searchQuery.toLowerCase())));
-    }
+      setFilteredPrograms(
+        programs.filter((p) =>
+          p.toLowerCase().includes(searchQuery.toLowerCase())
+        )
+      );
   }, [searchQuery, programs]);
 
   const fetchPrograms = async () => {
@@ -76,7 +80,9 @@ export default function Program() {
 
     try {
       const fileExists = await FileSystem.getInfoAsync(filePath);
-      let updatedData = fileExists.exists ? JSON.parse(await FileSystem.readAsStringAsync(filePath)) : [];
+      let updatedData = fileExists.exists
+        ? JSON.parse(await FileSystem.readAsStringAsync(filePath))
+        : [];
 
       if (!Array.isArray(updatedData)) {
         updatedData = [];
@@ -88,6 +94,25 @@ export default function Program() {
         updatedData[0].email = email;
       } else {
         updatedData.push({
+          firstname: "",
+          lastname: "",
+          studentID: "",
+          DCMail: "",
+          campus: "",
+          program,
+          reason: "",
+          appointmentDate: "",
+          appointmentTime: "",
+          appointmentType: "",
+          advisor,
+          email,
+        });
+      }
+
+      await FileSystem.writeAsStringAsync(
+        filePath,
+        JSON.stringify(updatedData, null, 2)
+      );
           firstname: '', lastname: '', studentID: '', DCMail: '', campus: '',
           program, reason: '', appointmentDate: '', appointmentTime: '', appointmentType: '',
           advisor, email
@@ -103,6 +128,81 @@ export default function Program() {
   };
 
   return (
+    <ImageBackground
+      source={require("../../assets/background.jpg")}
+      style={styles.background}
+      resizeMode="cover"
+    >
+      {/* Arrows */}
+      <View style={styles.arrowContainer}>
+        <Pressable style={styles.arrowButton} onPress={() => router.back()}>
+          <Ionicons name="arrow-back" size={32} color="white" />
+        </Pressable>
+
+        <Pressable
+          style={[
+            styles.arrowButton,
+            program ? styles.activeArrow : styles.disabledArrow,
+          ]}
+          onPress={HandleSubmit}
+          disabled={!program}
+        >
+          <Ionicons name="arrow-forward" size={32} color="white" />
+        </Pressable>
+      </View>
+
+      <View style={styles.transparentContainer}>
+        <Text style={styles.whiteTitle}>Program Information</Text>
+        <TextInput
+          style={styles.input}
+          value={searchQuery}
+          onChangeText={(text) => {
+            setSearchQuery(text);
+            setProgram(text);
+          }}
+          placeholder="Search for a program..."
+          placeholderTextColor="#ddd"
+        />
+        <View
+          style={[
+            styles.transparentContainer,
+            { maxHeight: 300, width: "90%", marginVertical: 10 },
+          ]}
+        >
+          {isLoading ? (
+            <ActivityIndicator size="large" color="#358f71" />
+          ) : (
+            <FlatList
+              data={filteredPrograms}
+              keyExtractor={(item) => item}
+              renderItem={({ item }) => (
+                <TouchableOpacity
+                  style={[styles.button, { marginVertical: 2 }]}
+                  onPress={() => handleSelectProgram(item)}
+                >
+                  <Text style={styles.buttonText}>{item}</Text>
+                </TouchableOpacity>
+              )}
+              style={{ width: "100%" }}
+            />
+          )}
+        </View>
+        <View style={styles.breadcrumbContainer}>
+          <Breadcrumb
+            entities={[
+              "Disclaimer",
+              "StudentNumber",
+              "Firstname",
+              "Lastname",
+              "DCMail",
+              "Institution",
+              "Program",
+            ]}
+            flowDepth={6}
+          />
+        </View>
+      </View>
+    </ImageBackground>
     <KeyboardAvoidingView style={styles.container} behavior={Platform.OS === "ios" ? "padding" : "height"} keyboardVerticalOffset={20}>
       <Arrows handleSubmit={HandleSubmit} router={router} />
       <SafeAreaView style={styles.container}>

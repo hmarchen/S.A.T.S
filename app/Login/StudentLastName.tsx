@@ -1,86 +1,122 @@
 import React, { useState } from 'react';
-import { View, Text, SafeAreaView, TextInput, Alert, Pressable, KeyboardAvoidingView, Platform } from 'react-native';
+import {
+  View,
+  Text,
+  TextInput,
+  Alert,
+  Pressable,
+  ImageBackground
+} from 'react-native';
 import { useRouter } from 'expo-router';
 import Breadcrumb from './breadcrumb';
-import Arrows from './arrows';
+import { Ionicons } from '@expo/vector-icons';
 import styles from '../css/styles';
 import * as FileSystem from 'expo-file-system';
 
 const filePath = FileSystem.documentDirectory + 'user.json';
 
-export default function StudentName() {
-    const router = useRouter();
-    const [lastName, setLastName] = useState('');
-    const LastnameREGEX = /^[A-Z][a-zA-Z' -]+$/;
-    const REQ_ERROR = "Last name is required.";
-    const REG_ERROR = "Invalid last name: Must start with a capital letter and contain only letters.";
-    const handleClear = () => (setLastName(''));
+export default function StudentLastName() {
+  const router = useRouter();
+  const [lastName, setLastName] = useState('');
+  const LastnameREGEX = /^[A-Z][a-zA-Z' -]+$/;
+  const isValid = lastName.length > 0 && LastnameREGEX.test(lastName.trim());
 
-    const validateForm = () => {
-        let errors = {};
-        const trimmedLastName = lastName.trim();
+  const REQ_ERROR = "Last name is required.";
+  const REG_ERROR = "Invalid last name: Must start with a capital letter and contain only letters.";
+  const handleClear = () => setLastName('');
 
-        if (!trimmedLastName) {
-            errors.lastName = REQ_ERROR;
-            handleClear();
-        }
-        else if (!LastnameREGEX.test(trimmedLastName)) {
-            errors.lastName = REG_ERROR;
-            handleClear();
-        }
+  const validateForm = () => {
+    let errors = {};
+    const trimmedLastName = lastName.trim();
 
-        return errors;
-    };
+    if (!trimmedLastName) {
+      errors.lastName = REQ_ERROR;
+      handleClear();
+    } else if (!LastnameREGEX.test(trimmedLastName)) {
+      errors.lastName = REG_ERROR;
+      handleClear();
+    }
 
-    const handleSubmit = async () => {
-        const errors = validateForm();
-        if (Object.keys(errors).length > 0) {
-            Alert.alert("Validation Error", Object.values(errors).join('\n'));
-            return;
-        }
-        else {
-             try {
-                 const fileExists = await FileSystem.getInfoAsync(filePath);
-                 let updatedData = fileExists.exists ? JSON.parse(await FileSystem.readAsStringAsync(filePath)) : [];
+    return errors;
+  };
 
-                 updatedData.length > 0
-                     ? (updatedData[0].lastname = lastName)
-                     : updatedData.push(
-                         {
-                             firstname: '',
-                             lastname: lastName,
-                             studentID: '',
-                             DCMail: '',
-                             campus: '',
-                             program: '',
-                             reason: '',
-                             appointmentDate: '',
-                             appointmentTime: '',
-                             appointmentType: ''
-                         }
-                     );
+  const handleSubmit = async () => {
+    const errors = validateForm();
+    if (Object.keys(errors).length > 0) {
+      Alert.alert("Validation Error", Object.values(errors).join('\n'));
+      return;
+    }
 
-                 await FileSystem.writeAsStringAsync(filePath, JSON.stringify(updatedData, null, 2));
-                 console.log("Form Submitted: Lastname");
-                 console.log("Last Name:", lastName);
-                 console.log('Navigating to DCMail...');
-                 router.push('/Login/DCMail');
-             }
-             catch (error) {
-                 console.error('Error writing to file:', error);
-                 Alert.alert('Error', 'Failed to save data.');
-             }
-        }
-    };
+    try {
+      const fileExists = await FileSystem.getInfoAsync(filePath);
+      let updatedData = fileExists.exists
+        ? JSON.parse(await FileSystem.readAsStringAsync(filePath))
+        : [];
 
-    return (
-        <KeyboardAvoidingView style={styles.container} behavior={Platform.OS === 'ios' ? 'padding' : 'height'} keyboardVerticalOffset={20}>
-            <Arrows handleSubmit={handleSubmit} router={router} />
-            <SafeAreaView style={styles.container}>
-                <Text style={styles.title}>Enter your Legal Last Name</Text>
-                <TextInput style={styles.input} value={lastName} onChangeText={setLastName} placeholder="Last Name" />
-                <Breadcrumb entities={['Disclaimer', 'StudentNumber', 'Firstname', 'Lastname']} flowDepth={3} />
-            </SafeAreaView>
-        </KeyboardAvoidingView>
-    );
+      updatedData.length > 0
+        ? (updatedData[0].lastname = lastName)
+        : updatedData.push({
+            firstname: '',
+            lastname: lastName,
+            studentID: '',
+            DCMail: '',
+            campus: '',
+            program: '',
+            reason: '',
+            appointmentDate: '',
+            appointmentTime: '',
+            appointmentType: ''
+          });
+
+      await FileSystem.writeAsStringAsync(filePath, JSON.stringify(updatedData, null, 2));
+      console.log("✅ Form Submitted: Last Name:", lastName);
+      router.push('/Login/DCMail');
+    } catch (error) {
+      console.error('❌ Error writing to file:', error);
+      Alert.alert('Error', 'Failed to save data.');
+    }
+  };
+
+  return (
+    <ImageBackground
+      source={require('../../assets/background.jpg')}
+      style={styles.background}
+      resizeMode="cover"
+    >
+      {/* Arrows */}
+      <View style={styles.arrowContainer}>
+        <Pressable
+          style={styles.arrowButton}
+          onPress={() => router.back()}
+        >
+          <Ionicons name="arrow-back" size={32} color="white" />
+        </Pressable>
+
+        <Pressable
+          style={[styles.arrowButton, !isValid && styles.disabledArrow]}
+          onPress={handleSubmit}
+          disabled={!isValid}
+        >
+          <Ionicons name="arrow-forward" size={32} color="white" />
+        </Pressable>
+      </View>
+
+      {/* Main UI */}
+      <View style={styles.transparentContainer}>
+        <Text style={styles.whiteTitle}>Enter your Legal Last Name</Text>
+
+        <TextInput
+          style={styles.input}
+          placeholder="Last Name"
+          placeholderTextColor="rgba(255,255,255,0.6)"
+          value={lastName}
+          onChangeText={setLastName}
+        />
+
+        <View style={styles.breadcrumbContainer}>
+          <Breadcrumb entities={['Disclaimer', 'StudentNumber', 'Firstname', 'Lastname']} flowDepth={3} />
+        </View>
+      </View>
+    </ImageBackground>
+  );
 }
