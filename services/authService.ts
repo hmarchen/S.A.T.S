@@ -9,6 +9,32 @@ require('dotenv').config();
 
 const app = express();
 
+// ------------------------------------------------------------------------------------------------
+// for the ID to be serializable via text file updates
+const fs = require('fs');
+const path = require('path');
+
+const counterFile = path.join(__dirname, 'assets', 'data', 'ID_Counter.txt');
+
+const dataDir = path.dirname(counterFile);
+if (!fs.existsSync(dataDir)) { fs.mkdirSync(dataDir, { recursive: true }); }
+
+function getNextEmailID() {
+  let currentID = 1;
+
+  if (fs.existsSync(counterFile)) {
+    const lastID = fs.readFileSync(counterFile, 'utf8').trim();
+    if (!isNaN(lastID)) { currentID = parseInt(lastID, 10) + 1; }
+  }
+
+  const emailID = currentID.toString().padStart(9, '0');
+  fs.writeFileSync(counterFile, emailID, 'utf8');
+
+  return emailID;
+}
+
+// ------------------------------------------------------------------------------------------------
+
 // Configure CORS to allow requests from your frontend
 app.use(cors({
   origin: '*', // Allow all origins for development
@@ -37,26 +63,16 @@ transporter.verify(function(error: any, success: any) {
 });
 
 app.post('/send-invite', async (req: any, res: any) => {
-  const { userData } = req.body; // Expecting userData to be sent in the request body
-  
-  // Log the userData to the console
-  console.log('Received userData:', userData);
-
+  const { name, email, studentId } = req.body;
+  const emailID = getNextEmailID();
   try {
-    // Check if userData is an array and has at least one element
-    if (!Array.isArray(userData) || userData.length === 0) {
-      return res.status(400).send('Invalid userData format');
-    }
-
-    const studentData = userData[0]; // Access the first object in the array
-
     // Calculate the next day's date at 10 AM
     const now = new Date();
     const nextDay = new Date(now);
     nextDay.setDate(now.getDate() + 1);
     nextDay.setHours(10, 0, 0, 0); // Set time to 10:00 AM
 
-    // Define the event details using studentData
+    // Define the event details
     const event = {
       start: [
         nextDay.getFullYear(),
@@ -66,8 +82,8 @@ app.post('/send-invite', async (req: any, res: any) => {
         0   // Minute
       ] as [number, number, number, number, number], // Ensure the type is correct
       duration: { hours: 1 }, // Duration of the event
-      title: `Student Advising Appointment`,
-      description: `Appointment with ${studentData.firstname} ${studentData.lastname}. Student ID: ${studentData.studentID}`,
+      title: `${emailID} - Student Advising Appointment`,
+      description: `Appointment with ${name}. Student ID: ${studentId}`,
       location: 'Office 123',
       status: 'CONFIRMED',
       organizer: { name: 'Appointment System', email: process.env.EMAIL_USER },
@@ -81,7 +97,7 @@ VERSION:2.0
 PRODID:-//YourKiosk//Appointment System//EN
 METHOD:REQUEST
 BEGIN:VEVENT
-UID:${studentData.studentID}@dcmail.ca
+UID:${studentId}@dcmail.ca
 DTSTAMP:${now.toISOString().replace(/[-:]/g, '').split('.')[0]}Z
 DTSTART:${nextDay.toISOString().replace(/[-:]/g, '').split('.')[0]}Z
 DTEND:${new Date(nextDay.getTime() + 60 * 60 * 1000).toISOString().replace(/[-:]/g, '').split('.')[0]}Z
@@ -100,18 +116,14 @@ END:VCALENDAR
     const advisorMessage = {
       from: process.env.EMAIL_USER!,
       to: process.env.ADVISOR_EMAIL!,
-      subject: `SEIT Visit Request - ${studentData.firstname} ${studentData.lastname}`,
+      subject: `${emailID} - SEIT Visit Request - ${name}`, // change this to include email ID, write an email ID in the server itself, not database nor email (serializable) whereas you use `${email}. MAKE THE POST REQ FROM SCRATCH
       html: `
         <h2>SEIT Visit Request</h2>
         <p><strong>Student Details:</strong></p>
         <ul>
-          <li>First Name: ${studentData.firstname}</li>
-          <li>Last Name: ${studentData.lastname}</li>
-          <li>Student ID: ${studentData.studentID}</li>
-          <li>Email: ${studentData.DCMail}</li>
-          <li>Campus: ${studentData.campus}</li>
-          <li>Program: ${studentData.program}</li>
-          <li>Reason: ${studentData.reason}</li>
+          <li>Name: ${name}</li>
+          <li>Student ID: ${studentId}</li>
+          <li>Email: ${email}</li>
         </ul>
         <p>Please review the request and respond with your decision.</p>
       `,
@@ -143,7 +155,7 @@ END:VCALENDAR
 
 // New endpoint to handle rejections
 app.post('/handle-rejection', async (req: any, res: any) => {
-  const { name, reason } = req.body;
+  const { name, reason, emailID } = req.body;
 
   try {
     // Send notification to the fixed student email
@@ -171,7 +183,7 @@ app.post('/handle-rejection', async (req: any, res: any) => {
 
 // New endpoint to handle acceptances
 app.post('/handle-acceptance', async (req: any, res: any) => {
-  const { name, reason } = req.body;
+  const { name, reason, emailID } = req.body;
 
   try {
     // Logic to handle acceptance (e.g., notify the advisor)
@@ -198,14 +210,14 @@ app.post('/handle-acceptance', async (req: any, res: any) => {
 
 // New endpoint to handle tentatives
 app.post('/handle-tentative', async (req: any, res: any) => {
-  const { name, reason } = req.body;
+  const { name, reason, emailID } = req.body;
 
   try {
     // Logic to handle tentative (e.g., notify the advisor)
     const tentativeMessage = {
       from: process.env.EMAIL_USER!,
       to: process.env.STUDENT_EMAIL!,
-      subject: `Appointment Tentative - ${name}`,
+       subject: `Appointment Tentative - ${name}`,
       html: `
         <h2>Appointment Tentative</h2>
         <p>Dear Advisor,</p>
@@ -241,10 +253,13 @@ function processNewEmails() {
       return;
     }
 
+    // create a function that will read the subject of the email and fetch the email ID if it has one (at the start of the subject line)
+    // if it has a subject email ID, then, let the logic enter `f.on('message', (msg: any) => {`
+
     // Search for unread emails
     imap.search(['UNSEEN'], (err: any, results: number[]) => {
       console.log('Found unread emails:', results.length);
-      
+
       if (!results.length) return;
 
       const f = imap.fetch(results, {
@@ -266,12 +281,12 @@ function processNewEmails() {
             // Check for acceptance response
             if (parsed.subject?.includes('Accepted:')) {
               console.log('Found acceptance response for:', parsed.subject);
-              
+
               // Extract the accept reason from the email body
               const bodyText = parsed.text || '';
               const reasonMatch = bodyText.match(/Accept reason:(.*?)(?=\n|$)/i);
               const reason = reasonMatch ? reasonMatch[1].trim() : 'No reason provided';
-              
+
               console.log('Extracted accept reason:', reason);
 
               if (studentEmail) {
@@ -296,12 +311,12 @@ function processNewEmails() {
             // Check for tentative response
             else if (parsed.subject?.includes('Tentative:')) {
               console.log('Found tentative response for:', parsed.subject);
-              
+
               // Extract the tentative reason from the email body
               const bodyText = parsed.text || '';
               const reasonMatch = bodyText.match(/Tentative Reason:(.*?)(?=\n|$)/i);
               const reason = reasonMatch ? reasonMatch[1].trim() : 'No reason provided';
-              
+
               console.log('Extracted tentative reason:', reason);
 
               if (studentEmail) {
@@ -326,12 +341,12 @@ function processNewEmails() {
             // Check for decline response
             else if (parsed.subject?.includes('Declined:')) {
               console.log('Found decline response for:', parsed.subject);
-              
+
               // Extract the decline reason from the email body
               const bodyText = parsed.text || '';
               const reasonMatch = bodyText.match(/Decline reason:(.*?)(?=\n|$)/i);
               const reason = reasonMatch ? reasonMatch[1].trim() : 'No reason provided';
-              
+
               console.log('Extracted decline reason:', reason);
 
               if (studentEmail) {
@@ -355,6 +370,7 @@ function processNewEmails() {
               console.log('No relevant response found in the email subject.');
             }
           });
+          // CREATE AN ENDPOINT FOR READING THE EMAIL ID FROM THE EMAIL (comes from the subject line in which will be nine digits at the start)
         });
       });
     });
@@ -365,7 +381,7 @@ function processNewEmails() {
 imap.once('ready', () => {
   console.log('IMAP Connection ready');
   processNewEmails();
-  
+
   // Listen for new emails
   imap.on('mail', () => {
     processNewEmails();
@@ -377,6 +393,26 @@ imap.once('error', (err: any) => {
 });
 
 imap.connect();
+
+app.post('/download-ics', async (req: any, res: any) => {
+  const { url } = req.body; // Expecting the URL to be sent in the request body
+
+  try {
+    // Fetch the .ics file from the provided URL
+    const response = await fetch(url);
+    if (!response.ok) {
+      throw new Error('Failed to fetch calendar file');
+    }
+
+    const icsContent = await response.text();
+    // You can save the icsContent to a file or process it as needed
+    // For now, let's just return it
+    res.status(200).send(icsContent);
+  } catch (error) {
+    console.error('Error downloading ICS file:', error);
+    res.status(500).send('Failed to download ICS file');
+  }
+});
 
 app.listen(3000, () => {
   console.log('Server is running on port 3000');
