@@ -138,20 +138,19 @@ const styles = StyleSheet.create({
       width: '100%', 
     },
 
-    errorContainer: {
+    resultContainer: {
       width: '50%',
       height: 50,
       position: 'absolute',
       bottom: '90%',
       zIndex: 9999,
-      backgroundColor: '#ff4444',
       padding: 10,
       borderRadius: 8,
       alignSelf: 'center',
       alignItems: 'center',
       justifyContent: 'center',
     },
-    errorText: {
+    resultText: {
       fontSize: 16,
       color: '#ffffff',
       textAlign: 'center',

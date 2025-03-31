@@ -21,7 +21,6 @@ const styles = StyleSheet.create({
     },
     popupBox: {
         width: '40%',
-        height: '45%',
         backgroundColor: 'white',
         borderRadius: 10,
         flexDirection: 'column',
@@ -145,7 +144,7 @@ const styles = StyleSheet.create({
         padding: 10,
     },
     userButton: {
-        width: 125,
+        width: 150,
         borderRadius: 8,
         padding: 5,
         backgroundColor: '#0B8261',

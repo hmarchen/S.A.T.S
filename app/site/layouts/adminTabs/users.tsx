@@ -8,11 +8,11 @@ import NewUser from './designs/NewUser';
 // MAIN LAYOUT COMPONENT
 interface LayoutProps {
   children: React.ReactNode; // This will hold the child content passed from the screen
-  onError: (error: string) => void;
+  sendResult: (success: boolean, error: string) => void;
 }
 
 
-const AdminUsers: React.FC<LayoutProps> = ({ onError }) => {
+const AdminUsers: React.FC<LayoutProps> = ({ sendResult }) => {
   // CONSTANTS
   const router = useRouter();
   const IMAGES = '../../images/';
@@ -40,6 +40,7 @@ const AdminUsers: React.FC<LayoutProps> = ({ onError }) => {
 
   const addUserClick = () => {
     // Handle login logic here
+    sendResult(false, 'Add User functionality not implemented yet...');
     handlePopupClose();
   };
 
@@ -56,7 +57,7 @@ const AdminUsers: React.FC<LayoutProps> = ({ onError }) => {
 
   const deleteUserClick = () => {
     // Handle login logic here
-    onError('Delete functionality not implemented yet...');
+    sendResult(false, 'Delete functionality not implemented yet...');
   };
 
   return (
@@ -171,6 +172,7 @@ const AdminUsers: React.FC<LayoutProps> = ({ onError }) => {
                       <Picker.Item label="Admin" value="admin" />
                     </Picker>
                   </View>
+                  
                   <Pressable style={styles.userButton} onPress={addUserClick}>
                     {isAddVisible && (
                       <Text style={styles.userButtonText}>Add</Text>

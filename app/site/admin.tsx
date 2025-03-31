@@ -17,31 +17,38 @@ export default function Admin() {
 
   const usersTabClick = () => { setSelectedTab('Users'); };
   const reasonsTabClick = () => { setSelectedTab('Reasons'); };
-  const [isErrorVisible, setIsErrorVisible] = useState(false);
+  const [isResultVisible, setIsResultVisible] = useState(false);
 
-  const [error, setError] = useState('');
+  const [success, setResultState] = useState(true);
+  const [result, setResult] = useState('');
 
   if (!isWeb) { return null; }
 
   // EVENT HANDLERS
-  const showErrorClick = (error: string) => {
-    setError(error);
-    setIsErrorVisible(true);
+  const showResultClick = (success: boolean, result: string) => {
+    setResultState(success);
+    setResult(result);
+    setIsResultVisible(true);
 
     setTimeout(() => {
-      setIsErrorVisible(false);
+      setIsResultVisible(false);
     }, 5000);
   };
 
   const closeErrorClick = () => {
-      setIsErrorVisible(false);
+    setIsResultVisible(false);
   };
 
   return (
     <Structure>
-      {isErrorVisible && (
-        <Pressable style={styles.errorContainer} onPress={closeErrorClick}>
-          <Text style={styles.errorText}>{error}</Text>
+      {isResultVisible && (
+        <Pressable 
+        style={[
+          styles.resultContainer,
+          success ? { backgroundColor: '#46B22D' }: { backgroundColor: '#ff4444' }
+        ]} 
+        onPress={closeErrorClick}>
+          <Text style={styles.resultText}>{result}</Text>
         </Pressable>
       )}
 
@@ -75,12 +82,12 @@ export default function Admin() {
           <View style={styles.adminTab}>
             {/* -------- MANAGE USERS --------- */}
             {selectedTab == "Users" && (
-              <AdminUsers onError={(error) => {showErrorClick(error)}} children={undefined} />
+              <AdminUsers sendResult={(success: boolean, result: string) => {showResultClick(success, result)}} children={undefined} />
             )}
       
             {/* -------- MANAGE REASONS --------- */}
             {selectedTab == "Reasons" && (
-              <AdminReasons children={undefined} />
+              <AdminReasons sendResult={(success: boolean, result: string) => {showResultClick(success, result)}} children={undefined} />
             )}
           </View>
         </View>

@@ -1,218 +1,279 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, FlatList, StyleSheet, ScrollView, Pressable } from 'react-native';
-import styles from '../../../css/styles';
-
-interface Reason {
-    id: number;
-    category: string;
-    details: string;
-}
+import { View, Text, FlatList, Image, Pressable, ScrollView, StyleSheet, Modal, TextInput } from 'react-native';
+import { useRouter } from 'expo-router';
+import styles from '../../styles/tabStyles';
+import ogStyles from '../../../css/styles';
+import NewReason, { Reason } from './designs/NewReason';
 
 // MAIN LAYOUT COMPONENT
 interface LayoutProps {
   children: React.ReactNode; // This will hold the child content passed from the screen
+  sendResult: (success: boolean, error: string) => void;
 }
 
-const AdminReasons: React.FC<LayoutProps> = () => {
-    const API_BASE_URL = 'http://localhost:3000';
-    
-    const [reasons, setReasons] = useState<Reason[]>([]);
-    const [newReason, setNewReason] = useState<Partial<Reason>>({ category: '', details: '' });
-    const [editingReason, setEditingReason] = useState<Reason | null>(null);
-    const [selectedReason, setSelectedReason] = useState<Reason | null>(null);
-    const [error, setError] = useState<string | null>(null);
+const AdminReasons: React.FC<LayoutProps> = ({ sendResult }) => {
+  // CONSTANTS
+  const router = useRouter();
+  const IMAGES = '../../images/';
+  const API_BASE_URL = 'http://localhost:3000';
+  const [isAddVisible, setIsAddVisible] = useState(false);
+  const [isEditVisible, setIsEditVisible] = useState(false);
 
-    useEffect(() => {
-        fetchReasons();
-      }, []);
-    
-    const fetchReasons = async () => {
-        try {
-        const response = await fetch(`${API_BASE_URL}/reasons`);
-        if (!response.ok) throw new Error('Failed to fetch reasons');
-        const data = await response.json();
-        setReasons(data.reasons);
-        setError(null);
-        } catch (error) {
-        console.error('Error fetching reasons:', error);
-        setError('Failed to load reasons. Please try again.');
-        }
-    };
+  const [reasons, setReasons] = useState<Reason[]>([]);
+  const [newReason, setNewReason] = useState<Partial<Reason>>({ category: '', details: '' });
+  const [editingReason, setEditingReason] = useState<Reason | null>(null);
 
-    const handleAddReason = async () => {
-        if (newReason.category && newReason.details) {
-        try {
-            const response = await fetch(`${API_BASE_URL}/reasons`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(newReason),
-            });
+  // EVENT HANDLER
+  const handleAddPopupClick = () => { 
+    setCategory('');
+    setDetails('');
 
-            if (!response.ok) throw new Error('Failed to add reason');
-            
-            const addedReason = await response.json();
-            setReasons([...reasons, addedReason]);
-            setNewReason({ category: '', details: '' });
-            setSelectedReason(null);
-            setError(null);
-        } catch (error) {
-            console.error('Error adding reason:', error);
-            setError('Failed to add reason. Please try again.');
-        }
-        }
-    };
+    setIsAddVisible(true); 
+  };
+  const handleEditPopupClick = () => { setIsEditVisible(true); };
+  const handlePopupClose = () => { 
+    setIsAddVisible(false); 
+    setIsEditVisible(false); 
+    setEditingReason(null);
+  };
 
-    const handleEditReason = (reason: Reason) => {
-        setEditingReason(reason);
-        setSelectedReason(reason);
-    };
+  const [category, setCategory] = useState('');
+  const [details, setDetails] = useState('');
 
-    const handleSaveEdit = async () => {
-        if (editingReason) {
-        try {
-            const response = await fetch(`${API_BASE_URL}/reasons`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(editingReason),
-            });
+  const editReasonClick = (reason: Reason) => {
+    // Handle login logic here
+    setCategory(reason.category);
+    setDetails(reason.details);
+    setEditingReason(reason);
 
-            if (!response.ok) throw new Error('Failed to update reason');
-            
-            const updatedReason = await response.json();
-            setReasons(reasons.map(r => 
-            r.id === updatedReason.id ? updatedReason : r
-            ));
-            setEditingReason(null);
-            setSelectedReason(null);
-            setError(null);
-        } catch (error) {
-            console.error('Error updating reason:', error);
-            setError('Failed to update reason. Please try again.');
-        }
-        }
-    };
+    handleEditPopupClick();
+  };
 
-    const handleDeleteReason = async (id: number) => {
-        try {
-        const response = await fetch(`${API_BASE_URL}/reasons/${id}`, {
-            method: 'DELETE',
+  useEffect(() => {
+    fetchReasons();
+  }, []);
+  
+  const fetchReasons = async () => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/reasons`);
+      if (!response.ok) throw new Error('Failed to fetch reasons');
+      const data = await response.json();
+      setReasons(data.reasons);
+    } catch (error) {
+      console.error('Error fetching reasons:', error);
+      sendResult(false, 'Failed to load reasons. Please try again.');
+    }
+  };
+
+  const handleReasonAdd = async () => {
+    if (newReason.category && newReason.details) {
+      try {
+        const response = await fetch(`${API_BASE_URL}/reasons`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(newReason),
         });
 
-        if (!response.ok) throw new Error('Failed to delete reason');
+        if (!response.ok) throw new Error('Failed to add reason');
         
-        setReasons(reasons.filter(r => r.id !== id));
-        setSelectedReason(null);
-        setEditingReason(null);
-        setError(null);
-        } catch (error) {
-        console.error('Error deleting reason:', error);
-        setError('Failed to delete reason. Please try again.');
-        }
-    };
+        const addedReason = await response.json();
+        setReasons([...reasons, addedReason]);
+        setNewReason({ category: '', details: '' });
+        sendResult(true, 'Successfully added a new reason!');
+      } catch (error) {
+        console.error('Error adding reason:', error);
+        sendResult(false, 'Failed to add reason. Please try again.');
+      }
 
-    return (
-        <View style={styles2.container}>
-        <Text style={styles2.title}>Admin Panel - Manage Reasons</Text>
-        
-        {error && (
-        <View style={styles2.errorContainer}>
-            <Text style={styles2.errorText}>{error}</Text>
-        </View>
-        )}
-        
-        <View style={styles2.paneContainer}>
-        {/* Left pane - Reasons list */}
-        <View style={styles2.leftPane}>
-            <Text style={styles2.paneTitle}>Reasons List</Text>
-            <FlatList
+      handlePopupClose();
+    }
+    else {
+      // error handling
+      if (!newReason.category) {
+        sendResult(false, 'Reason Category cannot be left empty.');
+      }
+      else if (!newReason.details) {
+        sendResult(false, 'Reason Details cannot be left empty.');
+      }
+    }
+  };
+
+  const handleReasonUpdate = async () => {
+    if (editingReason?.category && editingReason?.details) {
+      try {
+          const response = await fetch(`${API_BASE_URL}/reasons`, {
+          method: 'PUT',
+          headers: {
+              'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(editingReason),
+          });
+
+          if (!response.ok) throw new Error('Failed to update reason');
+          
+          const updatedReason = await response.json();
+            setReasons(reasons.map(r => 
+            r.id === updatedReason.id ? updatedReason : r
+          ));
+          setEditingReason(null);
+          sendResult(true, 'Successfully update reason!');
+      } catch (error) {
+          console.error('Error updating reason:', error);
+          sendResult(false, 'Failed to update reason. Please try again.');
+      }
+
+      handlePopupClose();
+    }
+    else {
+      // error handling
+      if (!newReason.category) {
+        sendResult(false, 'Reason Category cannot be left empty.');
+      }
+      else if (!newReason.details) {
+        sendResult(false, 'Reason Details cannot be left empty.');
+      }
+    }
+  };
+
+  const handleReasonDelete = async (id: number) => {
+    // Handle login logic here
+    try {
+      const response = await fetch(`${API_BASE_URL}/reasons/${id}`, {
+          method: 'DELETE',
+      });
+
+      if (!response.ok) throw new Error('Failed to delete reason');
+      
+      setReasons(reasons.filter(r => r.id !== id));
+      setEditingReason(null);
+      sendResult(true, 'Successfuly deleted reason.');
+    } catch (error) {
+      console.error('Error deleting reason:', error);
+      sendResult(false, 'Failed to delete reason. Please try again.');
+    }
+  };
+
+  return (
+    <View style={styles.userContainer}>
+      {/* Header */}
+      <View style={styles.userHeader}>
+        <Pressable style={styles.userButton} onPress={handleAddPopupClick}>
+          <Image
+            source={require(IMAGES + 'icons/add_icon.png')} // Add your logo image here
+            style={[ styles.headerIcon, { tintColor: '#E1FFED' } ]}
+          />
+          <Text style={styles.userButtonText}>New Reason</Text>
+        </Pressable>
+      </View>
+      
+      {/* Body */}
+      <View style={styles.userBody}>
+        {/* ALL USERS */}
+        <ScrollView style={styles.userScroll}>
+          <FlatList
             data={reasons}
             keyExtractor={(item) => item.id.toString()}
             renderItem={({ item }) => (
-                <View 
-                style={[
-                    styles2.reasonItem,
-                    selectedReason?.id === item.id && styles2.selectedReason
-                ]}
-                onTouchEnd={() => setSelectedReason(item)}
-                >
-                <View style={styles2.reasonContent}>
-                    <Text style={styles2.category}>{item.category}</Text>
-                    <Text style={styles2.details}>{item.details}</Text>
+                <View>
+                  <NewReason 
+                    reason={item}
+                    onEditPress={editReasonClick} onDeletePress={(id: number) => {handleReasonDelete(id)}} children={undefined} 
+                  />
                 </View>
-                <View style={styles2.actions}>
-                    <Pressable style={styles.button} onPress={() => handleEditReason(item)}>
-                    <Text>Edit</Text>
-                    </Pressable>
-                    <Pressable style={styles.clearButton} onPress={() => handleDeleteReason(item.id)} >
-                    <Text>Delete</Text>
-                    </Pressable>
-                </View>
-                </View>
-            )}
+              )}
             />
-        </View>
+        </ScrollView>
 
-        {/* Right pane - Edit/Add form */}
-        <View style={styles2.rightPane}>
-            <Text style={styles2.paneTitle}>
-            {editingReason ? 'Edit Reason' : 'Add New Reason'}
-            </Text>
-            <ScrollView style={styles2.form}>
-            {editingReason ? (
-                <View style={styles2.editForm}>
-                <TextInput
-                    style={styles2.input}
-                    placeholder="Category"
-                    value={editingReason.category}
-                    onChangeText={(text) => setEditingReason({ ...editingReason, category: text })}
-                />
-                <TextInput
-                    style={styles2.input}
-                    placeholder="Details"
-                    value={editingReason.details}
-                    onChangeText={(text) => setEditingReason({ ...editingReason, details: text })}
-                />
-                <Pressable style={styles.button} onPress={handleSaveEdit}>
-                    <Text>Save Changes</Text>
-                </Pressable>
-                <Pressable style={styles.clearButton} onPress={() => {
-                    setEditingReason(null);
-                    setSelectedReason(null);
-                }}>
-                    <Text>Cancel</Text>
-                </Pressable>
+        {/* ADD USER POPUP */}
+        {(isAddVisible || isEditVisible) && (
+          <Modal
+            animationType="none"
+            transparent={true}
+            visible={isAddVisible || isEditVisible}
+            onRequestClose={handlePopupClose}
+          >
+            <View style={styles.popup}>
+              <View style={styles.popupBox}>
+                <View style={styles.popupHeader}>
+                  {isAddVisible && (
+                    <Text style={styles.popupTitle}>Add Reason</Text>
+                  )}
+                  {isEditVisible && (
+                    <Text style={styles.popupTitle}>Edit Reason</Text>
+                  )}
+                  <Pressable style={styles.popupClose} onPress={handlePopupClose}>
+                    <Image
+                      source={require(IMAGES + 'icons/close_icon.png')} // Add your logo image here
+                      style={[ styles.popupIcon, { tintColor: '#6C6D6C' } ]}
+                    />
+                  </Pressable>
                 </View>
-            ) : (
-                <View style={styles2.addForm}>
-                <TextInput
-                    style={styles2.input}
-                    placeholder="Category"
-                    value={newReason.category}
-                    onChangeText={(text) => setNewReason({ ...newReason, category: text })}
-                />
-                <TextInput
-                    style={styles2.input}
-                    placeholder="Details"
-                    value={newReason.details}
-                    onChangeText={(text) => setNewReason({ ...newReason, details: text })}
-                />
-                <Pressable style={styles.button} onPress={handleAddReason}>
-                    <Text>Add Reason</Text>
-                </Pressable>
-                </View>
-            )}
-            </ScrollView>
-        </View>
-        </View>
+
+                {/* ADDING NEW REASON */}
+                {isAddVisible && (
+                  <View style={styles.popupBody}>
+                    <Text style={styles.popupSubtitle}>Create a new reason:</Text>
+                    <View style={styles.popupBodyRow}>
+                    <TextInput
+                      style={styles.popupTextInput}
+                      onChangeText={(text) => setNewReason({ ...newReason, category: text })}
+                      value={newReason.category}  
+                      placeholder="Enter reason category" 
+                    />
+                    </View>
+                    <View style={styles.popupBodyRow}>
+                      <TextInput
+                        style={styles.popupTextInput}
+                        onChangeText={(text) => setNewReason({ ...newReason, details: text })}
+                        value={newReason.details}  
+                        placeholder="Enter reason details" 
+                      />
+                    </View>
+                    <Pressable style={styles.userButton} onPress={handleReasonAdd}>
+                      <Text style={styles.userButtonText}>Add</Text>
+                    </Pressable>
+                  </View>
+                )}
+
+                {/* EDITTING NEW REASON */}
+                {isEditVisible && editingReason && (
+                  <View style={styles.popupBody}>
+                    <Text style={styles.popupSubtitle}>Edit reason:</Text>
+                    <View style={styles.popupBodyRow}>
+                    <TextInput
+                      style={styles.popupTextInput}
+                      onChangeText={(text) => setEditingReason({ ...editingReason, category: text })}
+                      value={editingReason.category}  
+                      placeholder="Enter reason category" 
+                    />
+                    </View>
+                    <View style={styles.popupBodyRow}>
+                      <TextInput
+                        style={styles.popupTextInput}
+                        onChangeText={(text) => setEditingReason({ ...editingReason, details: text })}
+                        value={editingReason.details}  
+                        placeholder="Enter reason details" 
+                      />
+                    </View>
+                    <Pressable style={styles.userButton} onPress={handleReasonUpdate}>
+                      <Text style={styles.userButtonText}>Update</Text>
+                    </Pressable>
+                  </View>
+                )}                
+              </View>
+            </View>
+          </Modal>
+        )}
+      </View>
     </View>
-    )
+  )
 }
 
+
 export default AdminReasons;
+
 
 const styles2 = StyleSheet.create({
     container: {
