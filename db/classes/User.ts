@@ -1,29 +1,28 @@
 export default class User {
-    userId: number;
+    email: string;
     firstName: string;
     lastName: string;
-    emailId: string;
     password: string;
     role: string;
 
-    constructor(userId: number, firstName: string, lastName: string, emailId: string, password: string, role: string) {
-        this.userId = userId;
+    constructor(email: string, firstName: string, lastName: string, password: string, role: string) {
+        this.email = email;
         this.firstName = firstName;
         this.lastName = lastName;
-        this.emailId = emailId;
         this.password = password;
         this.role = role;
     }
 
-    getUserId(): number {
-        return this.userId;
+    getEmail(): string {
+        return this.email;
     }
 
-    setUserId(userId: number): void {
-        if (userId <= 0) {
-            throw new Error("User ID must be a positive number.");
+    setEmail(email: string): void {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+            throw new Error("Invalid email format.");
         }
-        this.userId = userId;
+        this.email = email;
     }
 
     getFirstName(): string {
@@ -46,18 +45,6 @@ export default class User {
             throw new Error("Last name cannot be empty.");
         }
         this.lastName = lastName;
-    }
-
-    getEmailId(): string {
-        return this.emailId;
-    }
-
-    setEmailId(emailId: string): void {
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailRegex.test(emailId)) {
-            throw new Error("Invalid email format.");
-        }
-        this.emailId = emailId;
     }
 
     getPassword(): string {
@@ -84,6 +71,6 @@ export default class User {
     }
 
     toString(): string {
-        return `User [ID=${this.userId}, Name=${this.firstName} ${this.lastName}, Email=${this.emailId}, Role=${this.role}]`;
+        return `User [Name=${this.firstName} ${this.lastName}, Email=${this.email}, Role=${this.role}]`;
     }
 }

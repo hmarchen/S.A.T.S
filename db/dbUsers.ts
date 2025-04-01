@@ -15,29 +15,27 @@ class DBUsers {
         }
     }
 
-    async createUser(firstName: string, lastName: string, emailId: string, password: string, role: string): Promise<User> {
+    async createUser(email: string, firstName: string, lastName: string, password: string, role: string): Promise<User> {
         const hashedPassword = await bcrypt.hash(password, 10); // Hash the password
         const query = `
             INSERT INTO users (firstname, lastname, email, password, role)
             VALUES ($1, $2, $3, $4, $5)
-            RETURNING userid
         `;
-        const result = await this.pool.query(query, [firstName, lastName, emailId, hashedPassword, role]);
-        const userId = result.rows[0].userid;
-        return new User(userId, firstName, lastName, emailId, hashedPassword, role);
+        await this.pool.query(query, [firstName, lastName, email, hashedPassword, role]);
+        return new User(email, firstName, lastName, hashedPassword, role);
     }
 
-    async getUserById(userId: number): Promise<User | null> {
+    async getUserByEmail(emailId: string): Promise<User | null> {
         const query = `
             SELECT * FROM users
-            WHERE userid = $1
+            WHERE email = $1
         `;
-        const result = await this.pool.query(query, [userId]);
+        const result = await this.pool.query(query, [emailId]);
         if (result.rows.length === 0) {
             return null;
         }
         const row = result.rows[0];
-        return new User(row.userid, row.firstname, row.lastname, row.email, row.password, row.role);
+        return new User(row.email, row.firstname, row.lastname, row.password, row.role);
     }
 
     async comparePassword(plainPassword: string, hashedPassword: string): Promise<boolean> {
@@ -48,18 +46,18 @@ class DBUsers {
         const hashedPassword = await bcrypt.hash(user.password, 10); // Hash the password
         const query = `
             UPDATE users
-            SET firstname = $2, lastname = $3, email = $4, password = $5, role = $6
-            WHERE userid = $1
+            SET firstname = $2, lastname = $3, password = $4, role = $5
+            WHERE email = $1
         `;
-        await this.pool.query(query, [user.userId, user.firstName, user.lastName, user.emailId, hashedPassword, user.role]);
+        await this.pool.query(query, [user.email, user.firstName, user.lastName, hashedPassword, user.role]);
     }
 
-    async deleteUser(userId: number): Promise<void> {
+    async deleteUser(email: string): Promise<void> {
         const query = `
             DELETE FROM users
-            WHERE userid = $1
+            WHERE email = $1
         `;
-        await this.pool.query(query, [userId]);
+        await this.pool.query(query, [email]);
     }
     
     async deleteAllUsers(): Promise<void> {

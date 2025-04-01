@@ -1,18 +1,16 @@
-import dotenv from 'dotenv';
-dotenv.config();
+require('dotenv').config();
 
 import { Pool } from 'pg';
 
-// returning undefined for some reason....
-const dbName = process.env.REACT_APP_DB_NAME;
-const dbUser = process.env.REACT_APP_DB_USER;
-const dbPass = process.env.REACT_APP_DB_PASS;
+const dbName = process.env.DB_NAME;
+const dbUser = process.env.DB_USER;
+const dbPass = process.env.DB_PASS;
 
 const pool = new Pool({
-    database: dbName || 'satsDB', 
-    user: dbUser || 'sats_admin',
+    database: dbName, 
+    user: dbUser,
     host: 'localhost',
-    password: dbPass || '12345678',
+    password: dbPass,
     port: 5432,
 });
 

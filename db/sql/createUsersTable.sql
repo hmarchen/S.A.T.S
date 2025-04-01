@@ -3,13 +3,12 @@ DROP TABLE IF EXISTS Users;
 
 CREATE TABLE Users
 (
-    UserID SERIAL PRIMARY KEY,  -- Use SERIAL for auto-incrementing UserID
+    Email VARCHAR(255) PRIMARY KEY,
     FirstName VARCHAR(50) NOT NULL,
     LastName VARCHAR(50) NOT NULL,
-    Email VARCHAR(255) NOT NULL,
-    Password VARCHAR(255) NOT NULL,
+    Password VARCHAR(255) NOT NULL, -- will be hashed in dbUser.ts
     Role VARCHAR(20) NOT NULL
 );
 
--- Reset UserID serial
--- ALTER SEQUENCE users_userid_seq RESTART WITH 1;
+-- Query the Email table
+SELECT * FROM Users;

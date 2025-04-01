@@ -7,7 +7,7 @@ const testConnection = async () => {
 
         try {
             // Create user test
-            const user = await dbUser.createUser('John', 'Doe', 'john.doe@fakeemail.com', 'password123', 'admin');
+            const user = await dbUser.createUser('john.doe@fakeemail.com', 'John', 'Doe', 'password123', 'admin');
             console.log("Successfully CREATED user!");
             console.log(user);
 
@@ -17,12 +17,12 @@ const testConnection = async () => {
             console.log("Successfully UPDATED user!");
             
             // Read/Get user test
-            const gotUser = await dbUser.getUserById(user.userId);
+            const gotUser = await dbUser.getUserByEmail(user.email);
             console.log("Successfully READ user!");
             console.log(gotUser);
             
             // Delete user test
-            await dbUser.deleteUser(user.userId);
+            await dbUser.deleteUser(user.email);
             console.log("Successfully DELETED user!");
 
             // close connection
