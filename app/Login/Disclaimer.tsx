@@ -43,7 +43,8 @@ export default function LoginScreen() {
           data={requiredInfo}
           keyExtractor={(item, index) => index.toString()}
           renderItem={({ item }) => <Text style={styles.whiteListItem}>• {item}</Text>}
-          contentContainerStyle={styles.transparentList}
+          contentContainerStyle={styles.translucentContainer} // Make sure this has proper padding
+          style={{ marginTop: 60 }} // Add marginBottom to create space between list and buttons
         />
 
         <View style={styles.buttonContainer}>

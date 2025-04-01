@@ -100,7 +100,7 @@ export default function Reason() {
               <TouchableOpacity
                 onPress={() => handlePress(item)}
                 style={{
-                  width: itemWidth,
+                  width: "30%",
                   backgroundColor: "rgba(255, 255, 255, 0.1)",
                   borderRadius: 10,
                   borderWidth: 2,

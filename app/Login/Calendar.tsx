@@ -90,7 +90,7 @@ export default function AppointmentCalendar() {
           <Ionicons name="arrow-forward" size={32} color="white" />
         </Pressable>
       </View>
-      <View style={styles.transparentContainer}>
+      <View>
         <Text style={styles.whiteTitle}>Select an Appointment Date</Text>
         {loading && <ActivityIndicator size="large" color="#358f71" />}
         <Calendar

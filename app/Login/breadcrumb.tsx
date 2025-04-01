@@ -6,9 +6,10 @@ const Breadcrumb = ({ entities, flowDepth }) => (
   <SafeAreaView>
     <View style={styles.breadcrumbContainer}>
       {entities.map((item, index) => (
-        <Text key={index} style={{ marginRight: 5, color: flowDepth === index ? "blue" : "gray" }}>
-          {item} {index < entities.length - 1 ? ">" : ""}
-        </Text>
+        <View key={index} style={styles.breadcrumbItem}>
+          <Text style={styles.breadcrumbText}>{item}</Text>
+          {index < entities.length - 1 && <Text style={styles.breadcrumbSeparator}>{'>'}</Text>}
+        </View>
       ))}
     </View>
   </SafeAreaView>

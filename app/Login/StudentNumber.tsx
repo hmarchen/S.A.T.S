@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Alert, Pressable, ImageBackground } from 'react-native';
+import { View, KeyboardAvoidingView, Text, TextInput, Alert, Pressable, ImageBackground } from 'react-native';
 import { useRouter } from 'expo-router';
 import Breadcrumb from './breadcrumb';
 import { Ionicons } from '@expo/vector-icons';
@@ -61,11 +61,7 @@ export default function StudentNumber() {
   };
 
   return (
-    <ImageBackground
-      source={require('../../assets/background.jpg')}
-      style={styles.background}
-      resizeMode="cover"
-    >
+    <>
       {/* Arrow navigation */}
       <View style={styles.arrowContainer}>
         <Pressable style={styles.arrowButton} onPress={() => router.back()}>
@@ -81,23 +77,29 @@ export default function StudentNumber() {
         </Pressable>
       </View>
 
-      {/* Main UI */}
-      <View style={styles.transparentContainer}>
-        <Text style={styles.whiteTitle}>Enter your Student Number</Text>
+      <ImageBackground
+        source={require('../../assets/background.jpg')}
+        style={styles.background}
+        resizeMode="cover"
+      >
+        {/* Main UI */}
+        <KeyboardAvoidingView style={styles.transparentContainer}>
+          <Text style={styles.whiteTitle}>Enter your Student Number</Text>
 
-        <TextInput
-          style={styles.input}
-          placeholder="Student Number"
-          placeholderTextColor="rgba(255,255,255,0.6)"
-          value={studentNumber}
-          onChangeText={setStudentNumber}
-          keyboardType="numeric"
-        />
+          <TextInput
+            style={styles.input}
+            placeholder="Student Number"
+            placeholderTextColor="rgba(255,255,255,0.6)"
+            value={studentNumber}
+            onChangeText={setStudentNumber}
+            keyboardType="numeric"
+          />
 
-        <View style={styles.breadcrumbContainer}>
-          <Breadcrumb entities={['Disclaimer', 'StudentNumber']} flowDepth={1} />
-        </View>
-      </View>
-    </ImageBackground>
+          <View style={styles.breadcrumbContainer}>
+            <Breadcrumb entities={['Disclaimer', 'StudentNumber']} flowDepth={1} />
+          </View>
+        </KeyboardAvoidingView>
+      </ImageBackground>
+    </>
   );
 }

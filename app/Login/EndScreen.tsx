@@ -1,17 +1,26 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, Pressable, Alert, ActivityIndicator, ImageBackground, ScrollView } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import {
+  View,
+  Text,
+  Pressable,
+  Alert,
+  ActivityIndicator,
+  ImageBackground,
+  SafeAreaView,
+} from "react-native";
 import { useRouter } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import * as FileSystem from "expo-file-system";
 import Breadcrumb from "./breadcrumb";
+import { Card } from "@rneui/themed";
 import styles from "../css/styles";
+
+const filePath = FileSystem.documentDirectory + "user.json";
 
 export default function EndScreen() {
   const router = useRouter();
   const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
-  const filePath = FileSystem.documentDirectory + "user.json";
 
   useEffect(() => {
     const loadJsonFile = async () => {
@@ -56,6 +65,7 @@ export default function EndScreen() {
     }
   };
 
+  // Loading State
   if (loading) {
     return (
       <SafeAreaView style={styles.container}>
@@ -65,6 +75,7 @@ export default function EndScreen() {
     );
   }
 
+  // No User Data Found
   if (!userData || Object.keys(userData).length === 0) {
     return (
       <SafeAreaView style={styles.container}>
@@ -74,30 +85,70 @@ export default function EndScreen() {
   }
 
   return (
-    <ImageBackground source={require("../../assets/background.jpg")} style={styles.background} resizeMode="cover">
+    <ImageBackground
+      source={require("../../assets/background.jpg")}
+      style={styles.background}
+      resizeMode="cover"
+    >
+      {/* Back Button */}
       <View style={styles.arrowContainer}>
         <Pressable style={styles.arrowButton} onPress={() => router.back()}>
           <Ionicons name="arrow-back" size={32} color="white" />
         </Pressable>
       </View>
 
-      <View style={styles.transparentContainer}>
-        <Text style={styles.whiteTitle}>Thank You for Your Application!</Text>
-        <ScrollView contentContainerStyle={styles.scrollContainer}>
+      <SafeAreaView style={styles.transparentContainer}>
+        {/* Card Container */}
+        <Card containerStyle={styles.cardContainer}>
+          <Card.Title style={styles.cardTitle}>Thank You for Your Application!</Card.Title>
+          <Card.Divider />
+
           <View style={styles.detailsContainer}>
-            <Text style={styles.detailsTitle}>Your Details:</Text>
-            {Object.entries(userData).map(([key, value]) => (
-              <Text key={key} style={styles.detailsText}>{`${key.replace(/([A-Z])/g, " $1").trim()}: ${value || "N/A"}`}</Text>
+            {[
+              { key: "firstname", label: "First Name" },
+              { key: "lastname", label: "Last Name" },
+              { key: "studentID", label: "Student ID" },
+              { key: "DCMail", label: "DC Email" },
+              { key: "campus", label: "Campus" },
+              { key: "program", label: "Program" },
+              { key: "advisor", label: "Advisor" },
+              { key: "reason", label: "Reason" },
+            ].map(({ key, label }) => (
+              <View key={key} style={styles.detailRow}>
+                <Text style={styles.detailLabel}>{label}:</Text>
+                <Text style={styles.detailValue}>{userData[key] || "N/A"}</Text>
+              </View>
             ))}
           </View>
+        </Card>
+
+        {/* Confirm Button */}
+        <View style={styles.buttonContainer}>
           <Pressable onPress={handleConfirm} style={styles.confirmButton}>
-            <Text style={styles.confirmText}>Confirm Appointment</Text>
+            <Text style={styles.confirmButtonText}>Confirm Appointment</Text>
           </Pressable>
-        </ScrollView>
-        <View style={styles.breadcrumbContainer}>
-          <Breadcrumb entities={["Disclaimer", "StudentNumber", "Firstname", "Lastname", "DCMail", "Institution", "Program", "Reason", "Calendar", "Time Selection", "END"]} flowDepth={10} />
         </View>
-      </View>
+
+        {/* Breadcrumb */}
+        <View style={styles.breadcrumbContainer}>
+          <Breadcrumb
+            entities={[
+              "Disclaimer",
+              "StudentNumber",
+              "Firstname",
+              "Lastname",
+              "DCMail",
+              "Institution",
+              "Program",
+              "Reason",
+              "Calendar",
+              "Time Selection",
+              "END",
+            ]}
+            flowDepth={10}
+          />
+        </View>
+      </SafeAreaView>
     </ImageBackground>
   );
 }

@@ -15,7 +15,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    padding: 24,
     backgroundColor: 'transparent',
   },
 
@@ -23,9 +22,16 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    padding: 24,
     backgroundColor: 'transparent',
   },
+
+translucentContainer: {
+  marginVertical: 2,
+      padding: 10,
+      borderRadius: 8,
+      alignItems: 'flex-start',
+  backgroundColor: 'rgba(255, 255, 255, 0.1)',
+},
 
   // Typography
   title: {
@@ -41,7 +47,8 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     textAlign: 'center',
     color: '#fff',
-    marginBottom: 30,
+    marginBottom: 5,
+    marginTop: 100
   },
 
   paragraph: {
@@ -58,6 +65,36 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     color: '#fff',
     marginBottom: 15,
+  },
+
+  calendar: {
+    width: 600,
+    alignSelf: "center",
+    borderRadius: 10,
+    padding: 10,
+    elevation: 5, // Adds shadow for better visibility
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    marginTop: 50,
+    marginBottom: 50
+  },
+
+  calendarTheme: {
+    backgroundColor: "rgba(255, 255, 255, 0.95)", // Slightly opaque white background
+    calendarBackground: "rgba(255, 255, 255, 0.9)",
+    textSectionTitleColor: "#333",
+    selectedDayBackgroundColor: "#358f71",
+    selectedDayTextColor: "#fff",
+    todayTextColor: "#358f71",
+    dayTextColor: "#000",
+    arrowColor: "#358f71",
+    textDisabledColor: "gray",
+    monthTextColor: "#333",
+    textDayFontSize: 18, // Larger day numbers
+    textMonthFontSize: 20,
+    textDayHeaderFontSize: 16,
   },
 
   listItem: {
@@ -89,16 +126,19 @@ const styles = StyleSheet.create({
   },
 
   // Input
-  input: {
-    width: 320,
-    height: 70,
-    fontSize: 26,
-    borderBottomWidth: 3,
-    borderBottomColor: 'white',
-    textAlign: 'center',
-    color: 'white',
-    marginBottom: 30,
-  },
+input: {
+  width: 500,
+  height: 100, // Slightly increased height for a larger touch area
+  fontSize: 28, // Slightly bigger text for readability
+  borderBottomWidth: 4, // More pronounced border
+  borderBottomColor: 'white',
+  textAlign: 'center',
+  color: 'white',
+  marginBottom: 20, // More spacing around for easier access
+  paddingVertical: 20, // More padding for a better touch experience
+  paddingHorizontal: 10, // Adds a bit of padding inside for better touch
+  borderRadius: 10, // Slightly rounded edges for a softer touch feel
+},
 
   // Buttons
   buttonContainer: {
@@ -180,22 +220,26 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
 
-  // Breadcrumb
-  breadcrumbContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    padding: 12,
-    borderRadius: 8,
-    marginTop: 30,
-    backgroundColor: 'transparent',
-    shadowColor: 'transparent',
-  },
-
-  breadcrumbText: {
-    color: 'white',
-    fontSize: 18,
-    fontWeight: '600',
-  },
+ breadcrumbContainer: {
+     flexDirection: 'row',
+     alignItems: 'center',
+     paddingVertical: 8,
+     marginVertical: 10
+   },
+   breadcrumbItem: {
+     flexDirection: 'row',
+     alignItems: 'center',
+   },
+   breadcrumbText: {
+     fontSize: 16,
+     fontWeight: '600',
+     color: '#F5F5F5', // Light color for contrast
+   },
+   breadcrumbSeparator: {
+     marginHorizontal: 5,
+     fontSize: 16,
+     color: '#C0C0C0', // Soft gray for contrast
+   },
 
   textLink: {
     textAlign: 'center',
@@ -203,7 +247,58 @@ const styles = StyleSheet.create({
     fontSize: 18,
     paddingBottom: 20,
   },
+cardContainer: {
+    marginTop: 60,
+    marginBottom: 20,
+    padding: 20,
+    borderRadius: 10,
+    backgroundColor: "rgba(255, 255, 255, 0.9)",
+    elevation: 5, // Shadow for Android
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+  },
+  cardTitle: {
+    fontSize: 24, // Increased font size
+    fontWeight: "bold",
+    textAlign: "left", // Left-aligned
+    color: "#333",
+  },
+  detailsContainer: {
+    marginTop: 10,
+  },
+  detailRow: {
+    flexDirection: "column", // Stack label and value vertically
+  },
+  detailLabel: {
+    fontSize: 18, // Increased font size
+    fontWeight: "bold",
+    color: "#444",
+    textAlign: "left",
+  },
+  detailValue: {
+    fontSize: 18, // Increased font size
+    fontWeight: "bold",
+    color: "#666",
+  },
 
+  confirmButton: {
+    backgroundColor: "#358f71",
+    borderRadius: 10,
+    paddingVertical: 14,
+    paddingHorizontal: 20,
+    borderWidth: 2,
+    borderColor: "#ffffff",
+    alignItems: "center",
+    justifyContent: "center",
+    elevation: 3,
+  },
+  confirmButtonText: {
+    fontSize: 18,
+    color: "#fff",
+    fontWeight: "bold",
+  },
   // Radio Buttons
   radioGroup: {
     flexDirection: 'row',
@@ -221,26 +316,25 @@ const styles = StyleSheet.create({
   },
 
 radioButton: {
-  paddingVertical: 16,
-  paddingHorizontal: 24,
-  borderRadius: 10,
-  marginVertical: 10,
-  marginHorizontal: 5,
-  borderWidth: 2,
-  borderColor: '#ffffff',
-  backgroundColor: 'rgba(255, 255, 255, 0.1)',
-  alignItems: 'center',
-  justifyContent: 'center', // This centers vertically
-  minWidth: 120, // Optional: consistent size
-},
+    paddingVertical: 16, // Good vertical padding for height
+    paddingHorizontal: 24, // Good horizontal padding for width
+    borderRadius: 10,
+    marginVertical: 10,
+    marginHorizontal: 5,
+    borderWidth: 2,
+    borderColor: '#ffffff',
+    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+    alignItems: 'center',
+    justifyContent: 'center',
+    minWidth: 120,
+  },
 
 radioButtonText: {
-  fontSize: 18,
+  fontSize: 400,
   color: '#fff',
   textAlign: 'center', // Ensures horizontal centering
   fontWeight: 'bold',
 },
-
 
   radioContainer: {
     flexDirection: 'row',
@@ -362,7 +456,18 @@ activeArrow: {
 
 disabledArrow: {
   opacity: 0.3,
-}
+},
+
+summaryText: {
+  fontSize: 18,
+  color: 'black',
+  textAlign: 'left', // Change to 'center' if you need centering
+  fontWeight: 'bold',
+  lineHeight: 24, // Helps with readability
+  marginVertical: 5, // Adds spacing above/below
+  paddingHorizontal: 10, // Ensures consistent spacing inside
+},
+
 });
 
 export default styles;

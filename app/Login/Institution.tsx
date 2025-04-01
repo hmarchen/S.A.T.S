@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Text, Pressable, ImageBackground, Alert } from "react-native";
+import { View, Text, Pressable, ImageBackground, Alert, SafeAreaView } from "react-native";
 import { useRouter } from "expo-router";
 import * as FileSystem from "expo-file-system";
 import Breadcrumb from "./breadcrumb";
@@ -15,21 +15,16 @@ const CustomRadioButton = ({ label, selected, onSelect }) => (
       styles.radioButton,
       {
         backgroundColor: selected ? "#358f71" : "rgba(255, 255, 255, 0.1)",
-        borderColor: "#ffffff",
-        borderWidth: 2,
-        margin: 5,
-        paddingVertical: 12,
-        paddingHorizontal: 16,
-        borderRadius: 8,
+        minWidth: 300, // Ensures button is large enough
+        minHeight: 100,
         alignItems: "center",
         justifyContent: "center",
-        minWidth: 90,
       },
     ]}
     android_ripple={{ color: "rgba(255,255,255,0.2)" }}
-    hitSlop={10}
+    hitSlop={{ top: 20, bottom: 20, left: 20, right: 20 }}
   >
-    <Text style={{ color: "#ffffff", fontWeight: "bold" }} numberOfLines={1} adjustsFontSizeToFit>
+    <Text style={{ color: "#ffffff", fontWeight: "bold", fontSize: 32 }} adjustsFontSizeToFit>
       {label}
     </Text>
   </Pressable>
@@ -49,26 +44,14 @@ export default function Institution() {
 
     try {
       const fileExists = await FileSystem.getInfoAsync(filePath);
-      const updatedData = fileExists.exists
-        ? JSON.parse(await FileSystem.readAsStringAsync(filePath))
-        : [];
+      let updatedData = {};
 
-      if (updatedData.length > 0) {
-        updatedData[0].campus = institution;
-      } else {
-        updatedData.push({
-          firstname: "",
-          lastname: "",
-          studentID: "",
-          DCMail: "",
-          campus: institution,
-          program: "",
-          reason: "",
-          appointmentDate: "",
-          appointmentTime: "",
-          appointmentType: "",
-        });
+      if (fileExists.exists) {
+        const fileContents = await FileSystem.readAsStringAsync(filePath);
+        updatedData = JSON.parse(fileContents);
       }
+
+      updatedData.campus = institution;
 
       await FileSystem.writeAsStringAsync(filePath, JSON.stringify(updatedData, null, 2));
       console.log("✅ Form Submitted: Institution:", institution);
@@ -97,12 +80,12 @@ export default function Institution() {
       </View>
 
       {/* Content */}
-      <View style={styles.transparentContainer}>
+      <SafeAreaView style={styles.transparentContainer}>
         <Text style={styles.whiteTitle}>Select Your Campus</Text>
 
-        <View style={{ flexDirection: "row", justifyContent: "center", marginTop: 10 }}>
-          <CustomRadioButton label="Whitby" selected={institution === "Whitby"} onSelect={() => setInstitution("Whitby")} />
-          <CustomRadioButton label="Oshawa" selected={institution === "Oshawa"} onSelect={() => setInstitution("Oshawa")} />
+        <View style={{ flexDirection: "row", justifyContent: "center", marginTop: 20 }}>
+          <CustomRadioButton style={{marginRight: 20}} label="Whitby" selected={institution === "Whitby"} onSelect={() => setInstitution("Whitby")} />
+          <CustomRadioButton style={{marginLeft: 20}} label="Oshawa" selected={institution === "Oshawa"} onSelect={() => setInstitution("Oshawa")} />
         </View>
 
         <View style={styles.breadcrumbContainer}>
@@ -111,7 +94,7 @@ export default function Institution() {
             flowDepth={4}
           />
         </View>
-      </View>
+      </SafeAreaView>
     </ImageBackground>
   );
 }
