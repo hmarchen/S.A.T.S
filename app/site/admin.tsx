@@ -5,10 +5,14 @@ import styles from './styles/style';
 import Structure from './layouts/structure';
 import AdminReasons from './layouts/adminTabs/reasons';
 import AdminUsers from './layouts/adminTabs/users';
+import Result from './layouts/adminTabs/designs/Result';
+
+interface Result {
+  success: boolean
+  status: string
+}
 
 export default function Admin() {
-  const API_BASE_URL = window.location.host;
-
   const isWeb = Platform.OS === 'web';
   const router = useRouter();
 
@@ -17,40 +21,31 @@ export default function Admin() {
 
   const usersTabClick = () => { setSelectedTab('Users'); };
   const reasonsTabClick = () => { setSelectedTab('Reasons'); };
-  const [isResultVisible, setIsResultVisible] = useState(false);
-
-  const [success, setResultState] = useState(true);
-  const [result, setResult] = useState('');
+  const [results, setResults] = useState<Result[]>([]);
 
   if (!isWeb) { return null; }
 
   // EVENT HANDLERS
-  const showResultClick = (success: boolean, result: string) => {
-    setResultState(success);
-    setResult(result);
-    setIsResultVisible(true);
+  const showResultClick = (success: boolean, status: string) => {
+    const newResult: Result = {
+      success: success,
+      status: status,
+    };
+    setResults([...results, newResult]);
 
     setTimeout(() => {
-      setIsResultVisible(false);
+      setResults((prevResults) => prevResults.filter((result) => result.status !== newResult.status));
     }, 5000);
-  };
-
-  const closeErrorClick = () => {
-    setIsResultVisible(false);
   };
 
   return (
     <Structure>
-      {isResultVisible && (
-        <Pressable 
-        style={[
-          styles.resultContainer,
-          success ? { backgroundColor: '#46B22D' }: { backgroundColor: '#ff4444' }
-        ]} 
-        onPress={closeErrorClick}>
-          <Text style={styles.resultText}>{result}</Text>
-        </Pressable>
-      )}
+      {results.map((reason, index) => (
+        <Result
+          success={reason.success}
+          status={reason.status}
+        />
+      ))}
 
       <View style={styles.adminContainer}>
         {/* Left Pane - Navigation */}

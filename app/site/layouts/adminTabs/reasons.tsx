@@ -18,7 +18,9 @@ const AdminReasons: React.FC<LayoutProps> = ({ sendResult }) => {
   const API_BASE_URL = 'http://localhost:3000';
   const [isAddVisible, setIsAddVisible] = useState(false);
   const [isEditVisible, setIsEditVisible] = useState(false);
+  const [isDeleteVisible, setIsDeleteVisible] = useState(false);
 
+  const [selectedReason, setSelectedReason] = useState<Reason>({} as Reason); // for deletion
   const [reasons, setReasons] = useState<Reason[]>([]);
   const [newReason, setNewReason] = useState<Partial<Reason>>({ category: '', details: '' });
   const [editingReason, setEditingReason] = useState<Reason | null>(null);
@@ -30,24 +32,26 @@ const AdminReasons: React.FC<LayoutProps> = ({ sendResult }) => {
 
     setIsAddVisible(true); 
   };
-  const handleEditPopupClick = () => { setIsEditVisible(true); };
+  const handleEditPopupClick = (reason: Reason) => {
+    setIsEditVisible(true);
+    setCategory(reason.category);
+    setDetails(reason.details);
+    setEditingReason(reason);
+  };
+  const handleDeletePopupClick = (reason: Reason) => { 
+    setIsDeleteVisible(true);
+    setSelectedReason(reason);
+  };
   const handlePopupClose = () => { 
     setIsAddVisible(false); 
     setIsEditVisible(false); 
+    setIsDeleteVisible(false);
     setEditingReason(null);
   };
 
   const [category, setCategory] = useState('');
   const [details, setDetails] = useState('');
 
-  const editReasonClick = (reason: Reason) => {
-    // Handle login logic here
-    setCategory(reason.category);
-    setDetails(reason.details);
-    setEditingReason(reason);
-
-    handleEditPopupClick();
-  };
 
   useEffect(() => {
     fetchReasons();
@@ -137,18 +141,25 @@ const AdminReasons: React.FC<LayoutProps> = ({ sendResult }) => {
     }
   };
 
-  const handleReasonDelete = async (id: number) => {
+  const handleReasonDelete = async () => {
     // Handle login logic here
     try {
-      const response = await fetch(`${API_BASE_URL}/reasons/${id}`, {
+      if (!selectedReason) {
+        sendResult(false, 'No reason selected for deletion.');
+        return;
+      }
+      
+      const response = await fetch(`${API_BASE_URL}/reasons/${selectedReason.id}`, {
           method: 'DELETE',
       });
 
       if (!response.ok) throw new Error('Failed to delete reason');
       
-      setReasons(reasons.filter(r => r.id !== id));
+      setReasons(reasons.filter(r => r.id !== selectedReason.id));
       setEditingReason(null);
       sendResult(true, 'Successfuly deleted reason.');
+
+      handlePopupClose();
     } catch (error) {
       console.error('Error deleting reason:', error);
       sendResult(false, 'Failed to delete reason. Please try again.');
@@ -174,12 +185,15 @@ const AdminReasons: React.FC<LayoutProps> = ({ sendResult }) => {
         <ScrollView style={styles.userScroll}>
           <FlatList
             data={reasons}
+            style={{ padding: 3 }}
             keyExtractor={(item) => item.id.toString()}
             renderItem={({ item }) => (
                 <View>
                   <NewReason 
                     reason={item}
-                    onEditPress={editReasonClick} onDeletePress={(id: number) => {handleReasonDelete(id)}} children={undefined} 
+                    isActive={true}
+                    onEditPress={handleEditPopupClick} 
+                    onDeletePress={() => {handleDeletePopupClick(item)}} 
                   />
                 </View>
               )}
@@ -187,11 +201,11 @@ const AdminReasons: React.FC<LayoutProps> = ({ sendResult }) => {
         </ScrollView>
 
         {/* ADD USER POPUP */}
-        {(isAddVisible || isEditVisible) && (
+        {(isAddVisible || isEditVisible || isDeleteVisible) && (
           <Modal
             animationType="none"
             transparent={true}
-            visible={isAddVisible || isEditVisible}
+            visible={isAddVisible || isEditVisible || isDeleteVisible}
             onRequestClose={handlePopupClose}
           >
             <View style={styles.popup}>
@@ -202,6 +216,9 @@ const AdminReasons: React.FC<LayoutProps> = ({ sendResult }) => {
                   )}
                   {isEditVisible && (
                     <Text style={styles.popupTitle}>Edit Reason</Text>
+                  )}
+                  {isDeleteVisible && (
+                    <Text style={styles.popupTitle}>Are you sure?</Text>
                   )}
                   <Pressable style={styles.popupClose} onPress={handlePopupClose}>
                     <Image
@@ -262,6 +279,32 @@ const AdminReasons: React.FC<LayoutProps> = ({ sendResult }) => {
                     </Pressable>
                   </View>
                 )}                
+
+                {/* DELETE CONFIRMATION */}
+                {isDeleteVisible && (
+                  <View style={styles.popupBody}>
+                    <Text style={styles.popupSubtitle}>
+                      You are about to delete the following item:
+                    </Text>
+                    <NewReason 
+                      reason={selectedReason}
+                      isActive={false}
+                      onEditPress={() => {}} 
+                      onDeletePress={() => {}} 
+                    />
+                    <View style={styles.popupBodyRow}>
+                      <Pressable style={styles.userButton} onPress={handleReasonDelete}>
+                        <Text style={styles.userButtonText}>Confirm</Text>
+                      </Pressable>
+                      <Pressable 
+                        style={[ styles.userButton, { backgroundColor: '#b91111' } ]} 
+                        onPress={handlePopupClose}
+                      >
+                        <Text style={styles.userButtonText}>Cancel</Text>
+                      </Pressable>
+                    </View>
+                  </View>
+                )}
               </View>
             </View>
           </Modal>
