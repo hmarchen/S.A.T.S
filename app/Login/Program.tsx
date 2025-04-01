@@ -20,9 +20,8 @@ export default function Program() {
   const [searchQuery, setSearchQuery] = useState('');
   const [programs, setPrograms] = useState<string[]>([]);
   const [filteredPrograms, setFilteredPrograms] = useState<string[]>([]);
-  const [advisor, setAdvisor] = useState<string>("");
+  const [advisorData, setAdvisorData] = useState<Advisor[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [email, setEmail] = useState<string>("");
 
   useEffect(() => {
     fetchPrograms();
@@ -50,8 +49,7 @@ export default function Program() {
         data.map(advisor => advisor.programs.split('\n')).flat()
       )).filter(program => program !== 'PROGRAMS:' && program !== '');
       
-      setAdvisor(data[0].advisor);
-      setEmail(data[0].email);
+      setAdvisorData(data);
       setPrograms(uniquePrograms);
       setFilteredPrograms(uniquePrograms);
     } catch (error) {
@@ -85,10 +83,17 @@ export default function Program() {
         updatedData = [];
       }
 
+      // Find advisor data for selected program
+      const selectedAdvisor = advisorData.find(advisor => 
+        advisor.programs.split('\n').includes(program)
+      );
+
       if (updatedData.length > 0) {
         updatedData[0].program = program;
-        updatedData[0].advisor = advisor;
-        updatedData[0].email = email;
+        if (selectedAdvisor) {
+          updatedData[0].advisor = selectedAdvisor.advisor;
+          updatedData[0].email = selectedAdvisor.email;
+        }
       }
       
       await FileSystem.writeAsStringAsync(filePath, JSON.stringify(updatedData, null, 2));
@@ -150,75 +155,3 @@ export default function Program() {
     </KeyboardAvoidingView>
   );
 }
-
-// const styles = StyleSheet.create({
-//   safeArea: {
-//     flex: 1,
-//     padding: 20,
-//     backgroundColor: '#fff',
-//   },
-//   title: {
-//     fontSize: 24,
-//     fontWeight: 'bold',
-//     marginBottom: 20,
-//     color: '#333',
-//   },
-//   searchContainer: {
-//     position: 'relative',
-//     marginBottom: 20,
-//   },
-//   input: {
-//     borderWidth: 1,
-//     borderColor: '#ddd',
-//     padding: 12,
-//     borderRadius: 8,
-//     fontSize: 16,
-//     backgroundColor: '#fff',
-//   },
-//   modalOverlay: {
-//     flex: 1,
-//     backgroundColor: 'rgba(0, 0, 0, 0.5)',
-//     justifyContent: 'center',
-//     alignItems: 'center',
-//   },
-//   dropdownContainer: {
-//     width: '80%',
-//     maxHeight: '60%',
-//     backgroundColor: '#fff',
-//     borderRadius: 8,
-//     padding: 16,
-//   },
-//   dropdownList: {
-//     maxHeight: 300,
-//   },
-//   dropdownItem: {
-//     padding: 12,
-//     borderBottomWidth: 1,
-//     borderBottomColor: '#eee',
-//   },
-//   dropdownText: {
-//     fontSize: 16,
-//     color: '#333',
-//   },
-//   buttonContainer: {
-//     flexDirection: 'row',
-//     justifyContent: 'space-between',
-//     marginTop: 20,
-//   },
-//   button: {
-//     backgroundColor: '#358f71',
-//     padding: 15,
-//     borderRadius: 8,
-//     flex: 1,
-//     marginHorizontal: 5,
-//     alignItems: 'center',
-//   },
-//   clearButton: {
-//     backgroundColor: '#534044',
-//   },
-//   buttonText: {
-//     color: '#fff',
-//     fontSize: 16,
-//     fontWeight: 'bold',
-//   },
-// });
