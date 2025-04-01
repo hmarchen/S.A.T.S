@@ -20,7 +20,7 @@ export default function Reason() {
 
   const fetchReasons = async () => {
     try {
-      const response = await fetch("http://10.0.2.2:3001/reasons");
+      const response = await fetch("http://192.168.2.29:3001/reasons");
       if (!response.ok) throw new Error("Failed to fetch programs");
       const data = await response.json();
       console.log(data.reasons);
