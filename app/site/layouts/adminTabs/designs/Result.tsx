@@ -29,7 +29,6 @@ const Result: React.FC<LayoutProps> = ({ success, status }) => {
                 </Pressable>
             )}
         </View>
-        
     )
 }
 

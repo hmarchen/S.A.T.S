@@ -21,6 +21,7 @@ const AdminUsers: React.FC<LayoutProps> = ({ sendResult }) => {
   const [isAddVisible, setIsAddVisible] = useState(false);
   const [isEditVisible, setIsEditVisible] = useState(false);
   const [isDeleteVisible, setIsDeleteVisible] = useState(false);
+  const [isPassVisible, setIsPassVisible] = useState(false);
 
   const [selectedUser, setSelectedUser] = useState<User>(new User('place@holder.com', 'place', 'holder', '123456', 'advisor'));
   const [users, setUsers] = useState<User[]>([]);
@@ -53,6 +54,10 @@ const AdminUsers: React.FC<LayoutProps> = ({ sendResult }) => {
     setIsAddVisible(false); 
     setIsEditVisible(false); 
     setIsDeleteVisible(false);
+  };
+  const handleVisible = () => {
+    if (isPassVisible) { setIsPassVisible(false); }
+    else { setIsPassVisible(true); }
   };
 
 
@@ -221,8 +226,22 @@ const AdminUsers: React.FC<LayoutProps> = ({ sendResult }) => {
                         style={styles.popupTextInput}
                         onChangeText={setPassword}
                         value={password}  
+                        secureTextEntry={!isPassVisible}
                         placeholder="Enter new password here" 
                       />
+                      <Pressable style={styles.popupClose} onPress={handleVisible}>
+                        {isPassVisible ? (
+                          <Image 
+                            source={require(IMAGES + 'icons/visible_icon.png')} 
+                            style={[styles.popupIcon, {tintColor: "rgb(49, 49, 49)"}]}
+                          />
+                        ) : (
+                          <Image 
+                            source={require(IMAGES + 'icons/invisible_icon.png')} 
+                            style={[styles.popupIcon, {tintColor: "rgb(49, 49, 49)"}]}
+                          />
+                        )}
+                      </Pressable>
                     </View>
                     <View style={styles.popupBodyRow}>
                       <Text style={styles.popupText}>Role:</Text>

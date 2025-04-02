@@ -1,52 +1,31 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { View, Text, Platform, ScrollView, Pressable } from 'react-native';
 import { useRouter } from 'expo-router';
 import styles from './styles/style';
 import Structure from './layouts/structure';
 import AdminReasons from './layouts/adminTabs/reasons';
 import AdminUsers from './layouts/adminTabs/users';
-import Result from './layouts/adminTabs/designs/Result';
-
-interface Result {
-  success: boolean
-  status: string
-}
 
 export default function Admin() {
   const isWeb = Platform.OS === 'web';
   const router = useRouter();
+  const structureRef = useRef<any>(null);
 
   // UI Handling
   const [selectedTab, setSelectedTab] = useState('Users'); // State to control the visibility of the pop-up
 
   const usersTabClick = () => { setSelectedTab('Users'); };
   const reasonsTabClick = () => { setSelectedTab('Reasons'); };
-  const [results, setResults] = useState<Result[]>([]);
 
   if (!isWeb) { return null; }
 
-  // EVENT HANDLERS
-  const showResultClick = (success: boolean, status: string) => {
-    const newResult: Result = {
-      success: success,
-      status: status,
-    };
-    setResults([...results, newResult]);
-
-    setTimeout(() => {
-      setResults((prevResults) => prevResults.filter((result) => result.status !== newResult.status));
-    }, 5000);
+  // STRUCTURE REF
+  const sendResult = (success: boolean, status: string) => {
+    structureRef.current?.showResultClick(success, status);
   };
 
   return (
-    <Structure>
-      {results.map((reason, index) => (
-        <Result
-          success={reason.success}
-          status={reason.status}
-        />
-      ))}
-
+    <Structure ref={structureRef}>
       <View style={styles.adminContainer}>
         {/* Left Pane - Navigation */}
         <View style={styles.adminNav}>
@@ -77,12 +56,12 @@ export default function Admin() {
           <View style={styles.adminTab}>
             {/* -------- MANAGE USERS --------- */}
             {selectedTab == "Users" && (
-              <AdminUsers sendResult={(success: boolean, result: string) => {showResultClick(success, result)}}/>
+              <AdminUsers sendResult={(success: boolean, result: string) => {sendResult(success, result)}}/>
             )}
       
             {/* -------- MANAGE REASONS --------- */}
             {selectedTab == "Reasons" && (
-              <AdminReasons sendResult={(success: boolean, result: string) => {showResultClick(success, result)}}/>
+              <AdminReasons sendResult={(success: boolean, result: string) => {sendResult(success, result)}}/>
             )}
           </View>
         </View>

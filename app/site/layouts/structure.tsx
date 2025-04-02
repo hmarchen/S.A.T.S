@@ -2,21 +2,52 @@
     Basic layout structure for the app.
 */
 
-import React, { useState } from 'react';
+import React, { useState, forwardRef, useImperativeHandle, useRef } from 'react';
 import { View, Text, Button, Image, Pressable, ScrollView, TouchableOpacity, Modal } from 'react-native';
 import { useRouter } from 'expo-router';
-
 import styles from '../styles/style';
+import Result from './adminTabs/designs/Result';
 
 // MAIN LAYOUT COMPONENT
 interface LayoutProps {
   children: React.ReactNode; // This will hold the child content passed from the screen
 }
 
-const Structure: React.FC<LayoutProps> = ({ children }) => {
+interface Result {
+  success: boolean
+  status: string
+}
+
+export type StructureRef = {
+  showResultClick: (success: boolean, status: string) => void;
+};
+
+
+// STRUCTURE ----------------------------------------------------------------------
+const Structure = forwardRef<StructureRef, LayoutProps>(({ children }, ref) => {
   // CONSTANTS
   const router = useRouter();
   const IMAGES = '../images/';
+
+  const [results, setResults] = useState<Result[]>([]);
+
+  // EVENT HANDLERS
+  const showResultClick = (success: boolean, status: string) => {
+    const newResult: Result = {
+      success: success,
+      status: status,
+    };
+    console.log(newResult);
+    setResults([...results, newResult]);
+  
+    setTimeout(() => {
+      setResults((prevResults) => prevResults.filter((result) => result.status !== newResult.status));
+    }, 5000);
+  };
+
+  useImperativeHandle(ref, () => ({
+    showResultClick,
+  }));
 
   // return if nothing in body
   if (!children) { return null; }
@@ -63,6 +94,13 @@ const Structure: React.FC<LayoutProps> = ({ children }) => {
 
       {/* BODY / CONTENT */}
       <View style={styles.body}>
+        {results.map((reason, index) => (
+          <Result
+            key={index}
+            success={reason.success}
+            status={reason.status}
+          />
+        ))}
         {children}
       </View>
 
@@ -77,6 +115,6 @@ const Structure: React.FC<LayoutProps> = ({ children }) => {
       </View>
     </View>
   );
-};
+});
 
 export default Structure;

@@ -3,28 +3,28 @@
     "email": "john.doe@fakeemail.com",
     "firstName": "John",
     "lastName": "Doe",
-    "password": "$2b$10$MmbO4OVoDE6U2nY9lSxmP.K/xG.IJSyoaCjHEab4hWWfDsWsFA7G.",
+    "password": "$2b$10$5lCeXvna.EEJeVhNk078qenJYBijPoWZgf7Zcbfzt2sHGW/3PeAEm",
     "role": "admin"
   },
   {
     "email": "some.fake@email.com",
     "firstName": "New",
     "lastName": "User",
-    "password": "$2b$10$11pymvzCjHUzqmFqjnBB2.PHjalTHJp0QtGSmQ/29pdDGLL90EEGW",
+    "password": "$2b$10$9fAtq9hvUY/.r/8W8AWi7.XKRGQVQpImUpp2Zx1iWfbcqYJxLDiOS",
     "role": "advisor"
   },
   {
     "email": "another@user.com",
     "firstName": "Another",
     "lastName": "User",
-    "password": "$2b$10$c1Pk3tLfAXe7czsUWRbt0OrHPYA8o8aj6Ndkl4t8tQMzh8jwGeULy",
+    "password": "$2b$10$cdRB.FFv8r8Nnx1H06reG.l0oRqv35BLCkfnhesuxuKsEZvf1Frqy",
     "role": "advisor"
   },
   {
     "email": "yipeppe.yahoooo@fakeemail.com",
     "firstName": "YAYAYAY",
     "lastName": "WOOOO",
-    "password": "$2b$10$BFNnWaVwtFTI2X83796.lOCda9GgcQzNY0cofuL3a/GYu4feFi.N2",
+    "password": "$2b$10$tfBSXkqN9C.ErlsT5Eyp/.aYmQs6cb2XSxDHaj6yRuCLgHPpR1Iby",
     "role": "admin"
   }
 ]

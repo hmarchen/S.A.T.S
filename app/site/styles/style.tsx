@@ -83,6 +83,17 @@ const styles = StyleSheet.create({
       marginRight: 10, 
       resizeMode: 'contain',
     },
+    iconLgBox: {
+      width: 40,
+      height: 40,
+      padding: 5,
+    },
+    iconLg: {
+      width: 30,
+      height: 30,
+      marginRight: 10, 
+      resizeMode: 'contain',
+    },
     icon: {
       width: 20,
       height: 20,
@@ -155,6 +166,14 @@ const styles = StyleSheet.create({
       color: '#ffffff',
       textAlign: 'center',
       fontWeight: 'bold',
+    },
+
+    inlineFill: {
+      width: '100%',
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'center',
+      gap: 10,
     },
 
     // ------------------------------------------
