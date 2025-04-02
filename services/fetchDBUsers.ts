@@ -8,7 +8,7 @@ import DBUsers from '../db/dbUsers';
 import User from '../db/classes/User';
 
 const app = express();
-const port = 3000; // You can change the port if needed
+const port = 3001; // You can change the port if needed
 const dbUsers = new DBUsers();
 const usersFilePath = path.join(__dirname, '/data/users.json');
 

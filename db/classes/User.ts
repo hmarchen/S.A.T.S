@@ -1,3 +1,5 @@
+const validRoles = ["admin", "advisor"];
+
 export default class User {
     email: string;
     firstName: string;
@@ -11,6 +13,18 @@ export default class User {
         this.lastName = lastName;
         this.password = password;
         this.role = role;
+
+        // validation
+        try {
+            this.setEmail(email);
+            this.setFirstName(firstName);
+            this.setLastName(lastName);
+            this.setPassword(password);
+            this.setRole(role);
+        }
+        catch (error) {
+            throw new Error(error as string);
+        }
     }
 
     getEmail(): string {
@@ -63,7 +77,6 @@ export default class User {
     }
 
     setRole(role: string): void {
-        const validRoles = ["admin", "user", "guest"];
         if (!validRoles.includes(role.toLowerCase())) {
             throw new Error(`Role must be one of the following: ${validRoles.join(", ")}.`);
         }

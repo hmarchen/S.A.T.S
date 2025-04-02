@@ -10,6 +10,13 @@ class DBUsers {
         this.pool = pool;   
     }
 
+    async openConnection(): Promise<void> {
+        if (!this.pool) {
+            this.pool = pool;
+            await this.pool.connect();
+        }
+    }
+
     async createUser(email: string, firstName: string, lastName: string, password: string, role: string): Promise<User> {
         const hashedPassword = await bcrypt.hash(password, 10); // Hash the password
         const query = `
@@ -34,9 +41,7 @@ class DBUsers {
     }
 
     async getAllUsers(): Promise<User[]> {
-        const query = `
-            SELECT * FROM users
-        `;
+        const query = `SELECT * FROM users`;
         const result = await this.pool.query(query);
         return result.rows.map(row => new User(row.email, row.firstname, row.lastname, row.password, row.role));
     }

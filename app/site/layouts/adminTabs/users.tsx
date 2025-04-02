@@ -17,12 +17,12 @@ const AdminUsers: React.FC<LayoutProps> = ({ sendResult }) => {
   // CONSTANTS
   const router = useRouter();
   const IMAGES = '../../images/';
-  const API_BASE_URL = 'http://localhost:3000';
+  const API_BASE_URL = 'http://localhost:3001';
   const [isAddVisible, setIsAddVisible] = useState(false);
   const [isEditVisible, setIsEditVisible] = useState(false);
   const [isDeleteVisible, setIsDeleteVisible] = useState(false);
 
-  const [selectedUser, setSelectedUser] = useState<User>(new User('', '', '', '', ''));
+  const [selectedUser, setSelectedUser] = useState<User>(new User('place@holder.com', 'place', 'holder', '123456', 'advisor'));
   const [users, setUsers] = useState<User[]>([]);
 
   const [firstName, setFirstName] = useState('');
@@ -129,10 +129,6 @@ const AdminUsers: React.FC<LayoutProps> = ({ sendResult }) => {
                   />
                 </View>
               )}
-          />
-          <NewUser 
-            user={new User('some.fake@email.com', 'New', 'User', 'somepassword', 'admin')} isActive={true}
-            onEditPress={(user: User) => { editUserClick(user); }} onDeletePress={(user: User) => { handleDeletePopupClick(user); }} 
           />
         </ScrollView>
 
