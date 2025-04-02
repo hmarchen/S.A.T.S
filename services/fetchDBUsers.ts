@@ -1,11 +1,10 @@
-import express from 'express';
-import { Request, Response } from 'express';
+import express, { Request, Response } from 'express';
 import bodyParser from 'body-parser';
+import DBUsers from '../db/dbUsers';
+import User from '../db/classes/User';
 import cors from 'cors';
 import fs from 'fs';
 import path from 'path';
-import DBUsers from '../db/dbUsers';
-import User from '../db/classes/User';
 
 const app = express();
 const port = 3001; // You can change the port if needed
