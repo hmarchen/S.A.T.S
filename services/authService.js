@@ -26,9 +26,9 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
                     if (op[0] === 3 && (!t || (op[1] > t[0] && op[1] < t[3]))) { _.label = op[1]; break; }
                     if (op[0] === 6 && _.label < t[1]) { _.label = t[1]; t = op; break; }
                     if (t && _.label < t[2]) { _.label = t[2]; _.ops.push(op); break; }
-                    if (t[2]) _.ops.pop();
-                    _.trys.pop(); continue;
-            }
+                    if (t[2]) _.ops.pop();                    _.trys.pop(); continue;
+                                                                                                             }
+
             op = body.call(thisArg, _);
         } catch (e) { op = [6, e]; y = 0; } finally { f = t = 0; }
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };

@@ -6,8 +6,35 @@ const ics = require('ics');
 const Imap = require('imap');
 const { simpleParser } = require('mailparser');
 require('dotenv').config();
+import pool from '../db/dbConfig'; // Adjust the path as necessary
 
 const app = express();
+
+// ------------------------------------------------------------------------------------------------
+// for the ID to be serializable via text file updates
+const fs = require('fs');
+const path = require('path');
+
+const counterFile = path.join(__dirname, 'assets', 'data', 'ID_Counter.txt');
+
+const dataDir = path.dirname(counterFile);
+if (!fs.existsSync(dataDir)) { fs.mkdirSync(dataDir, { recursive: true }); }
+
+function getNextEmailID() {
+  let currentID = 1;
+
+  if (fs.existsSync(counterFile)) {
+    const lastID = fs.readFileSync(counterFile, 'utf8').trim();
+    if (!isNaN(lastID)) { currentID = parseInt(lastID, 10) + 1; }
+  }
+
+  const emailID = currentID.toString().padStart(9, '0');
+  fs.writeFileSync(counterFile, emailID, 'utf8');
+
+  return emailID;
+}
+
+// ------------------------------------------------------------------------------------------------
 
 // Configure CORS to allow requests from your frontend
 app.use(cors({
@@ -37,9 +64,14 @@ transporter.verify(function(error: any, success: any) {
 });
 
 app.post('/send-invite', async (req: any, res: any) => {
-  const { name, email, studentId } = req.body;
+  console.log('Incoming request body:', req.body);
+  const { firstname, lastname, DCMail, studentID, advisor } = req.body;
+  const emailID = getNextEmailID();
 
   try {
+    // Insert the emailID and email into the database
+    await pool.query('INSERT INTO Email (EmailID, EmailAddress) VALUES ($1, $2)', [emailID, DCMail]);
+
     // Calculate the next day's date at 10 AM
     const now = new Date();
     const nextDay = new Date(now);
@@ -48,73 +80,114 @@ app.post('/send-invite', async (req: any, res: any) => {
 
     // Define the event details
     const event = {
-      start: [nextDay.getFullYear(), nextDay.getMonth() + 1, nextDay.getDate(), 10, 0], // Next day at 10 AM
-      duration: { hours: 1 },
-      title: `SEIT Visit Request - ${name}`,
-      description: `Student ID: ${studentId}\nEmail: ${email}`,
-      location: 'Online',
-      url: 'http://example.com',
+      start: [
+        nextDay.getFullYear(),
+        nextDay.getMonth() + 1,
+        nextDay.getDate(),
+        10, // Hour
+        0   // Minute
+      ] as [number, number, number, number, number], // Ensure the type is correct
+      duration: { hours: 1 }, // Duration of the event
+      title: `${emailID} - Student Advising Appointment`,
+      description: `Appointment with ${advisor}. Student ID: ${studentID}`,
+      location: 'Office 123',
       status: 'CONFIRMED',
-      organizer: { name: 'Admin', email: process.env.EMAIL_USER },
-      attendees: [{ name, email }],
+      organizer: { name: 'Appointment System', email: process.env.EMAIL_USER },
+      attendees: [{ name: 'Advisor Name', email: process.env.ADVISOR_EMAIL }],
     };
 
-    // Generate the .ics file
-    ics.createEvent(event, (error: any, value: string) => {
-      if (error) {
-        console.error('Error creating .ics file:', error);
-        res.status(500).send('Failed to create calendar event');
-        return;
+    // Generate the .ics file in the required format
+    const icsContent = `
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//YourKiosk//Appointment System//EN
+METHOD:REQUEST
+BEGIN:VEVENT
+UID:${studentID}@dcmail.ca
+DTSTAMP:${now.toISOString().replace(/[-:]/g, '').split('.')[0]}Z
+DTSTART:${nextDay.toISOString().replace(/[-:]/g, '').split('.')[0]}Z
+DTEND:${new Date(nextDay.getTime() + 60 * 60 * 1000).toISOString().replace(/[-:]/g, '').split('.')[0]}Z
+SUMMARY:${event.title}
+DESCRIPTION:${event.description}
+LOCATION:${event.location}
+ORGANIZER;CN="${event.organizer.name}":mailto:${event.organizer.email}
+ATTENDEE;ROLE=REQ-PARTICIPANT;PARTSTAT=NEEDS-ACTION;RSVP=TRUE;CN="Advisor Name":mailto:${event.attendees[0].email}
+STATUS:${event.status}
+SEQUENCE:0
+END:VEVENT
+END:VCALENDAR
+    `;
+
+    // Send email to advisor with .ics attachment
+    const advisorMessage = {
+      from: process.env.EMAIL_USER!,
+      to: process.env.ADVISOR_EMAIL!,
+      subject: `${emailID} - SEIT Visit Request - ${firstname} ${lastname}`,
+      html: `
+        <h2>SEIT Visit Request</h2>
+        <p><strong>Student Details:</strong></p>
+        <ul>
+          <li>Name: ${firstname} ${lastname}</li>
+          <li>Student ID: ${studentID}</li>
+          <li>Email: ${DCMail}</li>
+        </ul>
+        <p>Please review the request and respond with your decision.</p>
+      `,
+      attachments: [
+        {
+          filename: 'invite.ics',
+          content: icsContent,
+          contentType: 'text/calendar; method=REQUEST; name="invite.ics"',
+          contentDisposition: 'attachment',
+        },
+      ],
+    };
+
+    transporter.sendMail(advisorMessage, (err: any, info: any) => {
+      if (err) {
+        console.error('Error sending email:', err);
+        return res.status(500).send('Failed to send email');
+      } else {
+        console.log('Email sent:', info.response);
+        return res.status(200).send('Invite sent successfully');
       }
-
-      // Send email to advisor with .ics attachment
-      const advisorMessage = {
-        from: process.env.EMAIL_USER, // Admin email
-        to: process.env.ADVISOR_EMAIL, // Advisor email
-        subject: `SEIT Visit Request - ${name}`,
-        html: `
-          <h2>SEIT Visit Request</h2>
-          <p><strong>Student Details:</strong></p>
-          <ul>
-            <li>Name: ${name}</li>
-            <li>Student ID: ${studentId}</li>
-            <li>Email: ${email}</li>
-          </ul>
-          <p>Please review the request and respond with your decision.</p>
-        `,
-        attachments: [
-          {
-            filename: 'invite.ics',
-            content: value,
-          },
-        ],
-      };
-
-      transporter.sendMail(advisorMessage, (err: any, info: any) => {
-        if (err) {
-          console.error('Error sending email:', err);
-          res.status(500).send('Failed to send email');
-        } else {
-          console.log('Email sent:', info.response);
-          res.status(200).send('Request sent to advisor successfully');
-        }
-      });
     });
+
   } catch (error: any) {
     console.error('Error sending request to advisor:', error);
-    res.status(500).send(`Failed to send request: ${error.message}`);
+    return res.status(500).send('Failed to send request');
   }
 });
 
 // New endpoint to handle rejections
 app.post('/handle-rejection', async (req: any, res: any) => {
+  console.log('Incoming request body for rejection:', req.body); // Log the request body
   const { name, reason } = req.body;
 
   try {
+    // Extract the email ID from the name variable
+    const emailIdMatch = name.match(/(\d{9})/); // Match 9-digit email ID
+    if (!emailIdMatch) {
+      return res.status(400).send('Invalid email ID format');
+    }
+    const extractedEmailID = emailIdMatch[1];
+    console.log("Extracted emailid:", extractedEmailID);
+
+    // Fetch the email address from the database using the emailID
+    const result = await pool.query('SELECT emailaddress FROM Email WHERE EmailID = $1', [extractedEmailID]); // Use lowercase emailaddress
+    console.log("Result variable:", result); // Log the result of the query
+
+    const studentEmail = result.rows[0]?.emailaddress; // Use lowercase emailaddress
+    console.log("studentEmail variable:", studentEmail); // Log the fetched email
+
+    if (!studentEmail) {
+      return res.status(404).send('Email not found for the given ID');
+    }
+
     // Send notification to the fixed student email
     const studentMessage = {
       from: process.env.EMAIL_USER, // Admin email
-      to: process.env.STUDENT_EMAIL, // Fixed student email
+      to: studentEmail, // Use the fetched email address
       subject: `Appointment Declined - ${name}`,
       html: `
         <h2>Appointment Declined</h2>
@@ -131,6 +204,84 @@ app.post('/handle-rejection', async (req: any, res: any) => {
   } catch (error) {
     console.error('Error handling rejection:', error);
     res.status(500).send('Failed to handle rejection');
+  }
+});
+
+// New endpoint to handle acceptances
+app.post('/handle-acceptance', async (req: any, res: any) => {
+  const { name, reason } = req.body;
+
+  try {
+    const emailIdMatch = name.match(/(\d{9})/);
+    if (!emailIdMatch) {
+      return res.status(400).send('Invalid email ID format');
+    }
+    const extractedEmailID = emailIdMatch[1];
+
+    const result = await pool.query('SELECT emailaddress FROM Email WHERE EmailID = $1', [extractedEmailID]); // Use lowercase emailaddress
+    const studentEmail = result.rows[0]?.emailaddress;
+
+    if (!studentEmail) {
+      return res.status(404).send('Email not found for the given ID');
+    }
+
+    const acceptanceMessage = {
+      from: process.env.EMAIL_USER!,
+      to: studentEmail,
+      subject: `Appointment Accepted - ${name}`,
+      html: `
+        <h2>Appointment Accepted</h2>
+        <p>Dear Advisor,</p>
+        <p>The appointment request for ${name} has been accepted.</p>
+        <p><strong>Reason for acceptance:</strong></p>
+        <p>${reason}</p>
+      `,
+    };
+
+    await transporter.sendMail(acceptanceMessage);
+    res.status(200).send('Acceptance handled successfully');
+  } catch (error) {
+    console.error('Error handling acceptance:', error);
+    res.status(500).send('Failed to handle acceptance');
+  }
+});
+
+// New endpoint to handle tentatives
+app.post('/handle-tentative', async (req: any, res: any) => {
+  const { name, reason } = req.body;
+
+  try {
+    const emailIdMatch = name.match(/(\d{9})/);
+    if (!emailIdMatch) {
+      return res.status(400).send('Invalid email ID format');
+    }
+    const extractedEmailID = emailIdMatch[1];
+
+    const result = await pool.query('SELECT emailaddress FROM Email WHERE EmailID = $1', [extractedEmailID]); // Use lowercase emailaddress
+    const studentEmail = result.rows[0]?.emailaddress;
+
+    if (!studentEmail) {
+      return res.status(404).send('Email not found for the given ID');
+    }
+
+    const tentativeMessage = {
+      from: process.env.EMAIL_USER!,
+      to: studentEmail,
+      subject: `Appointment Tentative - ${name}`,
+      html: `
+        <h2>Appointment Tentative</h2>
+        <p>Dear Advisor,</p>
+        <p>The appointment request for ${name} is tentative.</p>
+        <p><strong>Reason for tentativeness:</strong></p>
+        <p>${reason}</p>
+      `,
+    };
+
+    await transporter.sendMail(tentativeMessage);
+    res.status(200).send('Tentative handled successfully');
+  } catch (error) {
+    console.error('Error handling tentative:', error);
+    res.status(500).send('Failed to handle tentative');
   }
 });
 
@@ -152,10 +303,13 @@ function processNewEmails() {
       return;
     }
 
+    // create a function that will read the subject of the email and fetch the email ID if it has one (at the start of the subject line)
+    // if it has a subject email ID, then, let the logic enter `f.on('message', (msg: any) => {`
+
     // Search for unread emails
     imap.search(['UNSEEN'], (err: any, results: number[]) => {
       console.log('Found unread emails:', results.length);
-      
+
       if (!results.length) return;
 
       const f = imap.fetch(results, {
@@ -166,46 +320,107 @@ function processNewEmails() {
       f.on('message', (msg: any) => {
         msg.on('body', (stream: any) => {
           simpleParser(stream, async (err: any, parsed: any) => {
-            console.log('Processing email with subject:', parsed.subject);
-            
             if (err) {
               console.error('Error parsing email:', err);
               return;
             }
 
-            // Check if this is a decline response
-            if (parsed.subject?.includes('Declined: SEIT Visit')) {
+            console.log('Processing email with subject:', parsed.subject);
+            const studentEmail = process.env.STUDENT_EMAIL;
+
+            // Check for acceptance response
+            if (parsed.subject?.includes('Accepted:')) {
+              console.log('Found acceptance response for:', parsed.subject);
+
+              // Extract the accept reason from the email body
+              const bodyText = parsed.text || '';
+              const reasonMatch = bodyText.match(/Accept reason:(.*?)(?=\n|$)/i);
+              const reason = reasonMatch ? reasonMatch[1].trim() : 'No reason provided';
+
+              console.log('Extracted accept reason:', reason);
+
+              if (studentEmail) {
+                try {
+                  await fetch('http://localhost:3001/handle-acceptance', {
+                    method: 'POST',
+                    headers: {
+                      'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                      name: parsed.subject.replace('Accepted: SEIT Visit - ', ''),
+                      reason
+                    }),
+                  });
+                  console.log('Acceptance handled successfully');
+                } catch (error) {
+                  console.error('Error handling acceptance:', error);
+                }
+              }
+            }
+
+            // Check for tentative response
+            else if (parsed.subject?.includes('Tentative:')) {
+              console.log('Found tentative response for:', parsed.subject);
+
+              // Extract the tentative reason from the email body
+              const bodyText = parsed.text || '';
+              const reasonMatch = bodyText.match(/Tentative Reason:(.*?)(?=\n|$)/i);
+              const reason = reasonMatch ? reasonMatch[1].trim() : 'No reason provided';
+
+              console.log('Extracted tentative reason:', reason);
+
+              if (studentEmail) {
+                try {
+                  await fetch('http://localhost:3001/handle-tentative', {
+                    method: 'POST',
+                    headers: {
+                      'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                      name: parsed.subject.replace('Tentative: SEIT Visit - ', ''),
+                      reason
+                    }),
+                  });
+                  console.log('Tentative handled successfully');
+                } catch (error) {
+                  console.error('Error handling tentative response:', error);
+                }
+              }
+            }
+
+            // Check for decline response
+            else if (parsed.subject?.includes('Declined:')) {
               console.log('Found decline response for:', parsed.subject);
-              
+
               // Extract the decline reason from the email body
               const bodyText = parsed.text || '';
               const reasonMatch = bodyText.match(/Decline reason:(.*?)(?=\n|$)/i);
               const reason = reasonMatch ? reasonMatch[1].trim() : 'No reason provided';
-              
-              console.log('Extracted decline reason:', reason);
 
-              // Use the fixed student email from environment variable
-              const studentEmail = process.env.STUDENT_EMAIL;
+              console.log('Extracted decline reason:', reason);
 
               if (studentEmail) {
                 try {
-                  await fetch('http://localhost:3000/handle-rejection', {
+                  await fetch('http://localhost:3001/handle-rejection', {
                     method: 'POST',
                     headers: {
                       'Content-Type': 'application/json',
                     },
                     body: JSON.stringify({
                       name: parsed.subject.replace('Declined: SEIT Visit - ', ''),
-                      email: studentEmail,
                       reason
                     }),
                   });
+                  console.log('Rejection handled successfully');
                 } catch (error) {
-                  console.error('Error handling decline:', error);
+                  console.error('Error handling rejection:', error);
                 }
               }
+            } else {
+              console.log('No relevant response found in the email subject.');
             }
           });
+          // CREATE AN ENDPOINT FOR READING THE EMAIL ID FROM THE EMAIL (comes from the subject line in which will be nine digits at the start)
         });
       });
     });
@@ -216,7 +431,7 @@ function processNewEmails() {
 imap.once('ready', () => {
   console.log('IMAP Connection ready');
   processNewEmails();
-  
+
   // Listen for new emails
   imap.on('mail', () => {
     processNewEmails();
@@ -229,6 +444,26 @@ imap.once('error', (err: any) => {
 
 imap.connect();
 
-app.listen(3000, () => {
-  console.log('Server is running on port 3000');
+app.post('/download-ics', async (req: any, res: any) => {
+  const { url } = req.body; // Expecting the URL to be sent in the request body
+
+  try {
+    // Fetch the .ics file from the provided URL
+    const response = await fetch(url);
+    if (!response.ok) {
+      throw new Error('Failed to fetch calendar file');
+    }
+
+    const icsContent = await response.text();
+    // You can save the icsContent to a file or process it as needed
+    // For now, let's just return it
+    res.status(200).send(icsContent);
+  } catch (error) {
+    console.error('Error downloading ICS file:', error);
+    res.status(500).send('Failed to download ICS file');
+  }
+});
+
+app.listen(3001, () => {
+  console.log('Server is running on port 3001');
 });

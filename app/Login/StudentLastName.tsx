@@ -1,52 +1,105 @@
 import React, { useState } from 'react';
-import { View, Text, SafeAreaView, TextInput, Alert, Pressable, KeyboardAvoidingView, Platform } from 'react-native';
+import { View, Text, TextInput, Alert, Pressable, ImageBackground } from 'react-native';
 import { useRouter } from 'expo-router';
 import Breadcrumb from './breadcrumb';
+import { Ionicons } from '@expo/vector-icons';
 import styles from '../css/styles';
 import * as FileSystem from 'expo-file-system';
 
 const filePath = FileSystem.documentDirectory + 'user.json';
 
-export default function StudentName() {
-    const router = useRouter();
-    const [lastName, setLastName] = useState('');
+export default function StudentLastName() {
+  const router = useRouter();
+  const [lastName, setLastName] = useState('');
+  const LastnameREGEX = /^[A-Z][a-zA-Z' -]+$/;
+  const isValid = lastName.length > 0 && LastnameREGEX.test(lastName.trim());
 
-    const handleSubmit = async () => {
-        try {
-            const fileExists = await FileSystem.getInfoAsync(filePath);
-            let updatedData = fileExists.exists ? JSON.parse(await FileSystem.readAsStringAsync(filePath)) : [];
+  const REQ_ERROR = "Last name is required.";
+  const REG_ERROR = "Invalid last name: Must start with a capital letter and contain only letters.";
 
-            updatedData.length > 0
-                ? (updatedData[0].lastname = lastName)
-                : updatedData.push({ firstname: '', lastname: lastName, studentID: '', DCMail: '', campus: '', program: '', reason: '' });
+  const validateForm = () => {
+    const trimmedLastName = lastName.trim();
+    if (!trimmedLastName) return REQ_ERROR;
+    if (!LastnameREGEX.test(trimmedLastName)) return REG_ERROR;
+    return null;
+  };
 
-            await FileSystem.writeAsStringAsync(filePath, JSON.stringify(updatedData, null, 2));
-            Alert.alert('Form Submitted', `Lastname: ${lastName}`);
-            console.log('Navigating to DCMail...');
-            router.push('/Login/DCMail');
-        } catch (error) {
-            console.error('Error writing to file:', error);
-            Alert.alert('Error', 'Failed to save data.');
-        }
-    };
+  const handleSubmit = async () => {
+    const error = validateForm();
+    if (error) {
+      Alert.alert("Validation Error", error);
+      return;
+    }
 
-    const handleClear = () => (setLastName(''));
+    try {
+      const fileExists = await FileSystem.getInfoAsync(filePath);
+      const updatedData = fileExists.exists
+        ? JSON.parse(await FileSystem.readAsStringAsync(filePath))
+        : [];
 
-    return (
-        <KeyboardAvoidingView style={styles.container} behavior={Platform.OS === 'ios' ? 'padding' : 'height'} keyboardVerticalOffset={20}>
-            <SafeAreaView style={styles.container}>
-                <Text style={styles.title}>Enter your Legal Last Name</Text>
-                <TextInput style={styles.input} value={lastName} onChangeText={setLastName} placeholder="Last Name" />
-                <View style={styles.buttonContainer}>
-                    <Pressable style={[styles.button, styles.clearButton]} onPress={handleClear}>
-                        <Text style={styles.buttonText}>CLEAR</Text>
-                    </Pressable>
-                    <Pressable style={styles.button} onPress={handleSubmit}>
-                        <Text style={styles.buttonText}>NEXT</Text>
-                    </Pressable>
-                </View>
-                <Breadcrumb entities={['Disclaimer', 'StudentNumber', 'Firstname', 'Lastname']} flowDepth={3} />
-            </SafeAreaView>
-        </KeyboardAvoidingView>
-    );
+      if (updatedData.length > 0) {
+        updatedData[0].lastname = lastName;
+      } else {
+        updatedData.push({
+          firstname: '',
+          lastname: lastName,
+          studentID: '',
+          DCMail: '',
+          campus: '',
+          program: '',
+          reason: '',
+          appointmentDate: '',
+          appointmentTime: '',
+          appointmentType: '',
+        });
+      }
+
+      await FileSystem.writeAsStringAsync(filePath, JSON.stringify(updatedData, null, 2));
+      console.log("✅ Form Submitted: Last Name:", lastName);
+      router.push('/Login/DCMail');
+    } catch (error) {
+      console.error('❌ Error writing to file:', error);
+      Alert.alert('Error', 'Failed to save data.');
+    }
+  };
+
+  return (
+    <ImageBackground
+      source={require('../../assets/background.jpg')}
+      style={styles.background}
+      resizeMode="cover"
+    >
+      {/* Arrows */}
+      <View style={styles.arrowContainer}>
+        <Pressable style={styles.arrowButton} onPress={() => router.back()}>
+          <Ionicons name="arrow-back" size={32} color="white" />
+        </Pressable>
+
+        <Pressable
+          style={[styles.arrowButton, !isValid && styles.disabledArrow]}
+          onPress={handleSubmit}
+          disabled={!isValid}
+        >
+          <Ionicons name="arrow-forward" size={32} color="white" />
+        </Pressable>
+      </View>
+
+      {/* Main UI */}
+      <View style={styles.transparentContainer}>
+        <Text style={styles.whiteTitle}>Enter your Legal Last Name</Text>
+
+        <TextInput
+          style={styles.input}
+          placeholder="Last Name"
+          placeholderTextColor="rgba(255,255,255,0.6)"
+          value={lastName}
+          onChangeText={setLastName}
+        />
+
+        <View style={styles.breadcrumbContainer}>
+          <Breadcrumb entities={['Disclaimer', 'StudentNumber', 'Firstname', 'Lastname']} flowDepth={3} />
+        </View>
+      </View>
+    </ImageBackground>
+  );
 }
