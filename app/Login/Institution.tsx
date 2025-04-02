@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { View, Text, Pressable, ImageBackground, Alert, SafeAreaView } from "react-native";
 import { useRouter } from "expo-router";
 import * as FileSystem from "expo-file-system";
@@ -8,7 +8,7 @@ import styles from "../css/styles";
 
 const filePath = FileSystem.documentDirectory + "user.json";
 
-const CustomRadioButton = ({ label, selected, onSelect }) => (
+const CustomRadioButton = ({ label, selected, onSelect }: { label: string, selected: boolean, onSelect: () => void }) => (
   <Pressable
     onPress={onSelect}
     style={[
@@ -33,9 +33,14 @@ const CustomRadioButton = ({ label, selected, onSelect }) => (
 export default function Institution() {
   const router = useRouter();
   const [institution, setInstitution] = useState('Oshawa');
+  const [isValid, setIsValid] = useState(true);
   const [program, setProgram] = useState("");
   const [data, setData] = useState([]);
   const [error, setError] = useState(null);
+
+  useEffect(() => {
+    setIsValid(!!institution);
+  }, [institution]);
 
   const handleSubmit = async () => {
     if (!isValid) {
@@ -45,7 +50,7 @@ export default function Institution() {
 
     try {
       const fileExists = await FileSystem.getInfoAsync(filePath);
-      let updatedData = {};
+      let updatedData = fileExists.exists ? JSON.parse(await FileSystem.readAsStringAsync(filePath)) : [];
 
       if (fileExists.exists) {
         const fileContents = await FileSystem.readAsStringAsync(filePath);
@@ -85,8 +90,8 @@ export default function Institution() {
         <Text style={styles.whiteTitle}>Select Your Campus</Text>
 
         <View style={{ flexDirection: "row", justifyContent: "center", marginTop: 20 }}>
-          <CustomRadioButton style={{marginRight: 20}} label="Whitby" selected={institution === "Whitby"} onSelect={() => setInstitution("Whitby")} />
-          <CustomRadioButton style={{marginLeft: 20}} label="Oshawa" selected={institution === "Oshawa"} onSelect={() => setInstitution("Oshawa")} />
+          <CustomRadioButton label="Whitby" selected={institution === "Whitby"} onSelect={() => setInstitution("Whitby")} />
+          <CustomRadioButton label="Oshawa" selected={institution === "Oshawa"} onSelect={() => setInstitution("Oshawa")} />
         </View>
 
         <View style={styles.breadcrumbContainer}>

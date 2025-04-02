@@ -13,7 +13,7 @@ const requiredInfo = [
   "Purpose of Visit",
 ];
 
-const CustomButton = ({ title, onPress, isClear = false }) => (
+const CustomButton = ({ title, onPress, isClear = false }: { title: string, onPress: () => void, isClear?: boolean }) => (
   <Pressable
     style={[styles.button, isClear && styles.clearButton, { borderRadius: 40 }]}
     onPress={onPress}

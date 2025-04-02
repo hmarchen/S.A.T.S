@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, TextInput, Pressable, Alert, ImageBackground, FlatList, TouchableOpacity, ActivityIndicator } from "react-native";
+import { View, Text, TextInput, Pressable, Alert, ImageBackground, FlatList, TouchableOpacity, ActivityIndicator, KeyboardAvoidingView, Platform, SafeAreaView } from "react-native";
 import { useRouter } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import * as FileSystem from "expo-file-system";
@@ -8,11 +8,6 @@ import styles from "../css/styles";
 
 const filePath = FileSystem.documentDirectory + "user.json";
 
-interface Advisor {
-  advisor: string;
-  email: string;
-  programs: string;
-}
 interface Advisor {
   advisor: string;
   email: string;
@@ -110,112 +105,64 @@ export default function Program() {
   };
 
   return (
-    <KeyboardAvoidingView
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
-      style={styles.container}
-    >
-      <SafeAreaView style={styles.container}>
-        <Text style={styles.title}>Program Information</Text>
-        <View style={styles.container}>
-          <TextInput
-            style={styles.input}
-            value={searchQuery}
-            onChangeText={(text) => {
-              setSearchQuery(text);
-              setProgram(text);
-            }}
-            placeholder="Search for a program..."
-          />
-          <View style={[styles.container, { maxHeight: 200, width: '100%' }]}>
-            {isLoading ? (
-              <ActivityIndicator size="large" color="#358f71" />
-            ) : (
-              <FlatList
-                data={filteredPrograms}
-                keyExtractor={(item) => item}
-                renderItem={({ item }) => (
-                  <TouchableOpacity
-                    style={[styles.button, { marginVertical: 2 }]}
-                    onPress={() => handleSelectProgram(item)}
-                  >
-                    <Text style={styles.buttonText}>{item}</Text>
-                  </TouchableOpacity>
-                )}
-                style={{ width: '100%' }}
-              />
-            )}
-          </View>
-        </View>
-
-        <View style={styles.buttonContainer}>
-          <Pressable style={[styles.button, styles.clearButton]} onPress={handleClear}>
-            <Text style={styles.buttonText}>CLEAR</Text>
-          </Pressable>
-          <Pressable style={styles.button} onPress={HandleSubmit}>
-            <Text style={styles.buttonText}>NEXT</Text>
-          </Pressable>
-        </View>
-        <Breadcrumb entities={['Disclaimer', 'StudentNumber', 'Firstname', 'Lastname', 'DCMail', 'Institution', 'Program']} flowDepth={6} />
-      </SafeAreaView>
-    </KeyboardAvoidingView>
     <ImageBackground
-      source={require("../../assets/background.jpg")}
-      style={styles.background}
-      resizeMode="cover"
-    >
-      <View style={styles.arrowContainer}>
-        <Pressable style={styles.arrowButton} onPress={() => router.back()}>
-          <Ionicons name="arrow-back" size={32} color="white" />
-        </Pressable>
-        <Pressable
-          style={[styles.arrowButton, program ? styles.activeArrow : styles.disabledArrow]}
-          onPress={handleSubmit}
-          disabled={!program}
-        >
-          <Ionicons name="arrow-forward" size={32} color="white" />
-        </Pressable>
-      </View>
+    source={require("../../assets/background.jpg")}
+    style={styles.background}
+    resizeMode="cover"
+  >
+    <View style={styles.arrowContainer}>
+      <Pressable style={styles.arrowButton} onPress={() => router.back()}>
+        <Ionicons name="arrow-back" size={32} color="white" />
+      </Pressable>
+      <Pressable
+        style={[styles.arrowButton, program ? styles.activeArrow : styles.disabledArrow]}
+        onPress={HandleSubmit}
+        disabled={!program}
+      >
+        <Ionicons name="arrow-forward" size={32} color="white" />
+      </Pressable>
+    </View>
 
-      <View style={styles.transparentContainer}>
-        <Text style={styles.whiteTitle}>Program Information</Text>
-        <TextInput
-          style={styles.input}
-          value={searchQuery}
-          onChangeText={(text) => {
-            setSearchQuery(text);
-            setProgram(text); // Set program for instant update
-          }}
-          placeholder="Search for a program..."
-          placeholderTextColor="#ddd"
-        />
+    <View style={styles.transparentContainer}>
+      <Text style={styles.whiteTitle}>Program Information</Text>
+      <TextInput
+        style={styles.input}
+        value={searchQuery}
+        onChangeText={(text) => {
+          setSearchQuery(text);
+          setProgram(text); // Set program for instant update
+        }}
+        placeholder="Search for a program..."
+        placeholderTextColor="#ddd"
+      />
 
-        <View style={{ maxHeight: 300, width: "90%", marginVertical: 10 }}>
-          {isLoading ? (
-            <ActivityIndicator size="large" color="#358f71" />
-          ) : (
-            <FlatList
-              data={filteredPrograms}
-              keyExtractor={(item) => item}
-              renderItem={({ item }) => (
-                <TouchableOpacity
-                  style={[styles.button, { marginVertical: 2 }]}
-                  onPress={() => handleSelectProgram(item)}
-                >
-                  <Text style={styles.buttonText}>{item}</Text>
-                </TouchableOpacity>
-              )}
-              style={{ width: "100%" }}
-            />
-          )}
-        </View>
-
-        <View style={styles.breadcrumbContainer}>
-          <Breadcrumb
-            entities={["Disclaimer", "StudentNumber", "Firstname", "Lastname", "DCMail", "Institution", "Program"]}
-            flowDepth={6}
+      <View style={{ maxHeight: 300, width: "90%", marginVertical: 10 }}>
+        {isLoading ? (
+          <ActivityIndicator size="large" color="#358f71" />
+        ) : (
+          <FlatList
+            data={filteredPrograms}
+            keyExtractor={(item) => item}
+            renderItem={({ item }) => (
+              <TouchableOpacity
+                style={[styles.button, { marginVertical: 2 }]}
+                onPress={() => handleSelectProgram(item)}
+              >
+                <Text style={styles.buttonText}>{item}</Text>
+              </TouchableOpacity>
+            )}
+            style={{ width: "100%" }}
           />
-        </View>
+        )}
       </View>
-    </ImageBackground>
+
+      <View style={styles.breadcrumbContainer}>
+        <Breadcrumb
+          entities={["Disclaimer", "StudentNumber", "Firstname", "Lastname", "DCMail", "Institution", "Program"]}
+          flowDepth={6}
+        />
+      </View>
+    </View>
+  </ImageBackground>
   );
 }

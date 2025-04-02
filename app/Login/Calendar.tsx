@@ -14,17 +14,16 @@ const calendarUrl = "https://outlook.office365.com/owa/calendar/b325e82263a84755
 export default function AppointmentCalendar() {
   const router = useRouter();
   const [selectedDate, setSelectedDate] = useState("");
-  const [availableSlots, setAvailableSlots] = useState([]);
+  const [availableSlots, setAvailableSlots] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
+  const todayStr = new Date().toISOString().split("T")[0];
 
-  const checkAvailability = async (date: string) => {
+  const fetchAvailability = async (date: string) => {
+    setLoading(true);
     try {
-      setLoading(true);
-      const response = await fetch('http://10.0.2.2:3001/download-ics', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+      const response = await fetch("http://10.0.2.2:3001/download-ics", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ url: calendarUrl }),
       });
       if (!response.ok) throw new Error("Failed to download calendar data");
@@ -57,7 +56,7 @@ export default function AppointmentCalendar() {
     }
   };
 
-  const handleDayPress = async ({ dateString }) => {
+  const handleDayPress = async ({ dateString }: { dateString: string }) => {
     if (dateString < todayStr) return;
     setSelectedDate(dateString);
     await fetchAvailability(dateString);

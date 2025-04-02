@@ -9,7 +9,7 @@ export default function HomeScreen() {
   return (
     <View style={styles.container}>
       <TouchableOpacity onPress={() => router.push('/Login/Disclaimer')}>
-        <Image style={{ flex: 1, resizeMode: 'contain' }} source={require('../../assets/Greeter.png')} />
+        <Image style={{ flex: 1, resizeMode: 'center' }} source={require('../../assets/Greeter.png')} />
       </TouchableOpacity>
     </View>
   );

@@ -5,11 +5,16 @@ import ICAL from 'ical.js';
 import { Ionicons } from '@expo/vector-icons';
 import styles from '../css/styles';
 
+interface DayAvailability {
+  date: string;
+  slots: string[];
+}
+
 const CalendarAvailability = () => {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
-  const [availability, setAvailability] = useState([]);
-  const [error, setError] = useState(null);
+  const [availability, setAvailability] = useState<DayAvailability[]>([]);
+  const [error, setError] = useState<string | null>(null);
   const [icsUrl, setIcsUrl] = useState('');
 
   const handleDownloadAndCheckAvailability = async () => {
@@ -18,7 +23,7 @@ const CalendarAvailability = () => {
     setAvailability([]);
 
     try {
-      const response = await fetch('http://192.168.2.29:3000/download-ics', {
+      const response = await fetch('http://10.0.2.2:3001/download-ics', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ url: icsUrl }),
@@ -43,7 +48,7 @@ const CalendarAvailability = () => {
       const endDate = new Date(startDate);
       endDate.setDate(endDate.getDate() + 6);
 
-      const availableTimes = Array.from({ length: 7 }, (_, i) => {
+      const availableTimes: DayAvailability[] = Array.from({ length: 7 }, (_, i) => {
         const date = new Date(startDate);
         date.setDate(startDate.getDate() + i);
         return {
@@ -74,7 +79,7 @@ const CalendarAvailability = () => {
 
       setAvailability(availableTimes);
     } catch (err) {
-      setError(err.message || 'An unknown error occurred');
+      setError(err instanceof Error ? err.message : 'An unknown error occurred');
     } finally {
       setLoading(false);
     }

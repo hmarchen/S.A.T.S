@@ -468,6 +468,35 @@ summaryText: {
   marginVertical: 5, // Adds spacing above/below
   paddingHorizontal: 10, // Ensures consistent spacing inside
 },
+errorText: {
+  color: '#dc3545',
+  marginTop: 10,
+  fontSize: 14,
+  textAlign: 'center',
+},
+
+scrollView: {
+  width: '100%',
+  maxHeight: 400,
+  marginTop: 20,
+},
+dateHeader: {
+  fontSize: 18,
+  fontWeight: 'bold',
+  color: '#fff',
+  marginTop: 15,
+  marginBottom: 5,
+},
+availabilityText: {
+  color: '#fff',
+  fontSize: 16,
+  marginVertical: 2,
+},
+errorText: {
+  color: '#ff4444',
+  marginTop: 10,
+  textAlign: 'center',
+},
 
 });
 

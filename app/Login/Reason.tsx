@@ -7,19 +7,23 @@ import * as FileSystem from "expo-file-system";
 
 const filePath = FileSystem.documentDirectory + "user.json";
 
-type Reason = {
-  id: number;
-  category: string;
-  details: string;
-};
-
 export default function Reason() {
+// Router and State values
   const router = useRouter();
   const [reasons, setReasons] = useState<Reason[]>([]);
+  const [reason, SetReason] = useState<Reason>();
   const [isLoading, setIsLoading] = useState(true);
 
-  const fetchReasons = async () => {
+  type Reason = {
+    id: number;
+    category: string;
+    details: string;
+  }
+
+
+  const getReasons = async() => {
     try {
+      setIsLoading(true);
       const response = await fetch(`http://10.0.2.2:3000/reasons`)
       .then(res => {return res.json()})
       .then(data => {console.log(data.reasons); return data.reasons});
@@ -28,12 +32,21 @@ export default function Reason() {
     }
     catch(e) {
       console.error(e);
+    } finally {
+      setIsLoading(false);
     }
-  };
-
+  }
   useEffect(() => {
+    const fetchReasons = async () => {
+      const data = await getReasons();
+      if (data) setReasons(data);
+    };
     fetchReasons();
   }, []);
+    
+
+
+
 
   const handlePress = async (item: Reason) => {
     try {
