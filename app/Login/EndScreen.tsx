@@ -55,8 +55,6 @@ export default function EndScreen() {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(userData),
         });
-
-        Alert.alert("Success", "Invite sent successfully.");
         router.push("/Login/AppConfirmation");
       }
     } catch (error) {
