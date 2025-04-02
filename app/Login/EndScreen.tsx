@@ -1,36 +1,46 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, Pressable, Alert, ActivityIndicator } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import {
+  View,
+  Text,
+  Pressable,
+  Alert,
+  ActivityIndicator,
+  ImageBackground,
+  SafeAreaView,
+} from "react-native";
 import { useRouter } from "expo-router";
-import { Card } from "@rneui/themed";
+import { Ionicons } from "@expo/vector-icons";
 import * as FileSystem from "expo-file-system";
 import Breadcrumb from "./breadcrumb";
+import { Card } from "@rneui/themed";
 import styles from "../css/styles";
+
+const filePath = FileSystem.documentDirectory + "user.json";
 
 export default function EndScreen() {
   const router = useRouter();
   const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
-  const filePath = FileSystem.documentDirectory + "user.json";
 
   useEffect(() => {
     const loadJsonFile = async () => {
       try {
         const fileInfo = await FileSystem.getInfoAsync(filePath);
-        console.log(fileInfo.exists ? `File exists at: ${filePath}` : "File does not exist. Copying from assets...");
 
         if (!fileInfo.exists) {
-          const userJson = require("../../assets/data/user.json");
-          await FileSystem.writeAsStringAsync(filePath, JSON.stringify(userJson));
+          await FileSystem.copyAsync({
+            from: FileSystem.bundleDirectory + "assets/data/user.json",
+            to: filePath,
+          });
           console.log(`File copied to: ${filePath}`);
         }
 
         const data = JSON.parse(await FileSystem.readAsStringAsync(filePath));
-        setUserData(data);
+        setUserData(data.length > 0 ? data[0] : {});
       } catch (error) {
         console.error("Error reading JSON file:", error);
       } finally {
-        setLoading(false); // Set loading to false after data is fetched
+        setLoading(false);
       }
     };
 
@@ -39,18 +49,15 @@ export default function EndScreen() {
 
   const handleConfirm = async () => {
     try {
-      
       if (userData) {
-        await fetch('http://10.0.2.2:3000/send-invite', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ userData }),
+        await fetch("http://10.0.2.2:3000/send-invite", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(userData),
         });
-        
+
         Alert.alert("Success", "Invite sent successfully.");
-        router.push("/Login/Disclaimer");
+        router.push("/Login/AppConfirmation");
       }
     } catch (error) {
       console.error("Error sending invite:", error);
@@ -58,6 +65,7 @@ export default function EndScreen() {
     }
   };
 
+  // Loading State
   if (loading) {
     return (
       <SafeAreaView style={styles.container}>
@@ -67,7 +75,8 @@ export default function EndScreen() {
     );
   }
 
-  if (!userData || !Array.isArray(userData) || userData.length === 0) {
+  // No User Data Found
+  if (!userData || Object.keys(userData).length === 0) {
     return (
       <SafeAreaView style={styles.container}>
         <Text style={styles.text}>No user data found.</Text>
@@ -75,45 +84,71 @@ export default function EndScreen() {
     );
   }
 
-  const {
-    firstname = "N/A",
-    lastname = "N/A",
-    studentID = "N/A",
-    DCMail = "N/A",
-    campus = "N/A",
-    program = "N/A",
-    reason = "N/A",
-    advisor = "N/A",
-    appointmentDate = "N/A",
-    appointmentTime = "N/A",
-    appointmentType = "N/A",
-  } = userData[0] || {};
-
-
   return (
-    <SafeAreaView style={styles.container}>
-      <Card containerStyle={{ marginTop: 15, marginBottom: 20 }}>
-        <Card.Title>Thank you for your application!</Card.Title>
-        <Card.Divider />
-        <Text style={styles.text}>Your Details:</Text>
-        <Text style={styles.text}>First Name: {firstname}</Text>
-        <Text style={styles.text}>Last Name: {lastname}</Text>
-        <Text style={styles.text}>Student ID: {studentID}</Text>
-        <Text style={styles.text}>Email: {DCMail}</Text>
-        <Text style={styles.text}>Campus: {campus}</Text>
-        <Text style={styles.text}>Program: {program}</Text>
-        <Text style={styles.text}>Advisor: {advisor}</Text>
-        <Text style={styles.text}>Reason: {reason}</Text>
-        <Text style={styles.text}>Date: {appointmentDate}</Text>
-        <Text style={styles.text}>Time: {appointmentTime}</Text>
-        <Text style={styles.text}>Appointment Type: {appointmentType}</Text>
-      </Card>
+    <ImageBackground
+      source={require("../../assets/background.jpg")}
+      style={styles.background}
+      resizeMode="cover"
+    >
+      {/* Back Button */}
+      <View style={styles.arrowContainer}>
+        <Pressable style={styles.arrowButton} onPress={() => router.back()}>
+          <Ionicons name="arrow-back" size={32} color="white" />
+        </Pressable>
+      </View>
 
-      <Pressable style={styles.loginButton} onPress={handleConfirm} accessibilityLabel="Tap to confirm and return to the menu">
-        <Text style={styles.buttonText}>Confirm Appointment</Text>
-      </Pressable>
+      <SafeAreaView style={styles.transparentContainer}>
+        {/* Card Container */}
+        <Card containerStyle={styles.cardContainer}>
+          <Card.Title style={styles.cardTitle}>Thank You for Your Application!</Card.Title>
+          <Card.Divider />
 
-      <Breadcrumb entities={['Disclaimer', 'StudentNumber', 'Firstname', 'Lastname', 'DCMail', 'Institution', 'Program', 'Reason', 'Calendar', 'Time Selection', 'END']} flowDepth={10} />
-    </SafeAreaView>
+          <View style={styles.detailsContainer}>
+            {[
+              { key: "firstname", label: "First Name" },
+              { key: "lastname", label: "Last Name" },
+              { key: "studentID", label: "Student ID" },
+              { key: "DCMail", label: "DC Email" },
+              { key: "campus", label: "Campus" },
+              { key: "program", label: "Program" },
+              { key: "advisor", label: "Advisor" },
+              { key: "reason", label: "Reason" },
+            ].map(({ key, label }) => (
+              <View key={key} style={styles.detailRow}>
+                <Text style={styles.detailLabel}>{label}:</Text>
+                <Text style={styles.detailValue}>{userData[key] || "N/A"}</Text>
+              </View>
+            ))}
+          </View>
+        </Card>
+
+        {/* Confirm Button */}
+        <View style={styles.buttonContainer}>
+          <Pressable onPress={handleConfirm} style={styles.confirmButton}>
+            <Text style={styles.confirmButtonText}>Confirm Appointment</Text>
+          </Pressable>
+        </View>
+
+        {/* Breadcrumb */}
+        <View style={styles.breadcrumbContainer}>
+          <Breadcrumb
+            entities={[
+              "Disclaimer",
+              "StudentNumber",
+              "Firstname",
+              "Lastname",
+              "DCMail",
+              "Institution",
+              "Program",
+              "Reason",
+              "Calendar",
+              "Time Selection",
+              "END",
+            ]}
+            flowDepth={10}
+          />
+        </View>
+      </SafeAreaView>
+    </ImageBackground>
   );
 }

@@ -1,13 +1,18 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, StyleSheet, FlatList, TouchableOpacity, SafeAreaView, Pressable, KeyboardAvoidingView, Platform, Alert, ActivityIndicator } from 'react-native';
+import React, { useState, useEffect } from "react";
+import { View, Text, TextInput, Pressable, Alert, ImageBackground, FlatList, TouchableOpacity, ActivityIndicator } from "react-native";
 import { useRouter } from "expo-router";
+import { Ionicons } from "@expo/vector-icons";
 import * as FileSystem from "expo-file-system";
 import Breadcrumb from "./breadcrumb";
-import Arrows from './arrows';
 import styles from "../css/styles";
 
 const filePath = FileSystem.documentDirectory + "user.json";
 
+interface Advisor {
+  advisor: string;
+  email: string;
+  programs: string;
+}
 interface Advisor {
   advisor: string;
   email: string;
@@ -153,5 +158,64 @@ export default function Program() {
         <Breadcrumb entities={['Disclaimer', 'StudentNumber', 'Firstname', 'Lastname', 'DCMail', 'Institution', 'Program']} flowDepth={6} />
       </SafeAreaView>
     </KeyboardAvoidingView>
+    <ImageBackground
+      source={require("../../assets/background.jpg")}
+      style={styles.background}
+      resizeMode="cover"
+    >
+      <View style={styles.arrowContainer}>
+        <Pressable style={styles.arrowButton} onPress={() => router.back()}>
+          <Ionicons name="arrow-back" size={32} color="white" />
+        </Pressable>
+        <Pressable
+          style={[styles.arrowButton, program ? styles.activeArrow : styles.disabledArrow]}
+          onPress={handleSubmit}
+          disabled={!program}
+        >
+          <Ionicons name="arrow-forward" size={32} color="white" />
+        </Pressable>
+      </View>
+
+      <View style={styles.transparentContainer}>
+        <Text style={styles.whiteTitle}>Program Information</Text>
+        <TextInput
+          style={styles.input}
+          value={searchQuery}
+          onChangeText={(text) => {
+            setSearchQuery(text);
+            setProgram(text); // Set program for instant update
+          }}
+          placeholder="Search for a program..."
+          placeholderTextColor="#ddd"
+        />
+
+        <View style={{ maxHeight: 300, width: "90%", marginVertical: 10 }}>
+          {isLoading ? (
+            <ActivityIndicator size="large" color="#358f71" />
+          ) : (
+            <FlatList
+              data={filteredPrograms}
+              keyExtractor={(item) => item}
+              renderItem={({ item }) => (
+                <TouchableOpacity
+                  style={[styles.button, { marginVertical: 2 }]}
+                  onPress={() => handleSelectProgram(item)}
+                >
+                  <Text style={styles.buttonText}>{item}</Text>
+                </TouchableOpacity>
+              )}
+              style={{ width: "100%" }}
+            />
+          )}
+        </View>
+
+        <View style={styles.breadcrumbContainer}>
+          <Breadcrumb
+            entities={["Disclaimer", "StudentNumber", "Firstname", "Lastname", "DCMail", "Institution", "Program"]}
+            flowDepth={6}
+          />
+        </View>
+      </View>
+    </ImageBackground>
   );
 }

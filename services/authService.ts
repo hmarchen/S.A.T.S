@@ -6,6 +6,7 @@ const ics = require('ics');
 const Imap = require('imap');
 const { simpleParser } = require('mailparser');
 require('dotenv').config();
+import pool from '../db/dbConfig'; // Adjust the path as necessary
 
 const app = express();
 
@@ -63,9 +64,14 @@ transporter.verify(function(error: any, success: any) {
 });
 
 app.post('/send-invite', async (req: any, res: any) => {
-  const { name, email, studentId } = req.body;
+  console.log('Incoming request body:', req.body);
+  const { firstname, lastname, DCMail, studentID, advisor } = req.body;
   const emailID = getNextEmailID();
+
   try {
+    // Insert the emailID and email into the database
+    await pool.query('INSERT INTO Email (EmailID, EmailAddress) VALUES ($1, $2)', [emailID, DCMail]);
+
     // Calculate the next day's date at 10 AM
     const now = new Date();
     const nextDay = new Date(now);
@@ -82,8 +88,8 @@ app.post('/send-invite', async (req: any, res: any) => {
         0   // Minute
       ] as [number, number, number, number, number], // Ensure the type is correct
       duration: { hours: 1 }, // Duration of the event
-      title: `Student Advising Appointment`,
-      description: `Appointment with ${name}. Student ID: ${studentId}`,
+      title: `${emailID} - Student Advising Appointment`,
+      description: `Appointment with ${advisor}. Student ID: ${studentID}`,
       location: 'Office 123',
       status: 'CONFIRMED',
       organizer: { name: 'Appointment System', email: process.env.EMAIL_USER },
@@ -97,7 +103,7 @@ VERSION:2.0
 PRODID:-//YourKiosk//Appointment System//EN
 METHOD:REQUEST
 BEGIN:VEVENT
-UID:${studentId}@dcmail.ca
+UID:${studentID}@dcmail.ca
 DTSTAMP:${now.toISOString().replace(/[-:]/g, '').split('.')[0]}Z
 DTSTART:${nextDay.toISOString().replace(/[-:]/g, '').split('.')[0]}Z
 DTEND:${new Date(nextDay.getTime() + 60 * 60 * 1000).toISOString().replace(/[-:]/g, '').split('.')[0]}Z
@@ -116,14 +122,14 @@ END:VCALENDAR
     const advisorMessage = {
       from: process.env.EMAIL_USER!,
       to: process.env.ADVISOR_EMAIL!,
-      subject: `${emailID} - SEIT Visit Request - ${name}`, // change this to include email ID, write an email ID in the server itself, not database nor email (serializable) whereas you use `${email}. MAKE THE POST REQ FROM SCRATCH
+      subject: `${emailID} - SEIT Visit Request - ${firstname} ${lastname}`,
       html: `
         <h2>SEIT Visit Request</h2>
         <p><strong>Student Details:</strong></p>
         <ul>
-          <li>Name: ${name}</li>
-          <li>Student ID: ${studentId}</li>
-          <li>Email: ${email}</li>
+          <li>Name: ${firstname} ${lastname}</li>
+          <li>Student ID: ${studentID}</li>
+          <li>Email: ${DCMail}</li>
         </ul>
         <p>Please review the request and respond with your decision.</p>
       `,
@@ -131,8 +137,8 @@ END:VCALENDAR
         {
           filename: 'invite.ics',
           content: icsContent,
-          contentType: 'text/calendar; method=REQUEST; name="invite.ics"', // Set the content type
-          contentDisposition: 'attachment', // Specify that this is an attachment
+          contentType: 'text/calendar; method=REQUEST; name="invite.ics"',
+          contentDisposition: 'attachment',
         },
       ],
     };
@@ -140,29 +146,49 @@ END:VCALENDAR
     transporter.sendMail(advisorMessage, (err: any, info: any) => {
       if (err) {
         console.error('Error sending email:', err);
-        return res.status(500).send('Failed to send email'); // Send error response
+        return res.status(500).send('Failed to send email');
       } else {
         console.log('Email sent:', info.response);
-        return res.status(200).send('Invite sent successfully'); // Send success response
+        return res.status(200).send('Invite sent successfully');
       }
     });
 
   } catch (error: any) {
     console.error('Error sending request to advisor:', error);
-    return res.status(500).send('Failed to send request'); // Send error response
+    return res.status(500).send('Failed to send request');
   }
 });
 
 // New endpoint to handle rejections
 app.post('/handle-rejection', async (req: any, res: any) => {
-  const { name, reason, emailID } = req.body;
+  console.log('Incoming request body for rejection:', req.body); // Log the request body
+  const { name, reason } = req.body;
 
   try {
+    // Extract the email ID from the name variable
+    const emailIdMatch = name.match(/(\d{9})/); // Match 9-digit email ID
+    if (!emailIdMatch) {
+      return res.status(400).send('Invalid email ID format');
+    }
+    const extractedEmailID = emailIdMatch[1];
+    console.log("Extracted emailid:", extractedEmailID);
+
+    // Fetch the email address from the database using the emailID
+    const result = await pool.query('SELECT emailaddress FROM Email WHERE EmailID = $1', [extractedEmailID]); // Use lowercase emailaddress
+    console.log("Result variable:", result); // Log the result of the query
+
+    const studentEmail = result.rows[0]?.emailaddress; // Use lowercase emailaddress
+    console.log("studentEmail variable:", studentEmail); // Log the fetched email
+
+    if (!studentEmail) {
+      return res.status(404).send('Email not found for the given ID');
+    }
+
     // Send notification to the fixed student email
     const studentMessage = {
       from: process.env.EMAIL_USER, // Admin email
-      to: process.env.STUDENT_EMAIL, // Fixed student email
-      subject: `${emailID} - Appointment Declined - ${name}`,
+      to: studentEmail, // Use the fetched email address
+      subject: `Appointment Declined - ${name}`,
       html: `
         <h2>Appointment Declined</h2>
         <p>Dear Student,</p>
@@ -183,14 +209,26 @@ app.post('/handle-rejection', async (req: any, res: any) => {
 
 // New endpoint to handle acceptances
 app.post('/handle-acceptance', async (req: any, res: any) => {
-  const { name, reason, emailID } = req.body;
+  const { name, reason } = req.body;
 
   try {
-    // Logic to handle acceptance (e.g., notify the advisor)
+    const emailIdMatch = name.match(/(\d{9})/);
+    if (!emailIdMatch) {
+      return res.status(400).send('Invalid email ID format');
+    }
+    const extractedEmailID = emailIdMatch[1];
+
+    const result = await pool.query('SELECT emailaddress FROM Email WHERE EmailID = $1', [extractedEmailID]); // Use lowercase emailaddress
+    const studentEmail = result.rows[0]?.emailaddress;
+
+    if (!studentEmail) {
+      return res.status(404).send('Email not found for the given ID');
+    }
+
     const acceptanceMessage = {
       from: process.env.EMAIL_USER!,
-      to: process.env.STUDENT_EMAIL!,
-      subject: `${emailID} - Appointment Accepted - ${name}`,
+      to: studentEmail,
+      subject: `Appointment Accepted - ${name}`,
       html: `
         <h2>Appointment Accepted</h2>
         <p>Dear Advisor,</p>
@@ -210,14 +248,26 @@ app.post('/handle-acceptance', async (req: any, res: any) => {
 
 // New endpoint to handle tentatives
 app.post('/handle-tentative', async (req: any, res: any) => {
-  const { name, reason, emailID } = req.body;
+  const { name, reason } = req.body;
 
   try {
-    // Logic to handle tentative (e.g., notify the advisor)
+    const emailIdMatch = name.match(/(\d{9})/);
+    if (!emailIdMatch) {
+      return res.status(400).send('Invalid email ID format');
+    }
+    const extractedEmailID = emailIdMatch[1];
+
+    const result = await pool.query('SELECT emailaddress FROM Email WHERE EmailID = $1', [extractedEmailID]); // Use lowercase emailaddress
+    const studentEmail = result.rows[0]?.emailaddress;
+
+    if (!studentEmail) {
+      return res.status(404).send('Email not found for the given ID');
+    }
+
     const tentativeMessage = {
       from: process.env.EMAIL_USER!,
-      to: process.env.STUDENT_EMAIL!,
-       subject: `${emailID} - Appointment Tentative - ${name}`,
+      to: studentEmail,
+      subject: `Appointment Tentative - ${name}`,
       html: `
         <h2>Appointment Tentative</h2>
         <p>Dear Advisor,</p>
