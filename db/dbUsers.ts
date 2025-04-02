@@ -27,12 +27,12 @@ class DBUsers {
         return new User(email, firstName, lastName, hashedPassword, role);
     }
 
-    async getUserByEmail(emailId: string): Promise<User | null> {
+    async getUserByEmail(email: string): Promise<User | null> {
         const query = `
             SELECT * FROM users
             WHERE email = $1
         `;
-        const result = await this.pool.query(query, [emailId]);
+        const result = await this.pool.query(query, [email]);
         if (result.rows.length === 0) {
             return null;
         }

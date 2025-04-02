@@ -25,6 +25,7 @@ const AdminUsers: React.FC<LayoutProps> = ({ sendResult }) => {
 
   const [selectedUser, setSelectedUser] = useState<User>(new User('place@holder.com', 'place', 'holder', '123456', 'advisor'));
   const [users, setUsers] = useState<User[]>([]);
+  const [editingUser, setEditingUser] = useState<User | null>(null);
 
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
@@ -33,22 +34,30 @@ const AdminUsers: React.FC<LayoutProps> = ({ sendResult }) => {
   const [selectedRole, setSelectedRole] = useState('advisor');
 
   // EVENT HANDLER
-  const handleAddPopupClick = () => { 
+  const resetForm = () => {
     setFirstName('');
     setLastName('');
     setEmail('');
     setPassword('');
     setSelectedRole('advisor');
-
+  };
+  
+  const handleAddPopupClick = () => {
+    resetForm();
     setIsAddVisible(true); 
   };
-  const handleEditPopupClick = () => { 
+  const handleEditPopupClick = (user: User) => { 
+    setFirstName(user.firstName);
+    setLastName(user.lastName);
+    setEmail(user.email);
+    setPassword(user.password);
+    setSelectedRole(user.role);
+
     setIsEditVisible(true); 
   };
   const handleDeletePopupClick = (user: User) => { 
     setIsDeleteVisible(true);
     setSelectedUser(user);
-    console.log(isDeleteVisible);
   };
   const handlePopupClose = () => { 
     setIsAddVisible(false); 
@@ -67,9 +76,7 @@ const AdminUsers: React.FC<LayoutProps> = ({ sendResult }) => {
     
   const fetchUsers = async () => {
     try {
-      console.log('fetch attempt');
       const response = await fetch(`${API_BASE_URL}/users`);
-      console.log(response);
       if (!response.ok) throw new Error('Failed to fetch users');
       const users = await response.json();
       setUsers(users);
@@ -78,22 +85,63 @@ const AdminUsers: React.FC<LayoutProps> = ({ sendResult }) => {
     }
   };
   
+  const addUserClick = async () => {
+    try {
+      const newUser = new User(email, firstName, lastName, password, selectedRole);
 
-  const addUserClick = () => {
-    // Handle login logic here
-    sendResult(false, 'Add User functionality not implemented yet...');
-    handlePopupClose();
+      const response = await fetch(`${API_BASE_URL}/users`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(newUser),
+      });
+
+      if (!response.ok) throw new Error('An issue occurred while saving user.');
+  
+      resetForm();
+      await fetchUsers();
+      sendResult(true, 'Successfully added a new user!');
+      handlePopupClose();
+    } catch (error) {
+      sendResult(false, `Failed to create user: ${error}`);
+    }
   };
 
-  const editUserClick = (user: User) => {
-    // Handle login logic here
-    setFirstName(user.firstName);
-    setLastName(user.lastName);
-    setEmail(user.email);
-    setPassword(user.password);
-    setSelectedRole(user.role);
+  const editUserClick = async () => {
+    try {
+      // check if user exists
+      console.log(lastName);
+      const user = new User(email, firstName, lastName, password, selectedRole);
 
-    handleEditPopupClick();
+      const getResponse = await fetch(`${API_BASE_URL}/users/${user.email}`);
+      if (!getResponse.ok) throw new Error('Failed to fetch user');
+
+      console.log(user.email);
+
+      // update user
+      const response = await fetch(`${API_BASE_URL}/users/${user.email}`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(user),
+      });
+
+      if (!response.ok) throw new Error(`${response.statusText}`);
+      
+      const updatedUser = await response.json();
+        setUsers(users.map(user => 
+        user.email === updatedUser.email ? updatedUser : user
+      ));
+      
+      setEditingUser(null);
+      sendResult(true, 'Successfully update user!');
+      await fetchUsers();
+      handlePopupClose();
+    } catch (error) {
+      sendResult(false, `Failed to update user: ${error}`);
+    }
   };
 
   const deleteUserClick = () => {
@@ -129,7 +177,7 @@ const AdminUsers: React.FC<LayoutProps> = ({ sendResult }) => {
                   <NewUser 
                     user={item} 
                     isActive={true}
-                    onEditPress={() => { editUserClick(item); }} 
+                    onEditPress={() => { handleEditPopupClick(item); }} 
                     onDeletePress={() => { handleDeletePopupClick(item); }} 
                   />
                 </View>
@@ -191,14 +239,9 @@ const AdminUsers: React.FC<LayoutProps> = ({ sendResult }) => {
                   </View>
                 )}
 
-                {(isAddVisible || isEditVisible) && (
+                {(isAddVisible) && (
                   <View style={styles.popupBody}>
-                    {isAddVisible && (
-                      <Text style={styles.popupSubtitle}>Enter new user information:</Text>
-                    )}
-                    {isEditVisible && (
-                      <Text style={styles.popupSubtitle}>Edit user information:</Text>
-                    )}
+                    <Text style={styles.popupSubtitle}>Enter new user information:</Text>
                     <View style={styles.popupBodyRow}>
                       <TextInput
                         style={styles.popupTextInput}
@@ -262,6 +305,71 @@ const AdminUsers: React.FC<LayoutProps> = ({ sendResult }) => {
                       {isEditVisible && (
                         <Text style={styles.userButtonText}>Update</Text>
                       )}
+                    </Pressable>
+                  </View>
+                )}
+
+                {isEditVisible && (
+                  <View style={styles.popupBody}>
+                    <Text style={styles.popupSubtitle}>Edit user information:</Text>
+                    <View style={styles.popupBodyRow}>
+                      <TextInput
+                        style={styles.popupTextInput}
+                        onChangeText={setFirstName}
+                        value={firstName}  
+                        placeholder="Enter first name here" 
+                      />
+                      <TextInput
+                        style={styles.popupTextInput}
+                        onChangeText={setLastName}
+                        value={lastName}  
+                        placeholder="Enter last name here" 
+                      />
+                    </View>
+                    <View style={styles.popupBodyRow}>
+                      <TextInput
+                        style={styles.popupTextInput}
+                        onChangeText={setEmail}
+                        value={email}  
+                        placeholder="Enter new email here" 
+                      />
+                    </View>
+                    <View style={styles.popupBodyRow}>
+                      <TextInput
+                        style={styles.popupTextInput}
+                        onChangeText={setPassword}
+                        value={password}
+                        secureTextEntry={!isPassVisible}
+                        placeholder="Create a new password here" 
+                      />
+                      <Pressable style={styles.popupClose} onPress={handleVisible}>
+                        {isPassVisible ? (
+                          <Image 
+                            source={require(IMAGES + 'icons/visible_icon.png')} 
+                            style={[styles.popupIcon, {tintColor: "rgb(49, 49, 49)"}]}
+                          />
+                        ) : (
+                          <Image 
+                            source={require(IMAGES + 'icons/invisible_icon.png')} 
+                            style={[styles.popupIcon, {tintColor: "rgb(49, 49, 49)"}]}
+                          />
+                        )}
+                      </Pressable>
+                    </View>
+                    <View style={styles.popupBodyRow}>
+                      <Text style={styles.popupText}>Role:</Text>
+                      <Picker
+                        selectedValue={selectedRole}
+                        onValueChange={(itemValue) => setSelectedRole(itemValue)}
+                        style={styles.picker}
+                      >
+                        <Picker.Item label="Advisor" value="advisor" />
+                        <Picker.Item label="Admin" value="admin" />
+                      </Picker>
+                    </View>
+                    
+                    <Pressable style={styles.userButton} onPress={editUserClick}>
+                      <Text style={styles.userButtonText}>Update</Text>
                     </Pressable>
                   </View>
                 )}

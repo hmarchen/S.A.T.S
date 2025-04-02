@@ -1,30 +1,44 @@
 [
   {
-    "email": "john.doe@fakeemail.com",
-    "firstName": "John",
-    "lastName": "Doe",
-    "password": "$2b$10$5lCeXvna.EEJeVhNk078qenJYBijPoWZgf7Zcbfzt2sHGW/3PeAEm",
-    "role": "admin"
-  },
-  {
     "email": "some.fake@email.com",
     "firstName": "New",
     "lastName": "User",
-    "password": "$2b$10$9fAtq9hvUY/.r/8W8AWi7.XKRGQVQpImUpp2Zx1iWfbcqYJxLDiOS",
+    "password": "$2b$10$0Za8Q8v0v7NZbas2onIJueYcXaUD/.F3GykhBspcen6Zf4pzbrNJ2",
     "role": "advisor"
   },
   {
     "email": "another@user.com",
     "firstName": "Another",
     "lastName": "User",
-    "password": "$2b$10$cdRB.FFv8r8Nnx1H06reG.l0oRqv35BLCkfnhesuxuKsEZvf1Frqy",
+    "password": "$2b$10$YpSMccrZhUtG7Gg2HT22L.gp/3iBVgMkc9l8qvvMxztUx7i9a4VZS",
     "role": "advisor"
   },
   {
     "email": "yipeppe.yahoooo@fakeemail.com",
     "firstName": "YAYAYAY",
     "lastName": "WOOOO",
-    "password": "$2b$10$tfBSXkqN9C.ErlsT5Eyp/.aYmQs6cb2XSxDHaj6yRuCLgHPpR1Iby",
+    "password": "$2b$10$lrV1NJDM6NPFdm01btjD.eK5Ym7DggRTKMoIG/lm1iLLt4WRU0TK6",
+    "role": "admin"
+  },
+  {
+    "email": "john.doe@fakeemail.com",
+    "firstName": "John",
+    "lastName": "Doe",
+    "password": "$2b$10$dj5rwE3lCXA7AueUcfg0L.5zX.75.ppBugIgKsXWh/LEfjq3pbf9W",
+    "role": "admin"
+  },
+  {
+    "email": "a@asda.com",
+    "firstName": "aaa",
+    "lastName": "aaaa",
+    "password": "$2b$10$A/sfdTXlbQ4bCMVakBNZaOTG8Xx/RactXyHvfsGdT16dUkGByn3.W",
+    "role": "advisor"
+  },
+  {
+    "email": "a@test.com",
+    "firstName": "this",
+    "lastName": "isaaaaaaa",
+    "password": "$2b$10$xChzRyBFIV0ZHH6ta0QlLOCdAqA3T1eqGqqy9ms35nKZ8ujeNxhxO",
     "role": "admin"
   }
 ]

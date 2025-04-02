@@ -27,6 +27,16 @@ const saveUsersToFile = async () => {
     }
 };
 
+const readUsersFile = async () => {
+  try {
+    const fileContent = await fs.promises.readFile(usersFilePath, 'utf-8');
+    return JSON.parse(fileContent);
+  } catch (error) {
+    console.error('Error reading reasons file:', error);
+    return { reasons: [] };
+  }
+}
+
 // Routes
 
 // Create a new user
@@ -73,15 +83,35 @@ app.get('/users', async (_req: Request, res: Response) => {
 // Update a user
 app.put('/users/:email', async (req: Request, res: Response) => {
     const { email } = req.params;
-    const { firstName, lastName, password, role } = req.body;
+    const body = req.body;
+    const data = await readUsersFile();
+
     try {
-        const user = new User(email, firstName, lastName, password, role);
-        await dbUsers.updateUser(user);
+        const foundUser = await dbUsers.getUserByEmail(email);
+        if (!foundUser) {
+            res.status(404).json({ error: 'User not found' });
+            return;
+        }
+
+        const updatedUser = new User(body.email, body.firstName, body.lastName, body.password, body.role);
+
+        console.log(body.email);
+        console.log(updatedUser.email);
+
+        // Find and update reason
+        const index = data.findIndex(() => updatedUser.email === body.email);
+        if (index === -1) {
+            res.status(404).json({ error: 'Reason not found' });
+        }
+
+        data[index] = body;
+
+        await dbUsers.updateUser(updatedUser);
         await saveUsersToFile();
         res.json({ message: 'User updated successfully' });
     } catch (error) {
         console.error(error);
-        res.status(500).json({ error: 'Failed to update user' });
+        res.status(500).json({ error: 'Failed to update usera' });
     }
 });
 
