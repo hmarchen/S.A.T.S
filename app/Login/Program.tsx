@@ -125,17 +125,18 @@ export default function Program() {
 
     <View style={styles.transparentContainer}>
       <Text style={styles.whiteTitle}>Program Information</Text>
-      <TextInput
-        style={styles.input}
-        value={searchQuery}
-        onChangeText={(text) => {
-          setSearchQuery(text);
-          setProgram(text); // Set program for instant update
-        }}
-        placeholder="Search for a program..."
-        placeholderTextColor="#ddd"
-      />
-
+      <SafeAreaView>
+	      <TextInput
+	        style={styles.input}
+	        value={searchQuery}
+	        onChangeText={(text) => {
+	          setSearchQuery(text);
+	          setProgram(text); // Set program for instant update
+	        }}
+	        placeholder="Search for a program..."
+	        placeholderTextColor="#ddd"
+	      />
+	  </SafeAreaView>
       <View style={{ maxHeight: 300, width: "90%", marginVertical: 10 }}>
         {isLoading ? (
           <ActivityIndicator size="large" color="#358f71" />

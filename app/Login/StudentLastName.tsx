@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Alert, Pressable, ImageBackground } from 'react-native';
+import { View, Text, TextInput, Alert, Pressable, ImageBackground, SafeAreaView } from 'react-native';
 import { useRouter } from 'expo-router';
 import Breadcrumb from './breadcrumb';
 import { Ionicons } from '@expo/vector-icons';
@@ -88,13 +88,15 @@ export default function StudentLastName() {
       <View style={styles.transparentContainer}>
         <Text style={styles.whiteTitle}>Enter your Legal Last Name</Text>
 
-        <TextInput
-          style={styles.input}
-          placeholder="Last Name"
-          placeholderTextColor="rgba(255,255,255,0.6)"
-          value={lastName}
-          onChangeText={setLastName}
-        />
+        <SafeAreaView>
+            <TextInput
+              style={styles.input}
+              placeholder="Last Name"
+              placeholderTextColor="rgba(255,255,255,0.6)"
+              value={lastName}
+              onChangeText={setLastName}
+            />
+        </SafeAreaView>
 
         <View style={styles.breadcrumbContainer}>
           <Breadcrumb entities={['Disclaimer', 'StudentNumber', 'Firstname', 'Lastname']} flowDepth={3} />

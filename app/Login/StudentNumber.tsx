@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, KeyboardAvoidingView, Text, TextInput, Alert, Pressable, ImageBackground } from 'react-native';
+import { View, KeyboardAvoidingView, SafeAreaView, Text, TextInput, Alert, Pressable, ImageBackground } from 'react-native';
 import { useRouter } from 'expo-router';
 import Breadcrumb from './breadcrumb';
 import { Ionicons } from '@expo/vector-icons';
@@ -85,16 +85,16 @@ export default function StudentNumber() {
         {/* Main UI */}
         <KeyboardAvoidingView style={styles.transparentContainer}>
           <Text style={styles.whiteTitle}>Enter your Student Number</Text>
-
-          <TextInput
-            style={styles.input}
-            placeholder="Student Number"
-            placeholderTextColor="rgba(255,255,255,0.6)"
-            value={studentNumber}
-            onChangeText={setStudentNumber}
-            keyboardType="numeric"
-          />
-
+		  <SafeAreaView>
+	          <TextInput
+	            style={styles.input}
+	            placeholder="Student Number"
+	            placeholderTextColor="rgba(255,255,255,0.6)"
+	            value={studentNumber}
+	            onChangeText={setStudentNumber}
+	            keyboardType="numeric"
+	          />
+	      </SafeAreaView>
           <View style={styles.breadcrumbContainer}>
             <Breadcrumb entities={['Disclaimer', 'StudentNumber']} flowDepth={1} />
           </View>

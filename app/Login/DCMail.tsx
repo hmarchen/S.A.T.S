@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Text, TextInput, Alert, Pressable, ImageBackground } from "react-native";
+import { View, Text, TextInput, Alert, Pressable, ImageBackground, SafeAreaView } from "react-native";
 import { useRouter } from "expo-router";
 import Breadcrumb from "./breadcrumb";
 import { Ionicons } from "@expo/vector-icons";
@@ -83,7 +83,7 @@ export default function DCMail() {
       {/* Main UI */}
       <View style={styles.transparentContainer}>
         <Text style={styles.whiteTitle}>Enter your Durham College Email Address</Text>
-
+		<SafeAreaView>
         <TextInput
           style={styles.input}
           placeholder="Durham College Email"
@@ -93,7 +93,7 @@ export default function DCMail() {
           autoCapitalize="none"
           keyboardType="email-address"
         />
-
+		</SafeAreaView>
         <View style={styles.breadcrumbContainer}>
           <Breadcrumb entities={["Disclaimer", "StudentNumber", "Firstname", "Lastname", "DCMail"]} flowDepth={4} />
         </View>
