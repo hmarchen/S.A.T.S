@@ -1,0 +1,30 @@
+[
+  {
+    "email": "john.doe@fakeemail.com",
+    "firstName": "John",
+    "lastName": "Doe",
+    "password": "$2b$10$NkOjj6h2idjR7oKuhdvKrOVFW9T5jm723v0RzZVeRX/1/HZhruD3.",
+    "role": "admin"
+  },
+  {
+    "email": "some.fake@email.com",
+    "firstName": "New",
+    "lastName": "User",
+    "password": "$2b$10$NKHPwk63tdghYignlqquE.1ZfPDTX88zNaXUvnyhyJTjJe7e1r8AS",
+    "role": "advisor"
+  },
+  {
+    "email": "another@user.com",
+    "firstName": "Another",
+    "lastName": "User",
+    "password": "$2b$10$y0HVI79RZm1yvLLOYwOaiurznyS1G5Wy4VGCPeJWTj9M42XTuhSPC",
+    "role": "advisor"
+  },
+  {
+    "email": "yipeppe.yahoooo@fakeemail.com",
+    "firstName": "YAYAYAY",
+    "lastName": "WOOOO",
+    "password": "$2b$10$FJDa9c9t2FlskKjBMCi.AuEN4OHpl0HJC.XyP6LIlzBicx/DFNX1W",
+    "role": "admin"
+  }
+]

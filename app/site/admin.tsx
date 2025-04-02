@@ -77,12 +77,12 @@ export default function Admin() {
           <View style={styles.adminTab}>
             {/* -------- MANAGE USERS --------- */}
             {selectedTab == "Users" && (
-              <AdminUsers sendResult={(success: boolean, result: string) => {showResultClick(success, result)}} children={undefined} />
+              <AdminUsers sendResult={(success: boolean, result: string) => {showResultClick(success, result)}}/>
             )}
       
             {/* -------- MANAGE REASONS --------- */}
             {selectedTab == "Reasons" && (
-              <AdminReasons sendResult={(success: boolean, result: string) => {showResultClick(success, result)}} children={undefined} />
+              <AdminReasons sendResult={(success: boolean, result: string) => {showResultClick(success, result)}}/>
             )}
           </View>
         </View>

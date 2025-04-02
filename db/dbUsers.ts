@@ -1,18 +1,13 @@
 import { Pool } from 'pg';
 import pool from './dbConfig';
 import User from './classes/User';
-import bcrypt from 'bcrypt';
+import bcrypt from 'bcryptjs';
 
 class DBUsers {
     private pool: Pool;
 
     constructor() {
-        try {
-            this.pool = pool;
-        } catch (error) {
-            console.error('Error initializing database pool:', error);
-            throw error;
-        }
+        this.pool = pool;   
     }
 
     async createUser(email: string, firstName: string, lastName: string, password: string, role: string): Promise<User> {
@@ -38,18 +33,25 @@ class DBUsers {
         return new User(row.email, row.firstname, row.lastname, row.password, row.role);
     }
 
+    async getAllUsers(): Promise<User[]> {
+        const query = `
+            SELECT * FROM users
+        `;
+        const result = await this.pool.query(query);
+        return result.rows.map(row => new User(row.email, row.firstname, row.lastname, row.password, row.role));
+    }
+
     async comparePassword(plainPassword: string, hashedPassword: string): Promise<boolean> {
         return await bcrypt.compare(plainPassword, hashedPassword); // Compare passwords
     }
 
     async updateUser(user: User): Promise<void> {
-        const hashedPassword = await bcrypt.hash(user.password, 10); // Hash the password
         const query = `
             UPDATE users
             SET firstname = $2, lastname = $3, password = $4, role = $5
             WHERE email = $1
         `;
-        await this.pool.query(query, [user.email, user.firstName, user.lastName, hashedPassword, user.role]);
+        await this.pool.query(query, [user.email, user.firstName, user.lastName, user.password, user.role]);
     }
 
     async deleteUser(email: string): Promise<void> {

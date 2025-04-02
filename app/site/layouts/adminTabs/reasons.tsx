@@ -7,7 +7,6 @@ import NewReason, { Reason } from './designs/NewReason';
 
 // MAIN LAYOUT COMPONENT
 interface LayoutProps {
-  children: React.ReactNode; // This will hold the child content passed from the screen
   sendResult: (success: boolean, error: string) => void;
 }
 
@@ -197,7 +196,7 @@ const AdminReasons: React.FC<LayoutProps> = ({ sendResult }) => {
                   />
                 </View>
               )}
-            />
+          />
         </ScrollView>
 
         {/* ADD USER POPUP */}

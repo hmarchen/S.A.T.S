@@ -24,7 +24,7 @@ interface Reason {
   details: string;
 }
 
-const REASONS_FILE_PATH = path.join(__dirname, 'reasons.json');
+const REASONS_FILE_PATH = path.join(__dirname, '/data/reasons.json');
 
 // Helper function to read reasons file
 async function readReasonsFile() {

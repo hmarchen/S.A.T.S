@@ -1,3 +1,4 @@
+import React from 'react';
 import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
 import { Platform } from 'react-native';
 import { useFonts } from 'expo-font';
@@ -7,6 +8,9 @@ import { StatusBar } from 'expo-status-bar';
 import { useEffect } from 'react';
 import 'react-native-reanimated';
 import { useColorScheme } from '@/hooks/useColorScheme';
+
+import { Buffer } from 'buffer';  // Import Buffer from buffer package
+global.Buffer = Buffer;
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();

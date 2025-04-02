@@ -1,14 +1,14 @@
-import React, { useState } from 'react';
-import { View, Text, Button, Image, Pressable, ScrollView, TouchableOpacity, Modal, TextInput } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, Text, FlatList, Image, Pressable, ScrollView, TouchableOpacity, Modal, TextInput } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import { useRouter } from 'expo-router';
 import styles from '../../styles/tabStyles';
 import NewUser from './designs/NewUser';
 import User from '@/db/classes/User';
+import DBUsers from '@/db/dbUsers';
 
 // MAIN LAYOUT COMPONENT
 interface LayoutProps {
-  children: React.ReactNode; // This will hold the child content passed from the screen
   sendResult: (success: boolean, error: string) => void;
 }
 
@@ -17,11 +17,13 @@ const AdminUsers: React.FC<LayoutProps> = ({ sendResult }) => {
   // CONSTANTS
   const router = useRouter();
   const IMAGES = '../../images/';
+  const API_BASE_URL = 'http://localhost:3000';
   const [isAddVisible, setIsAddVisible] = useState(false);
   const [isEditVisible, setIsEditVisible] = useState(false);
   const [isDeleteVisible, setIsDeleteVisible] = useState(false);
 
   const [selectedUser, setSelectedUser] = useState<User>(new User('', '', '', '', ''));
+  const [users, setUsers] = useState<User[]>([]);
 
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
@@ -52,6 +54,25 @@ const AdminUsers: React.FC<LayoutProps> = ({ sendResult }) => {
     setIsEditVisible(false); 
     setIsDeleteVisible(false);
   };
+
+
+  useEffect(() => {
+    fetchUsers();
+  }, []);
+    
+  const fetchUsers = async () => {
+    try {
+      console.log('fetch attempt');
+      const response = await fetch(`${API_BASE_URL}/users`);
+      console.log(response);
+      if (!response.ok) throw new Error('Failed to fetch users');
+      const users = await response.json();
+      setUsers(users);
+    } catch (error) {
+      sendResult(false, `Failed to load users: ${error}`);
+    }
+  };
+  
 
   const addUserClick = () => {
     // Handle login logic here
@@ -94,26 +115,25 @@ const AdminUsers: React.FC<LayoutProps> = ({ sendResult }) => {
       <View style={styles.userBody}>
         {/* ALL USERS */}
         <ScrollView style={styles.userScroll}>
+          <FlatList
+            data={users}
+            style={{ padding: 3 }}
+            keyExtractor={(item) => item.email.toString()}
+            renderItem={({ item }) => (
+                <View>
+                  <NewUser 
+                    user={item} 
+                    isActive={true}
+                    onEditPress={() => { editUserClick(item); }} 
+                    onDeletePress={() => { handleDeletePopupClick(item); }} 
+                  />
+                </View>
+              )}
+          />
           <NewUser 
             user={new User('some.fake@email.com', 'New', 'User', 'somepassword', 'admin')} isActive={true}
             onEditPress={(user: User) => { editUserClick(user); }} onDeletePress={(user: User) => { handleDeletePopupClick(user); }} 
           />
-          {/* <NewUser 
-            firstName={'Another'} lastName={'User'} email={'another.user@durhamcollege.ca'} password={'somepassword'} role={'advisor'}
-            onEditPress={editUserClick} onDeletePress={deleteUserClick} 
-          />
-          <NewUser 
-            firstName={'Hi'} lastName={'There'} email={'hi.there@durhamcollege.ca'} password={'somepassword'} role={'advisor'}
-            onEditPress={editUserClick} onDeletePress={deleteUserClick} 
-          />
-          <NewUser 
-            firstName={':'} lastName={'33333'} email={'cat.face@durhamcollege.ca'} password={'somepassword'} role={'admin'}
-            onEditPress={editUserClick} onDeletePress={deleteUserClick} 
-          />
-          <NewUser 
-            firstName={'YAYAYAYY'} lastName={'YAAAAA'} email={'yipppeee.yahoooo@durhamcollege.ca'} password={'somepassword'} role={'advisor'}
-            onEditPress={editUserClick} onDeletePress={deleteUserClick} 
-          /> */}
         </ScrollView>
 
         {/* ADD USER POPUP */}
