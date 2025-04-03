@@ -7,7 +7,6 @@ import {
   ActivityIndicator,
   ImageBackground,
   SafeAreaView,
-  ScrollView,
 } from "react-native";
 import { useRouter } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
@@ -96,7 +95,7 @@ export default function EndScreen() {
           <Ionicons name="arrow-back" size={32} color="white" />
         </Pressable>
       </View>
-      <ScrollView>
+      
       <SafeAreaView style={styles.transparentContainer}>
         {/* Card Container */}
         <Card containerStyle={styles.cardContainer}>
@@ -149,7 +148,7 @@ export default function EndScreen() {
           />
         </View>
       </SafeAreaView>
-      </ScrollView>
+      
     </ImageBackground>
   );
 }

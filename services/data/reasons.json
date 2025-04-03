@@ -1,0 +1,70 @@
+{
+  "reasons": [
+    {
+      "id": 1,
+      "category": "Academic Support",
+      "details": "Course selection and enrollment guidance",
+      "redirect": false
+    },
+    {
+      "id": 2,
+      "category": "Academic Support",
+      "details": "Understanding degree requirements and prerequisites",
+      "redirect": false
+    },
+    {
+      "id": 3,
+      "category": "Academic Support",
+      "details": "Advice on elective and specialization choices",
+      "redirect": false
+    },
+    {
+      "id": 4,
+      "category": "Career Guidance",
+      "details": "Internship and co-op program opportunities",
+      "redirect": false
+    },
+    {
+      "id": 5,
+      "category": "Career Guidance",
+      "details": "Career pathways for engineering, IT, and science graduates",
+      "redirect": false
+    },
+    {
+      "id": 6,
+      "category": "Research & Projects",
+      "details": "Finding research opportunities and faculty mentors",
+      "redirect": false
+    },
+    {
+      "id": 7,
+      "category": "Research & Projects",
+      "details": "Guidance on final-year projects and thesis work",
+      "redirect": false
+    },
+    {
+      "id": 8,
+      "category": "Personal & Well-being",
+      "details": "Managing academic stress and workload",
+      "redirect": false
+    },
+    {
+      "id": 9,
+      "category": "Personal & Well-being",
+      "details": "Special accommodations for learning difficulties",
+      "redirect": false
+    },
+    {
+      "id": 10,
+      "category": "Administrative Support",
+      "details": "Understanding academic policies and deadlines",
+      "redirect": false
+    },
+    {
+      "id": 11,
+      "category": "Administrative Support",
+      "details": "Appealing grades and academic standing concerns",
+      "redirect": false
+    }
+  ]
+}
