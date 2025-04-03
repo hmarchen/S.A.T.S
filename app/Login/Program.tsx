@@ -115,9 +115,9 @@ export default function Program() {
         <Ionicons name="arrow-back" size={32} color="white" />
       </Pressable>
       <Pressable
-        style={[styles.arrowButton, program ? styles.activeArrow : styles.disabledArrow]}
+        style={[styles.arrowButton, program && filteredPrograms.length === 1 ? styles.activeArrow : styles.disabledArrow]}
         onPress={HandleSubmit}
-        disabled={!program}
+        disabled={!program || filteredPrograms.length > 1 }
       >
         <Ionicons name="arrow-forward" size={32} color="white" />
       </Pressable>
