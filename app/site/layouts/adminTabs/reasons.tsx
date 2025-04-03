@@ -46,6 +46,7 @@ const AdminReasons: React.FC<LayoutProps> = ({ sendResult }) => {
   const [category, setCategory] = useState('');
   const [details, setDetails] = useState('');
 
+
   useEffect(() => {
     fetchReasons();
   }, []);
@@ -56,9 +57,9 @@ const AdminReasons: React.FC<LayoutProps> = ({ sendResult }) => {
       if (!response.ok) throw new Error('Failed to fetch reasons');
       const data = await response.json();
       setReasons(data.reasons);
-    } catch (error: any) {
+    } catch (error) {
       console.error('Error fetching reasons:', error);
-      sendResult(false, error.message);
+      sendResult(false, 'Failed to load reasons. Please try again.');
     }
   };
 
@@ -79,9 +80,9 @@ const AdminReasons: React.FC<LayoutProps> = ({ sendResult }) => {
         setReasons([...reasons, addedReason]);
         setNewReason({ category: '', details: '' });
         sendResult(true, 'Successfully added a new reason!');
-      } catch (error: any) {
+      } catch (error) {
         console.error('Error adding reason:', error);
-        sendResult(false, error.message);
+        sendResult(false, 'Failed to add reason. Please try again.');
       }
 
       handlePopupClose();
@@ -116,9 +117,9 @@ const AdminReasons: React.FC<LayoutProps> = ({ sendResult }) => {
           ));
           setEditingReason(null);
           sendResult(true, 'Successfully update reason!');
-      } catch (error: any) {
+      } catch (error) {
           console.error('Error updating reason:', error);
-          sendResult(false, error.message);
+          sendResult(false, 'Failed to update reason. Please try again.');
       }
 
       handlePopupClose();
@@ -152,9 +153,9 @@ const AdminReasons: React.FC<LayoutProps> = ({ sendResult }) => {
       sendResult(true, 'Successfuly deleted reason.');
 
       handlePopupClose();
-    } catch (error: any) {
+    } catch (error) {
       console.error('Error deleting reason:', error);
-      sendResult(false, error.message);
+      sendResult(false, 'Failed to delete reason. Please try again.');
     }
   };
 

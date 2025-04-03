@@ -2,6 +2,7 @@
 import { Platform } from 'react-native';
 import { Stack } from 'expo-router';
 import React from 'react';
+import { UserProvider } from './contexts/userContext';
 
 export default function SiteLayout() {
   const isWeb = Platform.OS === 'web';
@@ -10,6 +11,8 @@ export default function SiteLayout() {
   if (!isWeb) { return null; }
 
   return (
-      <Stack screenOptions={{headerShown: false}} />
+      <UserProvider>
+        <Stack screenOptions={{headerShown: false}} />
+      </UserProvider>
   );
 }

@@ -1,10 +1,11 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { View, Text, Button, Image, Pressable, ScrollView, TextInput } from 'react-native';
 import { useRouter } from 'expo-router';
-
+import { useUser } from './contexts/userContext';
 import styles from './styles/style';
 import Structure from './layouts/structure';
 import User from '@/db/classes/User';
+import Unauthorized from './layouts/unauthorized';
 
 export default function Home() {  
   const router = useRouter();
@@ -12,29 +13,14 @@ export default function Home() {
   const API_BASE_URL = 'http://localhost:3001';
   const structureRef = useRef<any>(null);
 
-  const [users, setUsers] = useState<User[]>([]);
+  const { user } = useUser();
+  const { setUser } = useUser();
   const [isPassVisible, setIsPassVisible] = useState(false);
   
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  useEffect(() => {
-    fetchUsers();
-  }, []);
-    
-  const fetchUsers = async () => {
-    try {
-      const response = await fetch(`${API_BASE_URL}/users`);
-      if (!response.ok) {
-        const resError = await response.json();
-        throw new Error(`${resError.error}` || 'Failed to fetch users');
-      }
-      const users = await response.json();
-      setUsers(users);
-    } catch (error: any) {
-      sendResult(false, `Failed to load users: ${error.message}`);
-    }
-  };
+  if (user) { return <Unauthorized reason={"You are already logged in..."}/> }
 
   // EVENT HANDLERS
   const loginButtonClick = async () => {
@@ -56,14 +42,19 @@ export default function Home() {
         body: JSON.stringify({email, password}),
       });
   
+      const responseJSON = await response.json();
+
       if (!response.ok) {
-        const resError = await response.json();
-        throw new Error(`${resError}` || 'Invalid Email or Passwo');
+        throw new Error(`${responseJSON.error}` || 'Invalid Email or Passwo');
       }
 
       // login
+      const gotUser = responseJSON.user
+      const loginUser = new User(gotUser.email, gotUser.firstName, gotUser.lastName, gotUser.password, gotUser.role);
+      setUser(loginUser);
   
-      sendResult(true, 'Login successful!');
+      router.navigate('./home');
+      sendResult(true, 'Successfully logged in!');
     }
     catch (error: any) {
       setPassword('');

@@ -7,6 +7,8 @@ import { View, Text, Button, Image, Pressable, ScrollView, TouchableOpacity, Mod
 import { useRouter } from 'expo-router';
 import styles from '../styles/style';
 import Result from './adminTabs/designs/Result';
+import { useUser } from '../contexts/userContext';
+import Unauthorized from './unauthorized';
 
 // MAIN LAYOUT COMPONENT
 interface LayoutProps {
@@ -30,6 +32,8 @@ const Structure = forwardRef<StructureRef, LayoutProps>(({ children }, ref) => {
   const IMAGES = '../images/';
 
   const [results, setResults] = useState<Result[]>([]);
+  const { user } = useUser(); 
+  const { setUser } = useUser();
 
   // EVENT HANDLERS
   const showResultClick = (success: boolean, status: string) => {
@@ -44,6 +48,12 @@ const Structure = forwardRef<StructureRef, LayoutProps>(({ children }, ref) => {
     }, 5000);
   };
 
+  const logoutClick = () => {
+    setUser(null);
+    router.navigate('./login');
+    showResultClick(true, 'Successfully logged out!');
+  }
+
   useImperativeHandle(ref, () => ({
     showResultClick,
   }));
@@ -55,7 +65,7 @@ const Structure = forwardRef<StructureRef, LayoutProps>(({ children }, ref) => {
     <View style={styles.page}>
       {/* HEADER */}
       <View style={styles.header}>
-        <TouchableOpacity onPress={() => { router.navigate('./home'); }}>
+        <TouchableOpacity onPress={() => { router.navigate('/site/home'); }}>
             <Image
                 source={require(IMAGES + 'logos/DCSATSLogo_White.png')} // Add your logo image here
                 style={styles.logo}
@@ -63,28 +73,37 @@ const Structure = forwardRef<StructureRef, LayoutProps>(({ children }, ref) => {
         </TouchableOpacity>
         
         <View style={styles.headerNav}>
-          <Pressable onPress={() => { router.navigate('./home'); }}>
+          <Pressable onPress={() => { router.navigate('/site/home'); }}>
             <Text style={styles.navText}>Home</Text>
           </Pressable>
-          <Pressable onPress={() => { router.navigate('./appointment'); }}>
+          <Pressable onPress={() => { router.navigate('/site/appointment'); }}>
             <Text style={styles.navText}>Book an appointment</Text>
           </Pressable>
-          <Pressable onPress={() => { router.navigate('./faq'); }}>
+          <Pressable onPress={() => { router.navigate('/site/faq'); }}>
             <Text style={styles.navText}>Frequently Asked Questions</Text>
           </Pressable>
         </View>
 
         <View style={styles.navProfile}>
-            <Pressable style={styles.navButton} onPress={() => { router.navigate('./login'); }}>
-                <Text style={styles.navButtonText}>Advisor Login</Text>
+          {user ? (
+            <View style={{ gap: 5 }}>
+              <Pressable style={styles.navButton} onPress={logoutClick}>
+              <Text style={styles.navButtonText}>Logout</Text>
+              </Pressable>
+                <Pressable style={styles.profileButton} onPress={() => { router.navigate('/site/admin'); }}>
+                  <Image
+                      source={require(IMAGES + 'icons/admin_icon.png')} // Add your logo image here
+                      style={[ styles.icon, { tintColor: 'rgb(117, 17, 17)' } ]}
+                  />
+                  <Text style={styles.profileButtonText}>View Admin Panel</Text>
+              </Pressable>
+            </View>
+          ) : (
+            <Pressable style={styles.navButton} onPress={() => { router.navigate('/site/login'); }}>
+              <Text style={styles.navButtonText}>Advisor Login</Text>
             </Pressable>
-            <Pressable style={styles.profileButton} onPress={() => { router.navigate('./admin'); }}>
-                <Image
-                    source={require(IMAGES + 'icons/admin_icon.png')} // Add your logo image here
-                    style={[ styles.icon, { tintColor: 'rgb(117, 17, 17)' } ]}
-                />
-                <Text style={styles.profileButtonText}>View Admin Panel</Text>
-            </Pressable>
+          )}
+          
         </View>
       </View>
 

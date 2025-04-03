@@ -1,14 +1,16 @@
 import React, { useState, useRef } from 'react';
 import { View, Text, Platform, ScrollView, Pressable } from 'react-native';
 import { useRouter } from 'expo-router';
+import { useUser } from './contexts/userContext';
 import styles from './styles/style';
 import Structure from './layouts/structure';
 import AdminReasons from './layouts/adminTabs/reasons';
 import AdminUsers from './layouts/adminTabs/users';
+import Unauthorized from './layouts/unauthorized';
 
 export default function Admin() {
-  const isWeb = Platform.OS === 'web';
   const router = useRouter();
+  const { user } = useUser(); 
   const structureRef = useRef<any>(null);
 
   // UI Handling
@@ -17,7 +19,7 @@ export default function Admin() {
   const usersTabClick = () => { setSelectedTab('Users'); };
   const reasonsTabClick = () => { setSelectedTab('Reasons'); };
 
-  if (!isWeb) { return null; }
+  if (!user) { return <Unauthorized reason={"You are not authorized to view this page..."}/> }
 
   // STRUCTURE REF
   const sendResult = (success: boolean, status: string) => {
