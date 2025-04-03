@@ -22,8 +22,8 @@ export default class User {
             this.setPassword(password);
             this.setRole(role);
         }
-        catch (error) {
-            throw new Error(error as string);
+        catch (error: any) {
+            throw new Error(error.message);
         }
     }
 

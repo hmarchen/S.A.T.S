@@ -12,7 +12,6 @@ interface LayoutProps {
   sendResult: (success: boolean, error: string) => void;
 }
 
-
 const AdminUsers: React.FC<LayoutProps> = ({ sendResult }) => {
   // CONSTANTS
   const router = useRouter();
@@ -78,7 +77,6 @@ const AdminUsers: React.FC<LayoutProps> = ({ sendResult }) => {
     else { setIsPassVisible(true); }
   };
 
-
   useEffect(() => {
     fetchUsers();
   }, []);
@@ -89,8 +87,8 @@ const AdminUsers: React.FC<LayoutProps> = ({ sendResult }) => {
       if (!response.ok) throw new Error('Failed to fetch users');
       const users = await response.json();
       setUsers(users);
-    } catch (error) {
-      sendResult(false, `Failed to load users: ${error}`);
+    } catch (error: any) {
+      sendResult(false, `Failed to load users: ${error.message}`);
     }
   };
   
@@ -111,8 +109,8 @@ const AdminUsers: React.FC<LayoutProps> = ({ sendResult }) => {
       await fetchUsers();
       sendResult(true, 'Successfully added a new user!');
       handlePopupClose();
-    } catch (error) {
-      sendResult(false, `Failed to create user: ${error}`);
+    } catch (error: any) {
+      sendResult(false, `Failed to create user: ${error.message}`);
     }
   };
 
@@ -123,11 +121,14 @@ const AdminUsers: React.FC<LayoutProps> = ({ sendResult }) => {
         throw new Error('Password must be at least 6 characters long.');
       }
 
-      const newPassword = editPassword ? await bcrypt.hash(editPassword, 10) : password
+      const newPassword = editPassword ? await bcrypt.hash(editPassword, 10) : password;
       const user = new User(email, firstName, lastName, newPassword, selectedRole);
 
       const getResponse = await fetch(`${API_BASE_URL}/users/${user.email}`);
-      if (!getResponse.ok) throw new Error('Failed to fetch user');
+      if (!getResponse.ok) {
+        const resError = await getResponse.json();
+        throw new Error(`${resError}` || 'Failed to fetch users');
+      }
 
       console.log(user.email);
 
@@ -140,7 +141,10 @@ const AdminUsers: React.FC<LayoutProps> = ({ sendResult }) => {
         body: JSON.stringify(user),
       });
 
-      if (!response.ok) throw new Error(`${response.statusText}`);
+      if (!response.ok) {
+        const resError = await response.json();
+        throw new Error(`${resError}` || 'An error occurred while updating user...');
+      }
       
       const updatedUser = await response.json();
         setUsers(users.map(user => 
@@ -150,8 +154,8 @@ const AdminUsers: React.FC<LayoutProps> = ({ sendResult }) => {
       sendResult(true, 'Successfully update user!');
       await fetchUsers();
       handlePopupClose();
-    } catch (error) {
-      sendResult(false, `Failed to update user: ${error}`);
+    } catch (error: any) {
+      sendResult(false, `Failed to update user: ${error.message}`);
     }
   };
 
@@ -164,14 +168,17 @@ const AdminUsers: React.FC<LayoutProps> = ({ sendResult }) => {
           method: 'DELETE',
       });
 
-      if (!response.ok) throw new Error('An issue occurred while deleting user...');
+      if (!response.ok) {
+        const resError = await response.json();
+        throw new Error(`${resError}` || 'An issue occurred while deleting user...');
+      }
       
       setUsers(users.filter(user => user.email !== selectedUser.email));
       sendResult(true, 'Successfuly deleted user.');
 
       handlePopupClose();
-    } catch (error) {
-      sendResult(false, `Failed to delete user: ${error}`);
+    } catch (error: any) {
+      sendResult(false, `Failed to delete user: ${error.message}`);
     }
   };
 
@@ -404,6 +411,5 @@ const AdminUsers: React.FC<LayoutProps> = ({ sendResult }) => {
     </View>
   )
 }
-
 
 export default AdminUsers;

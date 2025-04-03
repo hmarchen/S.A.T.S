@@ -20,8 +20,8 @@ class Appointment {
             this.setReason(reason);
             this.setDate(date);
         }
-        catch (error) {
-            throw new Error(error as string);
+        catch (error: any) {
+            throw new Error(error.message);
         }
     }
 

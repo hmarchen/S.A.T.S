@@ -30,8 +30,8 @@ export default class Student {
             this.setCampus(campus);
             this.setProgram(program);
         }
-        catch (error) {
-            throw new Error(error as string);
+        catch (error: any) {
+            throw new Error(error.message);
         }
     }
 

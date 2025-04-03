@@ -17,7 +17,7 @@ app.use(express.json());
 app.use(bodyParser.json());
 
 // Helper function to save users to a JSON file
-const saveUsersToFile = async () => {
+const saveUsersToFile = async (): Promise<any> => {
     try {
         const users = await dbUsers.getAllUsers();
         fs.writeFileSync(usersFilePath, JSON.stringify(users, null, 2), 'utf-8');
@@ -27,61 +27,60 @@ const saveUsersToFile = async () => {
     }
 };
 
-const readUsersFile = async () => {
-  try {
-    const fileContent = await fs.promises.readFile(usersFilePath, 'utf-8');
-    return JSON.parse(fileContent);
-  } catch (error) {
-    console.error('Error reading reasons file:', error);
-    return { reasons: [] };
-  }
-}
+const readUsersFile = async (): Promise<any> => {
+    try {
+        const fileContent = await fs.promises.readFile(usersFilePath, 'utf-8');
+        return JSON.parse(fileContent);
+    } catch (error) {
+        console.error('Error reading reasons file:', error);
+        return { reasons: [] };
+    }
+};
 
 // Routes
 
 // Create a new user
-app.post('/users', async (req: Request, res: Response) => {
+app.post('/users', async (req: Request, res: Response): Promise<any> => {
     const { email, firstName, lastName, password, role } = req.body;
     try {
         const user = await dbUsers.createUser(email, firstName, lastName, password, role);
         await saveUsersToFile();
-        res.status(201).json(user);
+        return res.status(201).json(user);
     } catch (error) {
         console.error(error);
-        res.status(500).json({ error: 'Failed to create user' });
+        return res.status(500).json({ error: 'Failed to create user' });
     }
 });
 
 // Get a user by email
-app.get('/users/:email', async (req: Request, res: Response) => {
+app.get('/users/:email', async (req: Request, res: Response): Promise<any> => {
     const { email } = req.params;
     try {
         const user = await dbUsers.getUserByEmail(email);
         if (!user) {
-            res.status(404).json({ error: 'User not found' });
-            return;
+            return res.status(404).json({ error: 'User not found' });
         }
-        res.json(user);
+        return res.json(user);
     } catch (error) {
         console.error(error);
-        res.status(500).json({ error: 'Failed to fetch user' });
+        return res.status(500).json({ error: 'Failed to fetch user' });
     }
 });
 
 // Get all users
-app.get('/users', async (_req: Request, res: Response) => {
+app.get('/users', async (_req: Request, res: Response): Promise<any> => {
     try {
         const users = await dbUsers.getAllUsers();
         await saveUsersToFile();
-        res.json(users);
+        return res.json(users);
     } catch (error) {
         console.error(error);
-        res.status(500).json({ error: 'Failed to fetch users' });
+        return res.status(500).json({ error: 'Failed to fetch users' });
     }
 });
 
 // Update a user
-app.put('/users/:email', async (req: Request, res: Response) => {
+app.put('/users/:email', async (req: Request, res: Response): Promise<any> => {
     const { email } = req.params;
     const body = req.body;
     const data = await readUsersFile();
@@ -89,8 +88,7 @@ app.put('/users/:email', async (req: Request, res: Response) => {
     try {
         const foundUser = await dbUsers.getUserByEmail(email);
         if (!foundUser) {
-            res.status(404).json({ error: 'User not found' });
-            return;
+            return res.status(404).json({ error: 'User not found' });
         }
 
         const updatedUser = new User(body.email, body.firstName, body.lastName, body.password, body.role);
@@ -98,45 +96,70 @@ app.put('/users/:email', async (req: Request, res: Response) => {
         console.log(body.email);
         console.log(updatedUser.email);
 
-        // Find and update reason
+        // Find and update user
         const index = data.findIndex(() => updatedUser.email === body.email);
         if (index === -1) {
-            res.status(404).json({ error: 'Reason not found' });
+            return res.status(404).json({ error: 'User not found' });
         }
 
         data[index] = body;
 
         await dbUsers.updateUser(updatedUser);
         await saveUsersToFile();
-        res.json({ message: 'User updated successfully' });
+        return res.json({ message: 'User updated successfully' });
     } catch (error) {
         console.error(error);
-        res.status(500).json({ error: 'Failed to update usera' });
+        return res.status(500).json({ error: 'Failed to update user' });
     }
 });
 
 // Delete a user by email
-app.delete('/users/:email', async (req: Request, res: Response) => {
+app.delete('/users/:email', async (req: Request, res: Response): Promise<any> => {
     const { email } = req.params;
     try {
         await dbUsers.deleteUser(email);
         await saveUsersToFile();
-        res.json({ message: 'User deleted successfully' });
+        return res.json({ message: 'User deleted successfully' });
     } catch (error) {
         console.error(error);
-        res.status(500).json({ error: 'Failed to delete user' });
+        return res.status(500).json({ error: 'Failed to delete user' });
     }
 });
 
 // Delete all users
-app.delete('/users', async (_req: Request, res: Response) => {
+app.delete('/users', async (_req: Request, res: Response): Promise<any> => {
     try {
         await dbUsers.deleteAllUsers();
         await saveUsersToFile();
-        res.json({ message: 'All users deleted successfully' });
+        return res.json({ message: 'All users deleted successfully' });
     } catch (error) {
         console.error(error);
-        res.status(500).json({ error: 'Failed to delete all users' });
+        return res.status(500).json({ error: 'Failed to delete all users' });
+    }
+});
+
+// Login a user
+app.post('/login', async (req: Request, res: Response): Promise<any> => {
+    const body = req.body;
+    try {
+        console.log(body.email);
+        const user = await dbUsers.getUserByEmail(body.email);
+
+        console.log(user);
+        if (!user) {
+            return res.status(401).json({ error: 'Invalid email or password' });
+        }
+
+        const passMatches = await dbUsers.comparePassword(body.password, user.password);
+        console.log(passMatches);
+
+        if (!passMatches) {
+            return res.status(401).json({ error: 'Invalid email or password' });
+        }
+        return res.json({ message: 'Login successful', user });
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ error: 'Failed to login' });
     }
 });
 
