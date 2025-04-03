@@ -6,28 +6,22 @@ import styles from '../../../styles/style';
 interface LayoutProps {
   success: boolean;
   status: string;
+  closeUI: (status: string) => void
 }
 
-const Result: React.FC<LayoutProps> = ({ success, status }) => {
-    const [isResultVisible, setIsResultVisible] = useState(true);
-
-    const closeUI = () => {
-        setIsResultVisible(false);
-    };
+const Result: React.FC<LayoutProps> = ({ success, status, closeUI }) => {
 
     return (
         <View>
-            {isResultVisible && (
-                <Pressable 
-                    style={[
-                        styles.resultContainer,
-                        success ? { backgroundColor: '#46B22D' }: { backgroundColor: '#ff4444' }
-                    ]} 
-                    onPress={closeUI}
-                >
-                    <Text style={styles.resultText}>{status}</Text>
-                </Pressable>
-            )}
+            <Pressable 
+                style={[
+                    styles.resultContainer,
+                    success ? { backgroundColor: '#46B22D' }: { backgroundColor: '#ff4444' }
+                ]} 
+                onPress={() => {closeUI(status);}}
+            >
+                <Text style={styles.resultText}>{status}</Text>
+            </Pressable>
         </View>
     )
 }

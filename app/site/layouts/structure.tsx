@@ -4,11 +4,12 @@
 
 import React, { useState, forwardRef, useImperativeHandle, useRef } from 'react';
 import { View, Text, Button, Image, Pressable, ScrollView, TouchableOpacity, Modal } from 'react-native';
-import { useRouter } from 'expo-router';
+import { useRouter, Slot } from 'expo-router';
 import styles from '../styles/style';
 import Result from './adminTabs/designs/Result';
 import { useUser } from '../contexts/userContext';
 import Unauthorized from './unauthorized';
+import { useNotifications } from '../contexts/notificationContext';
 
 // MAIN LAYOUT COMPONENT
 interface LayoutProps {
@@ -31,22 +32,8 @@ const Structure = forwardRef<StructureRef, LayoutProps>(({ children }, ref) => {
   const router = useRouter();
   const IMAGES = '../images/';
 
-  const [results, setResults] = useState<Result[]>([]);
-  const { user } = useUser(); 
-  const { setUser } = useUser();
-
-  // EVENT HANDLERS
-  const showResultClick = (success: boolean, status: string) => {
-    const newResult: Result = {
-      success: success,
-      status: status,
-    };
-    setResults([...results, newResult]);
-  
-    setTimeout(() => {
-      setResults((prevResults) => prevResults.filter((result) => result.status !== newResult.status));
-    }, 5000);
-  };
+  const { results, showResultClick, closeResultClick } = useNotifications();
+  const { user, setUser } = useUser(); 
 
   const logoutClick = () => {
     setUser(null);
@@ -117,6 +104,7 @@ const Structure = forwardRef<StructureRef, LayoutProps>(({ children }, ref) => {
             key={index}
             success={reason.success}
             status={reason.status}
+            closeUI={closeResultClick}
           />
         ))}
         {children}

@@ -3,6 +3,7 @@ import { Platform } from 'react-native';
 import { Stack } from 'expo-router';
 import React from 'react';
 import { UserProvider } from './contexts/userContext';
+import { NotificationProvider } from './contexts/notificationContext';
 
 export default function SiteLayout() {
   const isWeb = Platform.OS === 'web';
@@ -12,7 +13,9 @@ export default function SiteLayout() {
 
   return (
       <UserProvider>
-        <Stack screenOptions={{headerShown: false}} />
+        <NotificationProvider>
+          <Stack screenOptions={{headerShown: false}} />
+        </NotificationProvider>
       </UserProvider>
   );
 }
