@@ -131,7 +131,6 @@ export default function Program() {
 	        value={searchQuery}
 	        onChangeText={(text) => {
 	          setSearchQuery(text);
-	          setProgram(text); // Set program for instant update
 	        }}
 	        placeholder="Search for a program..."
 	        placeholderTextColor="#ddd"
