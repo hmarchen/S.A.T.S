@@ -7,22 +7,41 @@ import styles from "../css/styles";
 
 const filePath = FileSystem.documentDirectory + "user.json";
 
-export default function Program() {
+interface LayoutProps {
+  setRoute: (route: string) => void;
+}
+
+const Program: React.FC<LayoutProps> = ({setRoute}) => {
   const router = useRouter();
+  const isWeb = Platform.OS === 'web';
   const [program, setProgram] = useState("");
 
   const HandleSubmit = async () => {
     try {
-      const fileExists = await FileSystem.getInfoAsync(filePath);
-      let updatedData = fileExists.exists ? JSON.parse(await FileSystem.readAsStringAsync(filePath)) : [];
+      if (isWeb) {
+        const existingData = localStorage.getItem('user');
+        const updatedData = existingData ? JSON.parse(existingData) : [];
 
-      if (updatedData.length > 0) {
-        updatedData[0].program = program;
+        if (updatedData.length > 0) {
+          updatedData[0].program = program;
+        }
+
+        localStorage.setItem('user', JSON.stringify(updatedData));
+        console.log(updatedData);
+        alert(`Form Submitted\nDCMail: ${program}`);
+        setRoute('reason');
+      } else {
+        const fileExists = await FileSystem.getInfoAsync(filePath);
+        let updatedData = fileExists.exists ? JSON.parse(await FileSystem.readAsStringAsync(filePath)) : [];
+
+        if (updatedData.length > 0) {
+          updatedData[0].program = program;
+        }
+
+        await FileSystem.writeAsStringAsync(filePath, JSON.stringify(updatedData, null, 2));
+        console.log("Navigating to Reason...");
+        router.push("/Login/Reason");
       }
-
-      await FileSystem.writeAsStringAsync(filePath, JSON.stringify(updatedData, null, 2));
-      console.log("Navigating to Reason...");
-      router.push("/Login/Reason");
     } catch (error) {
       console.error("Error writing to file:", error);
       Alert.alert("Error", "Failed to save data.");
@@ -49,3 +68,5 @@ export default function Program() {
     </KeyboardAvoidingView>
   );
 }
+
+export default Program;

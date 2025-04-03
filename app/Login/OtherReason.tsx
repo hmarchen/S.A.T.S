@@ -1,12 +1,16 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Pressable, SafeAreaView, TextInput, Alert } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Pressable, SafeAreaView, TextInput, Alert, Platform } from 'react-native';
 import Breadcrumb from './breadcrumb';
 import { useRouter } from 'expo-router';
 import styles from '../css/styles';
 
-export default function VisitReason() {
+interface LayoutProps {
+  setRoute: (route: string) => void;
+}
 
-  const router = useRouter(); 
+const VisitReason: React.FC<LayoutProps> = ({setRoute}) => {
+  const router = useRouter();
+  const isWeb = Platform.OS === 'web';
   const [Visit, setVisit] = useState('');
   
   const handleSubmit = () => { Alert.alert('Form Submitted', `${Visit}`); };
@@ -35,3 +39,5 @@ export default function VisitReason() {
     </SafeAreaView>
   );
 }
+
+export default VisitReason;

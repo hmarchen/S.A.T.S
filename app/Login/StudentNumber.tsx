@@ -7,23 +7,46 @@ import * as FileSystem from 'expo-file-system';
 
 const filePath = FileSystem.documentDirectory + 'user.json';
 
-export default function StudentNumber() {
+interface LayoutProps {
+  setRoute: (route: string) => void;
+}
+
+const StudentNumber: React.FC<LayoutProps> = ({setRoute}) => {
     const router = useRouter();
+    const isWeb = Platform.OS === 'web';
     const [studentNumber, setStudentNumber] = useState('');
 
     const handleSubmit = async () => {
         try {
-            const fileExists = await FileSystem.getInfoAsync(filePath);
-            let updatedData = fileExists.exists ? JSON.parse(await FileSystem.readAsStringAsync(filePath)) : [];
+            if (isWeb) {
+                const existingData = localStorage.getItem('user');
+                let updatedData = existingData ? JSON.parse(existingData) : [];
 
-            updatedData.length > 0
-                ? (updatedData[0].studentID = studentNumber)
-                : updatedData.push({ firstname: '', lastname: '', studentID: studentNumber, DCMail: '', campus: '', program: '', reason: '' });
+                updatedData.length > 0
+                    ? (updatedData[0].studentID = studentNumber)
+                    : updatedData.push({ firstname: '', lastname: '', studentID: studentNumber, DCMail: '', campus: '', program: '', reason: '' });
 
-            await FileSystem.writeAsStringAsync(filePath, JSON.stringify(updatedData, null, 2));
-            Alert.alert('Form Submitted', `Student Number: ${studentNumber}`);
-            console.log('Navigating to StudentFirstName...');
-            router.push('/Login/StudentFirstName');
+                localStorage.setItem('user', JSON.stringify(updatedData));
+
+
+                alert(`Form Submitted\nStudent Number: ${studentNumber}`);
+                console.log(updatedData);
+                console.log('Navigating to StudentFirstName...');
+                setRoute('studentFirstName');
+            }
+            else {
+                const fileExists = await FileSystem.getInfoAsync(filePath);
+                let updatedData = fileExists.exists ? JSON.parse(await FileSystem.readAsStringAsync(filePath)) : [];
+
+                updatedData.length > 0
+                    ? (updatedData[0].studentID = studentNumber)
+                    : updatedData.push({ firstname: '', lastname: '', studentID: studentNumber, DCMail: '', campus: '', program: '', reason: '' });
+
+                await FileSystem.writeAsStringAsync(filePath, JSON.stringify(updatedData, null, 2));
+                Alert.alert('Form Submitted', `Student Number: ${studentNumber}`);
+                console.log('Navigating to StudentFirstName...');
+                router.push('/Login/StudentFirstName');
+            }
         }
         catch (error) {
             console.error('Error writing to file:', error);
@@ -57,3 +80,5 @@ export default function StudentNumber() {
         </KeyboardAvoidingView>
     );
 }
+
+export default StudentNumber;

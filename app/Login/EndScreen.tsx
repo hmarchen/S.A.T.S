@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, Pressable, Alert } from "react-native";
+import { View, Text, Pressable, Alert, Platform } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
 import { Card } from "@rneui/themed";
@@ -7,24 +7,43 @@ import * as FileSystem from "expo-file-system";
 import Breadcrumb from "./breadcrumb";
 import styles from "../css/styles";
 
-export default function EndScreen() {
+interface LayoutProps {
+  setRoute: (route: string) => void;
+}
+
+const EndScreen: React.FC<LayoutProps> = ({setRoute}) => {
   const router = useRouter();
+  const isWeb = Platform.OS === 'web';
   const [userData, setUserData] = useState(null);
   const filePath = FileSystem.documentDirectory + "user.json";
 
   useEffect(() => {
     const loadJsonFile = async () => {
       try {
-        const fileInfo = await FileSystem.getInfoAsync(filePath);
-        console.log(fileInfo.exists ? `File exists at: ${filePath}` : "File does not exist. Copying from assets...");
+        if (isWeb) {
+          const existingData = localStorage.getItem('user');
+          const fileInfo = existingData ? JSON.parse(existingData) : [];
+  
+          if (!fileInfo.exists) {
+            const userJson = require("../../assets/data/user.json");
+            localStorage.setItem('user', JSON.stringify(userJson));
+            console.log(`File copied to: ${filePath}`);
+          }
 
-        if (!fileInfo.exists) {
-          const userJson = require("../../assets/data/user.json");
-          await FileSystem.writeAsStringAsync(filePath, JSON.stringify(userJson));
-          console.log(`File copied to: ${filePath}`);
+          setUserData(fileInfo);
         }
+        else {
+          const fileInfo = await FileSystem.getInfoAsync(filePath);
+          console.log(fileInfo.exists ? `File exists at: ${filePath}` : "File does not exist. Copying from assets...");
 
-        setUserData(JSON.parse(await FileSystem.readAsStringAsync(filePath)));
+          if (!fileInfo.exists) {
+            const userJson = require("../../assets/data/user.json");
+            await FileSystem.writeAsStringAsync(filePath, JSON.stringify(userJson));
+            console.log(`File copied to: ${filePath}`);
+          }
+
+          setUserData(JSON.parse(await FileSystem.readAsStringAsync(filePath)));
+        }
       } catch (error) {
         console.error("Error reading JSON file:", error);
       }
@@ -73,3 +92,5 @@ export default function EndScreen() {
     </SafeAreaView>
   );
 }
+
+export default EndScreen;

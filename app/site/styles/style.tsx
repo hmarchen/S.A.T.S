@@ -192,6 +192,10 @@ const styles = StyleSheet.create({
       justifyContent: 'center',
       alignItems: 'center',
     },
+    apptView: {
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
 
     // faq page
     faqContainer: {

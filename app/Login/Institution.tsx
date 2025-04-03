@@ -9,8 +9,13 @@ import { AutocompleteDropdown, AutocompleteDropdownItem } from 'react-native-aut
 
 const filePath = FileSystem.documentDirectory + "user.json";
 
-export default function Institution() {
+interface LayoutProps {
+  setRoute: (route: string) => void;
+}
+
+const Institution: React.FC<LayoutProps> = ({setRoute}) => {
   const router = useRouter();
+  const isWeb = Platform.OS === 'web';
   const [institution, setInstitution] = useState("");
   const [program, setProgram] = useState("");
   const [data, setData] = useState([]);
@@ -18,17 +23,31 @@ export default function Institution() {
 
   const handleSubmit = async () => {
     try {
-      const fileExists = await FileSystem.getInfoAsync(filePath);
-      let updatedData = fileExists.exists ? JSON.parse(await FileSystem.readAsStringAsync(filePath)) : [];
+      if (isWeb) {
+        const existingData = localStorage.getItem('user');
+        const updatedData = existingData ? JSON.parse(existingData) : [];
 
-      updatedData.length > 0
-        ? (updatedData[0].campus = institution)
-        : updatedData.push({ firstname: "", lastname: "", studentID: "", DCMail: "", campus: institution, program: "", reason: "" });
-
-      await FileSystem.writeAsStringAsync(filePath, JSON.stringify(updatedData, null, 2));
-      Alert.alert("Form Submitted", `${institution}`);
-      console.log("Navigating to Program...");
-      router.push("/Login/Program");
+        updatedData.length > 0
+          ? (updatedData[0].campus = institution)
+          : updatedData.push({ firstname: "", lastname: "", studentID: "", DCMail: "", campus: institution, program: "", reason: "" });
+  
+        localStorage.setItem('user', JSON.stringify(updatedData));
+        console.log(updatedData);
+        alert(`Form Submitted\nDCMail: ${institution}`);
+        setRoute('program');
+      } else {
+        const fileExists = await FileSystem.getInfoAsync(filePath);
+        let updatedData = fileExists.exists ? JSON.parse(await FileSystem.readAsStringAsync(filePath)) : [];
+  
+        updatedData.length > 0
+          ? (updatedData[0].campus = institution)
+          : updatedData.push({ firstname: "", lastname: "", studentID: "", DCMail: "", campus: institution, program: "", reason: "" });
+  
+        await FileSystem.writeAsStringAsync(filePath, JSON.stringify(updatedData, null, 2));
+        Alert.alert("Form Submitted", `${institution}`);
+        console.log("Navigating to Program...");
+        router.push("/Login/Program");
+      }
     } catch (error) {
       console.error("Error writing to file:", error);
       Alert.alert("Error", "Failed to save data.");
@@ -125,3 +144,5 @@ export default function Institution() {
   </KeyboardAvoidingView>
 );
 }
+
+export default Institution;

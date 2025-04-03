@@ -7,22 +7,40 @@ import * as FileSystem from "expo-file-system";
 
 const filePath = FileSystem.documentDirectory + "user.json";
 
-export default function DCMail() {
+interface LayoutProps {
+  setRoute: (route: string) => void;
+}
+
+const DCMail: React.FC<LayoutProps> = ({setRoute}) => {
   const router = useRouter();
+  const isWeb = Platform.OS === 'web';
   const [DCMail, setMail] = useState("");
 
   const handleSubmit = async () => {
     try {
-      const fileExists = await FileSystem.getInfoAsync(filePath);
-      let updatedData = fileExists.exists ? JSON.parse(await FileSystem.readAsStringAsync(filePath)) : [];
+      if (isWeb) {
+        const existingData = localStorage.getItem('user');
+        const updatedData = existingData ? JSON.parse(existingData) : [];
 
-      updatedData.length > 0 ? (updatedData[0].DCMail = DCMail) :
-      updatedData.push({ firstname: "", lastname: "", studentID: "", DCMail, campus: "", program: "", reason: "" });
+        updatedData.length > 0 ? (updatedData[0].DCMail = DCMail) :
+        updatedData.push({ firstname: "", lastname: "", studentID: "", DCMail, campus: "", program: "", reason: "" });
 
-      await FileSystem.writeAsStringAsync(filePath, JSON.stringify(updatedData, null, 2));
-      Alert.alert("Form Submitted", `Email Address: ${DCMail}`);
-      console.log("Navigating to Institution...");
-      router.push("/Login/Institution");
+        localStorage.setItem('user', JSON.stringify(updatedData));
+        console.log(updatedData);
+        alert(`Form Submitted\nDCMail: ${DCMail}`);
+        setRoute('institution');
+      } else {
+        const fileExists = await FileSystem.getInfoAsync(filePath);
+        let updatedData = fileExists.exists ? JSON.parse(await FileSystem.readAsStringAsync(filePath)) : [];
+
+        updatedData.length > 0 ? (updatedData[0].DCMail = DCMail) :
+        updatedData.push({ firstname: "", lastname: "", studentID: "", DCMail, campus: "", program: "", reason: "" });
+
+        await FileSystem.writeAsStringAsync(filePath, JSON.stringify(updatedData, null, 2));
+        Alert.alert("Form Submitted", `Email Address: ${DCMail}`);
+        console.log("Navigating to Institution...");
+        router.push("/Login/Institution");
+      }
     }
     catch (error) {
       console.error("Error writing to file:", error);
@@ -52,3 +70,5 @@ export default function DCMail() {
     </KeyboardAvoidingView>
   );
 }
+
+export default DCMail;

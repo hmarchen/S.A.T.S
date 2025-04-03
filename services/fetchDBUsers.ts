@@ -5,7 +5,7 @@ import User from '../db/classes/User';
 import cors from 'cors';
 import fs from 'fs';
 import path from 'path';
-import bcrypt from 'bcrypt';
+import bcrypt from 'bcryptjs';
 
 const app = express();
 const port = 3001; // You can change the port if needed
