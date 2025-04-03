@@ -5,7 +5,6 @@ import { useRouter } from 'expo-router';
 import styles from '../../styles/tabStyles';
 import NewUser from './designs/NewUser';
 import User from '@/db/classes/User';
-import bcrypt from 'bcryptjs';
 
 // MAIN LAYOUT COMPONENT
 interface LayoutProps {
@@ -125,7 +124,22 @@ const AdminUsers: React.FC<LayoutProps> = ({ sendResult }) => {
         throw new Error('Password must be at least 6 characters long.');
       }
 
-      const newPassword = editPassword ? await bcrypt.hash(editPassword, 10) : password;
+      const newPassword = editPassword 
+        ? await fetch(`${API_BASE_URL}/hash-password`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ password: editPassword }),
+          })
+          .then(response => {
+        if (!response.ok) {
+          throw new Error('Failed to hash password');
+        }
+        return response.json();
+          })
+          .then(data => data.hashedPassword)
+      : password;
       const user = new User(email, firstName, lastName, newPassword, selectedRole, ics);
 
       const getResponse = await fetch(`${API_BASE_URL}/users/${user.email}`);
@@ -341,8 +355,8 @@ const AdminUsers: React.FC<LayoutProps> = ({ sendResult }) => {
                         onValueChange={(itemValue) => setSelectedRole(itemValue)}
                         style={styles.picker}
                       >
-                        <Picker.Item label="Advisor" value="advisor" />
                         <Picker.Item label="Admin" value="admin" />
+                        <Picker.Item label="Advisor" value="advisor" />
                       </Picker>
                     </View>
                     
@@ -423,8 +437,8 @@ const AdminUsers: React.FC<LayoutProps> = ({ sendResult }) => {
                         onValueChange={(itemValue) => setSelectedRole(itemValue)}
                         style={styles.picker}
                       >
-                        <Picker.Item label="Advisor" value="advisor" />
                         <Picker.Item label="Admin" value="admin" />
+                        <Picker.Item label="Advisor" value="advisor" />
                       </Picker>
                     </View>
                     

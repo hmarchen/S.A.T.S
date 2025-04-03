@@ -5,6 +5,7 @@ import User from '../db/classes/User';
 import cors from 'cors';
 import fs from 'fs';
 import path from 'path';
+import bcrypt from 'bcrypt';
 
 const app = express();
 const port = 3001; // You can change the port if needed
@@ -91,7 +92,7 @@ app.put('/users/:email', async (req: Request, res: Response): Promise<any> => {
             return res.status(404).json({ error: 'User not found' });
         }
 
-        const updatedUser = new User(body.email, body.firstName, body.lastName, body.password, body.role);
+        const updatedUser = new User(body.email, body.firstName, body.lastName, body.password, body.role, body.ics);
 
         console.log(body.email);
         console.log(updatedUser.email);
@@ -160,6 +161,23 @@ app.post('/login', async (req: Request, res: Response): Promise<any> => {
     } catch (error) {
         console.error(error);
         return res.status(500).json({ error: 'Failed to login' });
+    }
+});
+
+// Route to hash a password
+app.post('/hash-password', async (req: Request, res: Response): Promise<any> => {
+    const { password } = req.body;
+    if (!password) {
+        return res.status(400).json({ error: 'Password is required' });
+    }
+
+    try {
+        const saltRounds = 10;
+        const hashedPassword = await bcrypt.hash(password, saltRounds);
+        return res.json({ hashedPassword });
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ error: 'Failed to hash password' });
     }
 });
 

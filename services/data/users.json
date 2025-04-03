@@ -1,5 +1,21 @@
 [
   {
+    "email": "test@test.test",
+    "firstName": "[T] hi",
+    "lastName": "hi",
+    "password": "$2b$10$mLuku3EzJ3.9kNNo7a7PzeX3lGedS58gKQL/2ZsVEQYTEKM0uyJ3K",
+    "role": "admin",
+    "ics": ""
+  },
+  {
+    "email": "test@test.com",
+    "firstName": "test",
+    "lastName": "test",
+    "password": "$2b$10$Gye6J5jay73sJq1Yc4uCruktY9sBCOMtnmKHMcTkC4bCYsFA84C6q",
+    "role": "advisor",
+    "ics": ""
+  },
+  {
     "email": "some.fake@email.com",
     "firstName": "[D] New",
     "lastName": "User",
@@ -29,14 +45,6 @@
     "lastName": "User",
     "password": "$2b$10$YpSMccrZhUtG7Gg2HT22L.gp/3iBVgMkc9l8qvvMxztUx7i9a4VZS",
     "role": "advisor",
-    "ics": ""
-  },
-  {
-    "email": "test@test.test",
-    "firstName": "[T] hi",
-    "lastName": "hi",
-    "password": "$2b$10$mLuku3EzJ3.9kNNo7a7PzeX3lGedS58gKQL/2ZsVEQYTEKM0uyJ3K",
-    "role": "admin",
     "ics": ""
   }
 ]

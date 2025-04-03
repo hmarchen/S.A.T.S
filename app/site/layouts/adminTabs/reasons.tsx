@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, FlatList, Image, Pressable, ScrollView, StyleSheet, Modal, TextInput } from 'react-native';
 import { useRouter } from 'expo-router';
 import styles from '../../styles/tabStyles';
-import ogStyles from '../../../css/styles';
+import { Checkbox } from 'react-native-paper';
 import NewReason, { Reason } from './designs/NewReason';
 
 // MAIN LAYOUT COMPONENT
@@ -18,18 +18,21 @@ const AdminReasons: React.FC<LayoutProps> = ({ sendResult }) => {
   const [isAddVisible, setIsAddVisible] = useState(false);
   const [isEditVisible, setIsEditVisible] = useState(false);
   const [isDeleteVisible, setIsDeleteVisible] = useState(false);
+  const [isRedirectChecked, setIsRedirectChecked] = useState(false);
 
   const [selectedReason, setSelectedReason] = useState<Reason>({} as Reason); // for deletion
   const [reasons, setReasons] = useState<Reason[]>([]);
-  const [newReason, setNewReason] = useState<Partial<Reason>>({ category: '', details: '' });
+  const [newReason, setNewReason] = useState<Partial<Reason>>({ category: '', details: '', redirect: false  });
   const [editingReason, setEditingReason] = useState<Reason | null>(null);
 
   // EVENT HANDLER
   const handleAddPopupClick = () => { 
+    setIsRedirectChecked(false);
     setIsAddVisible(true); 
   };
   const handleEditPopupClick = (reason: Reason) => {
     setIsEditVisible(true);
+    setIsRedirectChecked(reason.redirect);
     setEditingReason(reason);
   };
   const handleDeletePopupClick = (reason: Reason) => { 
@@ -40,12 +43,9 @@ const AdminReasons: React.FC<LayoutProps> = ({ sendResult }) => {
     setIsAddVisible(false); 
     setIsEditVisible(false); 
     setIsDeleteVisible(false);
+    setIsRedirectChecked(false);
     setEditingReason(null);
   };
-
-  const [category, setCategory] = useState('');
-  const [details, setDetails] = useState('');
-
 
   useEffect(() => {
     fetchReasons();
@@ -65,6 +65,7 @@ const AdminReasons: React.FC<LayoutProps> = ({ sendResult }) => {
 
   const handleReasonAdd = async () => {
     if (newReason.category && newReason.details) {
+      console.log(newReason);
       try {
         const response = await fetch(`${API_BASE_URL}/reasons`, {
         method: 'POST',
@@ -78,7 +79,7 @@ const AdminReasons: React.FC<LayoutProps> = ({ sendResult }) => {
         
         const addedReason = await response.json();
         setReasons([...reasons, addedReason]);
-        setNewReason({ category: '', details: '' });
+        setNewReason({ category: '', details: '', redirect: false });
         sendResult(true, 'Successfully added a new reason!');
       } catch (error) {
         console.error('Error adding reason:', error);
@@ -243,6 +244,17 @@ const AdminReasons: React.FC<LayoutProps> = ({ sendResult }) => {
                         placeholderTextColor="#999"
                       />
                     </View>
+                    <View style={styles.popupBodyRow}>
+                      <Checkbox.Item
+                        label="Redirect? :"
+                        status={isRedirectChecked ? 'checked': 'unchecked' }
+                        onPress={() => {
+                          const newValue = !isRedirectChecked;
+                          setIsRedirectChecked(newValue)
+                          setNewReason({ ...newReason, redirect: newValue });
+                        }}
+                      />
+                    </View>
                     <Pressable style={styles.userButton} onPress={handleReasonAdd}>
                       <Text style={styles.userButtonText}>Add</Text>
                     </Pressable>
@@ -269,6 +281,17 @@ const AdminReasons: React.FC<LayoutProps> = ({ sendResult }) => {
                         value={editingReason.details}  
                         placeholder="Enter reason details" 
                         placeholderTextColor="#999"
+                      />
+                    </View>
+                    <View style={styles.popupBodyRow}>
+                      <Checkbox.Item
+                        label="Redirect? :"
+                        status={isRedirectChecked ? 'checked': 'unchecked' }
+                        onPress={() => {
+                          const newValue = !isRedirectChecked;
+                          setIsRedirectChecked(newValue)
+                          setEditingReason({ ...editingReason, redirect: newValue });
+                        }}
                       />
                     </View>
                     <Pressable style={styles.userButton} onPress={handleReasonUpdate}>

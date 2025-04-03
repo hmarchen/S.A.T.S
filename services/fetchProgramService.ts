@@ -22,6 +22,7 @@ interface Reason {
   id: number;
   category: string;
   details: string;
+  redirect: boolean;
 }
 
 const REASONS_FILE_PATH = path.join(__dirname, '/data/reasons.json');
@@ -110,11 +111,14 @@ app.post('/reasons', (async (req, res) => {
       return res.status(400).json({ error: 'Category and details are required' });
     }
 
+    console.log(body.redirect);
+
     // Create new reason
     const newReason: Reason = {
       id: Math.max(...data.reasons.map((r: Reason) => r.id), 0) + 1,
       category: body.category,
       details: body.details,
+      redirect: body.redirect
     };
 
     data.reasons.push(newReason);
