@@ -231,6 +231,7 @@ const AdminReasons: React.FC<LayoutProps> = ({ sendResult }) => {
                       onChangeText={(text) => setNewReason({ ...newReason, category: text })}
                       value={newReason.category}  
                       placeholder="Enter reason category" 
+                      placeholderTextColor="#999"
                     />
                     </View>
                     <View style={styles.popupBodyRow}>
@@ -239,6 +240,7 @@ const AdminReasons: React.FC<LayoutProps> = ({ sendResult }) => {
                         onChangeText={(text) => setNewReason({ ...newReason, details: text })}
                         value={newReason.details}  
                         placeholder="Enter reason details" 
+                        placeholderTextColor="#999"
                       />
                     </View>
                     <Pressable style={styles.userButton} onPress={handleReasonAdd}>
@@ -257,6 +259,7 @@ const AdminReasons: React.FC<LayoutProps> = ({ sendResult }) => {
                       onChangeText={(text) => setEditingReason({ ...editingReason, category: text })}
                       value={editingReason.category}  
                       placeholder="Enter reason category" 
+                      placeholderTextColor="#999"
                     />
                     </View>
                     <View style={styles.popupBodyRow}>
@@ -265,6 +268,7 @@ const AdminReasons: React.FC<LayoutProps> = ({ sendResult }) => {
                         onChangeText={(text) => setEditingReason({ ...editingReason, details: text })}
                         value={editingReason.details}  
                         placeholder="Enter reason details" 
+                        placeholderTextColor="#999"
                       />
                     </View>
                     <Pressable style={styles.userButton} onPress={handleReasonUpdate}>

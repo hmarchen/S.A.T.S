@@ -52,6 +52,10 @@ const NewUser: React.FC<LayoutProps> = ({ user, isActive, onEditPress, onDeleteP
                 <Text style={styles.newUserText}>Role:</Text>
                 <Text style={styles.newUserText}>{user.role}</Text>
             </View>
+            <View style={styles.inlineFill}>
+                <Text style={styles.newUserText}>Outlook Calendar:</Text>
+                <Text style={styles.newUserText}>{user.ics || 'None'}</Text>
+            </View>
         </View>
     );
 }

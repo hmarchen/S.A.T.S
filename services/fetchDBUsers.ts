@@ -41,9 +41,9 @@ const readUsersFile = async (): Promise<any> => {
 
 // Create a new user
 app.post('/users', async (req: Request, res: Response): Promise<any> => {
-    const { email, firstName, lastName, password, role } = req.body;
+    const { email, firstName, lastName, password, role, ics } = req.body;
     try {
-        const user = await dbUsers.createUser(email, firstName, lastName, password, role);
+        const user = await dbUsers.createUser(email, firstName, lastName, password, role, ics);
         await saveUsersToFile();
         return res.status(201).json(user);
     } catch (error) {

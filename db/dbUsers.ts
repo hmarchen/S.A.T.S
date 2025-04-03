@@ -17,14 +17,17 @@ class DBUsers {
         }
     }
 
-    async createUser(email: string, firstName: string, lastName: string, password: string, role: string): Promise<User> {
+    async createUser(
+        email: string, firstName: string, lastName: string, 
+        password: string, role: string, ics: string = ''
+    ): Promise<User> {
         const hashedPassword = await bcrypt.hash(password, 10); // Hash the password
         const query = `
-            INSERT INTO users (firstname, lastname, email, password, role)
-            VALUES ($1, $2, $3, $4, $5)
+            INSERT INTO users (firstname, lastname, email, password, role, ics)
+            VALUES ($1, $2, $3, $4, $5, $6)
         `;
-        await this.pool.query(query, [firstName, lastName, email, hashedPassword, role]);
-        return new User(email, firstName, lastName, hashedPassword, role);
+        await this.pool.query(query, [firstName, lastName, email, hashedPassword, role, ics]);
+        return new User(email, firstName, lastName, hashedPassword, role, ics);
     }
 
     async getUserByEmail(email: string): Promise<User | null> {
@@ -37,13 +40,13 @@ class DBUsers {
             return null;
         }
         const row = result.rows[0];
-        return new User(row.email, row.firstname, row.lastname, row.password, row.role);
+        return new User(row.email, row.firstname, row.lastname, row.password, row.role, row.ics);
     }
 
     async getAllUsers(): Promise<User[]> {
         const query = `SELECT * FROM users`;
         const result = await this.pool.query(query);
-        return result.rows.map(row => new User(row.email, row.firstname, row.lastname, row.password, row.role));
+        return result.rows.map(row => new User(row.email, row.firstname, row.lastname, row.password, row.role, row.ics));
     }
 
     async comparePassword(plainPassword: string, hashedPassword: string): Promise<boolean> {
@@ -53,10 +56,10 @@ class DBUsers {
     async updateUser(user: User): Promise<void> {
         const query = `
             UPDATE users
-            SET firstname = $2, lastname = $3, password = $4, role = $5
+            SET firstname = $2, lastname = $3, password = $4, role = $5, ics = $6
             WHERE email = $1
         `;
-        await this.pool.query(query, [user.email, user.firstName, user.lastName, user.password, user.role]);
+        await this.pool.query(query, [user.email, user.firstName, user.lastName, user.password, user.role, user.ics]);
     }
 
     async deleteUser(email: string): Promise<void> {

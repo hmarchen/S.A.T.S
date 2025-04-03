@@ -6,13 +6,15 @@ export default class User {
     lastName: string;
     password: string;
     role: string;
+    ics: string;
 
-    constructor(email: string, firstName: string, lastName: string, password: string, role: string) {
+    constructor(email: string, firstName: string, lastName: string, password: string, role: string, ics: string = '') {
         this.email = email;
         this.firstName = firstName;
         this.lastName = lastName;
         this.password = password;
         this.role = role;
+        this.ics = ics;
 
         // validation
         try {
@@ -21,6 +23,7 @@ export default class User {
             this.setLastName(lastName);
             this.setPassword(password);
             this.setRole(role);
+            this.setIcs(ics);
         }
         catch (error: any) {
             throw new Error(error.message);
@@ -83,7 +86,21 @@ export default class User {
         this.role = role;
     }
 
+    getIcs(): string {
+        return this.ics;
+    }
+
+    setIcs(ics: string): void {
+        if (ics) {
+            const icsRegex = /^https:\/\/outlook\.office365\.com\/.+$/;
+            if (!icsRegex.test(ics)) {
+                throw new Error("ICS must be a valid outlook.office365.com link.");
+            }
+        }
+        this.ics = ics;
+    }
+
     toString(): string {
-        return `User [Name=${this.firstName} ${this.lastName}, Email=${this.email}, Role=${this.role}]`;
+        return `User [Name=${this.firstName} ${this.lastName}, Email=${this.email}, Role=${this.role}, ICS=${this.ics}]`;
     }
 }

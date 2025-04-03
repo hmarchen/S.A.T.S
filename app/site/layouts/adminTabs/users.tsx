@@ -22,7 +22,7 @@ const AdminUsers: React.FC<LayoutProps> = ({ sendResult }) => {
   const [isDeleteVisible, setIsDeleteVisible] = useState(false);
   const [isPassVisible, setIsPassVisible] = useState(false);
 
-  const [selectedUser, setSelectedUser] = useState<User>(new User('place@holder.com', 'place', 'holder', '123456', 'advisor'));
+  const [selectedUser, setSelectedUser] = useState<User>(new User('place@holder.com', 'place', 'holder', '123456', 'advisor', ''));
   const [users, setUsers] = useState<User[]>([]);
 
   const [firstName, setFirstName] = useState('');
@@ -31,6 +31,7 @@ const AdminUsers: React.FC<LayoutProps> = ({ sendResult }) => {
   const [password, setPassword] = useState('');
   const [editPassword, setEditPassword] = useState('');
   const [selectedRole, setSelectedRole] = useState('advisor');
+  const [ics, setIcs] = useState('');
 
   // EVENT HANDLER
   const resetForm = () => {
@@ -40,6 +41,7 @@ const AdminUsers: React.FC<LayoutProps> = ({ sendResult }) => {
     setPassword('');
     setEditPassword('');
     setSelectedRole('advisor');
+    setIcs('');
     setIsPassVisible(false);
   };
   
@@ -53,6 +55,7 @@ const AdminUsers: React.FC<LayoutProps> = ({ sendResult }) => {
     setEmail(user.email);
     setPassword(user.password);
     setSelectedRole(user.role);
+    setIcs(user.ics);
 
     setIsEditVisible(true); 
   };
@@ -62,6 +65,7 @@ const AdminUsers: React.FC<LayoutProps> = ({ sendResult }) => {
     setEmail(user.email);
     setPassword(user.password);
     setSelectedRole(user.role);
+    setIcs(user.ics);
     
     setIsDeleteVisible(true);
     setSelectedUser(user);
@@ -94,7 +98,7 @@ const AdminUsers: React.FC<LayoutProps> = ({ sendResult }) => {
   
   const addUserClick = async () => {
     try {
-      const newUser = new User(email, firstName, lastName, password, selectedRole);
+      const newUser = new User(email, firstName, lastName, password, selectedRole, ics);
 
       const response = await fetch(`${API_BASE_URL}/users`, {
         method: 'POST',
@@ -122,7 +126,7 @@ const AdminUsers: React.FC<LayoutProps> = ({ sendResult }) => {
       }
 
       const newPassword = editPassword ? await bcrypt.hash(editPassword, 10) : password;
-      const user = new User(email, firstName, lastName, newPassword, selectedRole);
+      const user = new User(email, firstName, lastName, newPassword, selectedRole, ics);
 
       const getResponse = await fetch(`${API_BASE_URL}/users/${user.email}`);
       if (!getResponse.ok) {
@@ -162,7 +166,7 @@ const AdminUsers: React.FC<LayoutProps> = ({ sendResult }) => {
   const deleteUserClick = async () => {
     try {
       // user validation
-      const user = new User(email, firstName, lastName, password, selectedRole);
+      const user = new User(email, firstName, lastName, password, selectedRole, ics);
       
       const response = await fetch(`${API_BASE_URL}/users/${user.email}`, {
           method: 'DELETE',
@@ -278,13 +282,15 @@ const AdminUsers: React.FC<LayoutProps> = ({ sendResult }) => {
                         style={styles.popupTextInput}
                         onChangeText={setFirstName}
                         value={firstName}  
-                        placeholder="Enter first name here" 
+                        placeholder="Enter first name here"
+                        placeholderTextColor="#999"
                       />
                       <TextInput
                         style={styles.popupTextInput}
                         onChangeText={setLastName}
                         value={lastName}  
-                        placeholder="Enter last name here" 
+                        placeholder="Enter last name here"
+                        placeholderTextColor="#999"
                       />
                     </View>
                     <View style={styles.popupBodyRow}>
@@ -292,7 +298,8 @@ const AdminUsers: React.FC<LayoutProps> = ({ sendResult }) => {
                         style={styles.popupTextInput}
                         onChangeText={setEmail}
                         value={email}  
-                        placeholder="Enter new email here" 
+                        placeholder="Enter new email here"
+                        placeholderTextColor="#999"
                       />
                     </View>
                     <View style={styles.popupBodyRow}>
@@ -301,21 +308,31 @@ const AdminUsers: React.FC<LayoutProps> = ({ sendResult }) => {
                         onChangeText={setPassword}
                         value={password}  
                         secureTextEntry={!isPassVisible}
-                        placeholder="Enter new password here" 
+                        placeholder="Enter new password here"
+                        placeholderTextColor="#999"
                       />
                       <Pressable style={styles.popupClose} onPress={handleVisible}>
                         {isPassVisible ? (
                           <Image 
-                            source={require(IMAGES + 'icons/visible_icon.png')} 
-                            style={[styles.popupIcon, {tintColor: "rgb(49, 49, 49)"}]}
+                          source={require(IMAGES + 'icons/visible_icon.png')} 
+                          style={[styles.popupIcon, {tintColor: "rgb(49, 49, 49)"}]}
                           />
                         ) : (
                           <Image 
-                            source={require(IMAGES + 'icons/invisible_icon.png')} 
-                            style={[styles.popupIcon, {tintColor: "rgb(49, 49, 49)"}]}
+                          source={require(IMAGES + 'icons/invisible_icon.png')} 
+                          style={[styles.popupIcon, {tintColor: "rgb(49, 49, 49)"}]}
                           />
                         )}
                       </Pressable>
+                    </View>
+                    <View style={styles.popupBodyRow}>
+                      <TextInput
+                        style={styles.popupTextInput}
+                        onChangeText={setIcs}
+                        value={ics}  
+                        placeholder="Enter outlook calender link here (optional)"
+                        placeholderTextColor="#999"
+                      />
                     </View>
                     <View style={styles.popupBodyRow}>
                       <Text style={styles.popupText}>Role:</Text>
@@ -331,10 +348,10 @@ const AdminUsers: React.FC<LayoutProps> = ({ sendResult }) => {
                     
                     <Pressable style={styles.userButton} onPress={addUserClick}>
                       {isAddVisible && (
-                        <Text style={styles.userButtonText}>Add</Text>
+                      <Text style={styles.userButtonText}>Add</Text>
                       )}
                       {isEditVisible && (
-                        <Text style={styles.userButtonText}>Update</Text>
+                      <Text style={styles.userButtonText}>Update</Text>
                       )}
                     </Pressable>
                   </View>
@@ -348,13 +365,15 @@ const AdminUsers: React.FC<LayoutProps> = ({ sendResult }) => {
                         style={styles.popupTextInput}
                         onChangeText={setFirstName}
                         value={firstName}  
-                        placeholder="Enter first name here" 
+                        placeholder="Enter first name here"
+                        placeholderTextColor="#999"
                       />
                       <TextInput
                         style={styles.popupTextInput}
                         onChangeText={setLastName}
                         value={lastName}  
-                        placeholder="Enter last name here" 
+                        placeholder="Enter last name here"
+                        placeholderTextColor="#999"
                       />
                     </View>
                     <View style={styles.popupBodyRow}>
@@ -362,7 +381,8 @@ const AdminUsers: React.FC<LayoutProps> = ({ sendResult }) => {
                         style={styles.popupTextInput}
                         onChangeText={setEmail}
                         value={email}  
-                        placeholder="Enter new email here" 
+                        placeholder="Enter new email here"
+                        placeholderTextColor="#999"
                       />
                     </View>
                     <View style={styles.popupBodyRow}>
@@ -370,21 +390,31 @@ const AdminUsers: React.FC<LayoutProps> = ({ sendResult }) => {
                         style={styles.popupTextInput}
                         onChangeText={setEditPassword}
                         secureTextEntry={!isPassVisible}
-                        placeholder="Create a new password here (optional)" 
+                        placeholder="Create a new password here (optional)"
+                        placeholderTextColor="#999"
                       />
                       <Pressable style={styles.popupClose} onPress={handleVisible}>
                         {isPassVisible ? (
                           <Image 
-                            source={require(IMAGES + 'icons/visible_icon.png')} 
-                            style={[styles.popupIcon, {tintColor: "rgb(49, 49, 49)"}]}
+                          source={require(IMAGES + 'icons/visible_icon.png')} 
+                          style={[styles.popupIcon, {tintColor: "rgb(49, 49, 49)"}]}
                           />
                         ) : (
                           <Image 
-                            source={require(IMAGES + 'icons/invisible_icon.png')} 
-                            style={[styles.popupIcon, {tintColor: "rgb(49, 49, 49)"}]}
+                          source={require(IMAGES + 'icons/invisible_icon.png')} 
+                          style={[styles.popupIcon, {tintColor: "rgb(49, 49, 49)"}]}
                           />
                         )}
                       </Pressable>
+                    </View>
+                    <View style={styles.popupBodyRow}>
+                      <TextInput
+                        style={styles.popupTextInput}
+                        onChangeText={setIcs}
+                        value={ics}  
+                        placeholder="Enter outlook calender link here (optional)"
+                        placeholderTextColor="#999"
+                      />
                     </View>
                     <View style={styles.popupBodyRow}>
                       <Text style={styles.popupText}>Role:</Text>
