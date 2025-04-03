@@ -37,7 +37,6 @@ const Structure = forwardRef<StructureRef, LayoutProps>(({ children }, ref) => {
       success: success,
       status: status,
     };
-    console.log(newResult);
     setResults([...results, newResult]);
   
     setTimeout(() => {

@@ -43,7 +43,10 @@ const NewUser: React.FC<LayoutProps> = ({ reason, isActive, onEditPress, onDelet
                 )}
             </View>
             <View style={styles.horizontalLine}/>
-            <Text style={styles.newUserText}>Details: {reason.details}</Text>
+            <View style={styles.inlineFill}>
+                <Text style={styles.newUserText}>Details:</Text>
+                <Text style={styles.newUserText}>{reason.details}</Text>
+            </View>
         </View>
     );
 }

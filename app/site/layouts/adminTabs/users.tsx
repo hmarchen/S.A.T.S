@@ -5,7 +5,7 @@ import { useRouter } from 'expo-router';
 import styles from '../../styles/tabStyles';
 import NewUser from './designs/NewUser';
 import User from '@/db/classes/User';
-import DBUsers from '@/db/dbUsers';
+import bcrypt from 'bcryptjs';
 
 // MAIN LAYOUT COMPONENT
 interface LayoutProps {
@@ -25,12 +25,12 @@ const AdminUsers: React.FC<LayoutProps> = ({ sendResult }) => {
 
   const [selectedUser, setSelectedUser] = useState<User>(new User('place@holder.com', 'place', 'holder', '123456', 'advisor'));
   const [users, setUsers] = useState<User[]>([]);
-  const [editingUser, setEditingUser] = useState<User | null>(null);
 
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [editPassword, setEditPassword] = useState('');
   const [selectedRole, setSelectedRole] = useState('advisor');
 
   // EVENT HANDLER
@@ -39,7 +39,9 @@ const AdminUsers: React.FC<LayoutProps> = ({ sendResult }) => {
     setLastName('');
     setEmail('');
     setPassword('');
+    setEditPassword('');
     setSelectedRole('advisor');
+    setIsPassVisible(false);
   };
   
   const handleAddPopupClick = () => {
@@ -56,6 +58,12 @@ const AdminUsers: React.FC<LayoutProps> = ({ sendResult }) => {
     setIsEditVisible(true); 
   };
   const handleDeletePopupClick = (user: User) => { 
+    setFirstName(user.firstName);
+    setLastName(user.lastName);
+    setEmail(user.email);
+    setPassword(user.password);
+    setSelectedRole(user.role);
+    
     setIsDeleteVisible(true);
     setSelectedUser(user);
   };
@@ -63,6 +71,7 @@ const AdminUsers: React.FC<LayoutProps> = ({ sendResult }) => {
     setIsAddVisible(false); 
     setIsEditVisible(false); 
     setIsDeleteVisible(false);
+    resetForm();
   };
   const handleVisible = () => {
     if (isPassVisible) { setIsPassVisible(false); }
@@ -99,7 +108,6 @@ const AdminUsers: React.FC<LayoutProps> = ({ sendResult }) => {
 
       if (!response.ok) throw new Error('An issue occurred while saving user.');
   
-      resetForm();
       await fetchUsers();
       sendResult(true, 'Successfully added a new user!');
       handlePopupClose();
@@ -111,8 +119,12 @@ const AdminUsers: React.FC<LayoutProps> = ({ sendResult }) => {
   const editUserClick = async () => {
     try {
       // check if user exists
-      console.log(lastName);
-      const user = new User(email, firstName, lastName, password, selectedRole);
+      if (editPassword && editPassword.length < 6) {
+        throw new Error('Password must be at least 6 characters long.');
+      }
+
+      const newPassword = editPassword ? await bcrypt.hash(editPassword, 10) : password
+      const user = new User(email, firstName, lastName, newPassword, selectedRole);
 
       const getResponse = await fetch(`${API_BASE_URL}/users/${user.email}`);
       if (!getResponse.ok) throw new Error('Failed to fetch user');
@@ -135,7 +147,6 @@ const AdminUsers: React.FC<LayoutProps> = ({ sendResult }) => {
         user.email === updatedUser.email ? updatedUser : user
       ));
       
-      setEditingUser(null);
       sendResult(true, 'Successfully update user!');
       await fetchUsers();
       handlePopupClose();
@@ -144,11 +155,24 @@ const AdminUsers: React.FC<LayoutProps> = ({ sendResult }) => {
     }
   };
 
-  const deleteUserClick = () => {
-    // Handle login logic here
-    sendResult(false, 'Delete functionality not implemented yet...');
+  const deleteUserClick = async () => {
+    try {
+      // user validation
+      const user = new User(email, firstName, lastName, password, selectedRole);
+      
+      const response = await fetch(`${API_BASE_URL}/users/${user.email}`, {
+          method: 'DELETE',
+      });
 
-    handlePopupClose();
+      if (!response.ok) throw new Error('An issue occurred while deleting user...');
+      
+      setUsers(users.filter(user => user.email !== selectedUser.email));
+      sendResult(true, 'Successfuly deleted user.');
+
+      handlePopupClose();
+    } catch (error) {
+      sendResult(false, `Failed to delete user: ${error}`);
+    }
   };
 
   return (
@@ -337,10 +361,9 @@ const AdminUsers: React.FC<LayoutProps> = ({ sendResult }) => {
                     <View style={styles.popupBodyRow}>
                       <TextInput
                         style={styles.popupTextInput}
-                        onChangeText={setPassword}
-                        value={password}
+                        onChangeText={setEditPassword}
                         secureTextEntry={!isPassVisible}
-                        placeholder="Create a new password here" 
+                        placeholder="Create a new password here (optional)" 
                       />
                       <Pressable style={styles.popupClose} onPress={handleVisible}>
                         {isPassVisible ? (

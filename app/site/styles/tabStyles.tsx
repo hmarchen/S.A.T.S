@@ -101,6 +101,15 @@ const styles = StyleSheet.create({
         paddingLeft: 10,
     },
 
+    inlineFill: {
+        width: '100%',
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'flex-start',
+        gap: 10,
+    },
+  
+
     // MANAGE USERS ------------------------------------
     userContainer:{
         flex: 1,
@@ -211,7 +220,8 @@ const styles = StyleSheet.create({
     newUserText: {
         fontSize: 16,
         fontFamily: 'Lato',
-        color: '#000',
+        color: 'rgb(66, 66, 66)',
+        resizeMode: 'contain',
     },
 
 

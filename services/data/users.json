@@ -26,19 +26,5 @@
     "lastName": "Doe",
     "password": "$2b$10$dj5rwE3lCXA7AueUcfg0L.5zX.75.ppBugIgKsXWh/LEfjq3pbf9W",
     "role": "admin"
-  },
-  {
-    "email": "a@asda.com",
-    "firstName": "aaa",
-    "lastName": "aaaa",
-    "password": "$2b$10$A/sfdTXlbQ4bCMVakBNZaOTG8Xx/RactXyHvfsGdT16dUkGByn3.W",
-    "role": "advisor"
-  },
-  {
-    "email": "a@test.com",
-    "firstName": "this",
-    "lastName": "isaaaaaaa",
-    "password": "$2b$10$xChzRyBFIV0ZHH6ta0QlLOCdAqA3T1eqGqqy9ms35nKZ8ujeNxhxO",
-    "role": "admin"
   }
 ]

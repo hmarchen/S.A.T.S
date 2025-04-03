@@ -26,15 +26,10 @@ const AdminReasons: React.FC<LayoutProps> = ({ sendResult }) => {
 
   // EVENT HANDLER
   const handleAddPopupClick = () => { 
-    setCategory('');
-    setDetails('');
-
     setIsAddVisible(true); 
   };
   const handleEditPopupClick = (reason: Reason) => {
     setIsEditVisible(true);
-    setCategory(reason.category);
-    setDetails(reason.details);
     setEditingReason(reason);
   };
   const handleDeletePopupClick = (reason: Reason) => { 
@@ -141,7 +136,6 @@ const AdminReasons: React.FC<LayoutProps> = ({ sendResult }) => {
   };
 
   const handleReasonDelete = async () => {
-    // Handle login logic here
     try {
       if (!selectedReason) {
         sendResult(false, 'No reason selected for deletion.');

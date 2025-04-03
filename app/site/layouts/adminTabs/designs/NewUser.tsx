@@ -3,6 +3,7 @@ import { View, Text, Button, Image, Pressable, ScrollView, TouchableOpacity, Mod
 import { useRouter } from 'expo-router';
 import styles from '../../../styles/tabStyles';
 import User from '@/db/classes/User';
+import { color } from '@rneui/base';
 
 // MAIN LAYOUT COMPONENT
 interface LayoutProps {
@@ -39,9 +40,18 @@ const NewUser: React.FC<LayoutProps> = ({ user, isActive, onEditPress, onDeleteP
                 )}
             </View>
             <View style={styles.horizontalLine}/>
-            <Text style={styles.newUserText}>Email: {user.email}</Text>
-            <Text style={styles.newUserText}>Password: {user.password}</Text>
-            <Text style={styles.newUserText}>Role: {user.role}</Text>
+            <View style={styles.inlineFill}>
+                <Text style={styles.newUserText}>Email:</Text>
+                <Text style={styles.newUserText}>{user.email}</Text>
+            </View>
+            <View style={styles.inlineFill}>
+                <Text style={styles.newUserText}>Password:</Text>
+                <Text style={styles.newUserText}>*******</Text>
+            </View>
+            <View style={styles.inlineFill}>
+                <Text style={styles.newUserText}>Role:</Text>
+                <Text style={styles.newUserText}>{user.role}</Text>
+            </View>
         </View>
     );
 }
