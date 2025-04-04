@@ -21,18 +21,9 @@ export default function RootLayout() {
   const colorScheme = useColorScheme();
   const [loaded] = useFonts({ SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'), });
 
-<<<<<<< HEAD
   useEffect(() => {
     if (loaded) {
       SplashScreen.hideAsync();
-=======
-  useEffect(() => { 
-    if (loaded) { SplashScreen.hideAsync(); }
-    
-    // redirect user to homepage if on web
-    if (typeof window !== 'undefined' && isWeb && window.location.pathname == '/') {
-      router.push('/site/home');
->>>>>>> f2ce5511a0e46cbc1cd88c913bde165ac763111a
     }
   }, [loaded]);
 
@@ -41,7 +32,6 @@ export default function RootLayout() {
   }
 
   return (
-<<<<<<< HEAD
     <InactivityProvider timeoutMinutes={2} warningSeconds={10}>
       <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
         <Stack screenOptions={{ headerShown: false }}>
@@ -52,15 +42,5 @@ export default function RootLayout() {
         <StatusBar style="auto" />
       </ThemeProvider>
     </InactivityProvider>
-=======
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="site" options={{ headerShown: false }} />
-        <Stack.Screen name="+not-found" />
-      </Stack>
-      <StatusBar style="auto" />
-    </ThemeProvider>
->>>>>>> f2ce5511a0e46cbc1cd88c913bde165ac763111a
   );
 }

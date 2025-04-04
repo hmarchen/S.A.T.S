@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-<<<<<<< HEAD
 import {
   View,
   Text,
@@ -10,39 +9,24 @@ import {
   SafeAreaView,
   ScrollView,
 } from "react-native";
-=======
-import { View, Text, Pressable, Alert, Platform } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
->>>>>>> f2ce5511a0e46cbc1cd88c913bde165ac763111a
 import { useRouter } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import * as FileSystem from "expo-file-system";
 import Breadcrumb from "./breadcrumb";
 import { Card } from "@rneui/themed";
 import styles from "../css/styles";
-import e from "express";
 
-<<<<<<< HEAD
 
 const filePath = FileSystem.documentDirectory + "user.json";
 
 export default function EndScreen() {
-=======
-interface LayoutProps {
-  setRoute: (route: string) => void;
-}
-
-const EndScreen: React.FC<LayoutProps> = ({setRoute}) => {
->>>>>>> f2ce5511a0e46cbc1cd88c913bde165ac763111a
   const router = useRouter();
-  const isWeb = Platform.OS === 'web';
   const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const loadJsonFile = async () => {
       try {
-<<<<<<< HEAD
         const fileInfo = await FileSystem.getInfoAsync(filePath);
 
         if (!fileInfo.exists) {
@@ -51,37 +35,10 @@ const EndScreen: React.FC<LayoutProps> = ({setRoute}) => {
             to: filePath,
           });
           console.log(`File copied to: ${filePath}`);
-=======
-        if (isWeb) {
-          const existingData = localStorage.getItem('student');
-          const fileInfo = existingData ? JSON.parse(existingData) : [];
-  
-          if (!fileInfo.exists) {
-            const userJson = require("../../assets/data/user.json");
-            localStorage.setItem('student', JSON.stringify(userJson));
-            console.log(`File copied to: ${filePath}`);
-          }
-
-          setUserData(fileInfo);
->>>>>>> f2ce5511a0e46cbc1cd88c913bde165ac763111a
         }
-        else {
-          const fileInfo = await FileSystem.getInfoAsync(filePath);
-          console.log(fileInfo.exists ? `File exists at: ${filePath}` : "File does not exist. Copying from assets...");
 
-<<<<<<< HEAD
         const data = JSON.parse(await FileSystem.readAsStringAsync(filePath));
         setUserData(data.length > 0 ? data[0] : {});
-=======
-          if (!fileInfo.exists) {
-            const userJson = require("../../assets/data/user.json");
-            await FileSystem.writeAsStringAsync(filePath, JSON.stringify(userJson));
-            console.log(`File copied to: ${filePath}`);
-          }
-
-          setUserData(JSON.parse(await FileSystem.readAsStringAsync(filePath)));
-        }
->>>>>>> f2ce5511a0e46cbc1cd88c913bde165ac763111a
       } catch (error) {
         console.error("Error reading JSON file:", error);
       } finally {
@@ -95,26 +52,12 @@ const EndScreen: React.FC<LayoutProps> = ({setRoute}) => {
   const handleConfirm = async () => {
     try {
       if (userData) {
-<<<<<<< HEAD
         await fetch("http://192.168.2.29:3000/send-invite", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(userData),
         });
         router.push("/Login/AppConfirmation");
-=======
-        // Modify the userData object here if necessary before saving
-        if (isWeb) {
-          localStorage.setItem('student', JSON.stringify(userData, null, 2));
-          alert("User data saved successfully.");
-          setRoute('disclaimer');
-        }
-        else {
-          await FileSystem.writeAsStringAsync(filePath, JSON.stringify(userData, null, 2));
-          Alert.alert("Success", "User data saved successfully.");
-          router.push("/Login/Disclaimer");
-        }
->>>>>>> f2ce5511a0e46cbc1cd88c913bde165ac763111a
       }
     } catch (error) {
       console.error("Error sending invite:", error);
@@ -212,5 +155,3 @@ const EndScreen: React.FC<LayoutProps> = ({setRoute}) => {
     </ScrollView>
   );
 }
-
-export default EndScreen;

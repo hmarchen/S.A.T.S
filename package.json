@@ -38,11 +38,7 @@
     "cheerio": "^1.0.0",
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
-<<<<<<< HEAD
-    "expo": "~52.0.41",
-=======
     "expo": "^52.0.42",
->>>>>>> f2ce5511a0e46cbc1cd88c913bde165ac763111a
     "expo-auth-session": "^6.0.3",
     "expo-blur": "~14.0.3",
     "expo-constants": "~17.0.5",
@@ -57,11 +53,7 @@
     "expo-system-ui": "~4.0.7",
     "expo-web-browser": "~14.0.2",
     "express": "^4.21.2",
-<<<<<<< HEAD
     "ical.js": "^2.1.0",
-=======
-    "fix": "^0.0.6",
->>>>>>> f2ce5511a0e46cbc1cd88c913bde165ac763111a
     "ics": "^3.8.1",
     "ics-js": "^0.10.2",
     "imap": "^0.8.19",
@@ -70,18 +62,11 @@
     "mailparser": "^3.7.2",
     "next": "^15.2.4",
     "nodemailer": "^6.10.0",
-<<<<<<< HEAD
     "npm": "^11.2.0",
     "pg": "^8.14.1",
     "react": "18.3.1",
     "react-dom": "18.3.1",
     "react-native": "0.76.7",
-=======
-    "pg": "^8.14.1",
-    "react": "^18.3.1",
-    "react-dom": "18.3.1",
-    "react-native": "0.76.8",
->>>>>>> f2ce5511a0e46cbc1cd88c913bde165ac763111a
     "react-native-app-auth": "^8.0.1",
     "react-native-autocomplete-dropdown": "^4.4.0",
     "react-native-breadcrumb": "^1.2.0",
@@ -101,10 +86,6 @@
     "@types/bcrypt": "^5.0.2",
     "@types/cors": "^2.8.17",
     "@types/jest": "^29.5.12",
-<<<<<<< HEAD
-=======
-    "@types/next": "^8.0.7",
->>>>>>> f2ce5511a0e46cbc1cd88c913bde165ac763111a
     "@types/pg": "^8.11.11",
     "@types/react": "~18.3.12",
     "@types/react-native": "^0.72.8",

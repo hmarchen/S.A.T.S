@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import React, { useState, useEffect } from "react";
 import { View, Text, TextInput, Pressable, Alert, ImageBackground, StyleSheet, Dimensions, ScrollView } from "react-native";
 import { useRouter } from "expo-router";
@@ -92,25 +91,6 @@ export default function VisitReason() {
   };
 
   const progressPercentage = Math.min(charCount / 100, 1) * 100;
-=======
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Pressable, SafeAreaView, TextInput, Alert, Platform } from 'react-native';
-import Breadcrumb from './breadcrumb';
-import { useRouter } from 'expo-router';
-import styles from '../css/styles';
-
-interface LayoutProps {
-  setRoute: (route: string) => void;
-}
-
-const VisitReason: React.FC<LayoutProps> = ({setRoute}) => {
-  const router = useRouter();
-  const isWeb = Platform.OS === 'web';
-  const [Visit, setVisit] = useState('');
-  
-  const handleSubmit = () => { Alert.alert('Form Submitted', `${Visit}`); };
-  const handleClear = () => { setVisit('')};
->>>>>>> f2ce5511a0e46cbc1cd88c913bde165ac763111a
 
   return (
     <ImageBackground
@@ -185,7 +165,6 @@ const VisitReason: React.FC<LayoutProps> = ({setRoute}) => {
   );
 }
 
-<<<<<<< HEAD
 const localStyles = StyleSheet.create({
   subtitle: {
     color: 'rgba(255,255,255,0.8)',
@@ -255,6 +234,3 @@ const localStyles = StyleSheet.create({
     fontWeight: 'bold',
   }
 });
-=======
-export default VisitReason;
->>>>>>> f2ce5511a0e46cbc1cd88c913bde165ac763111a

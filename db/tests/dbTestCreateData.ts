@@ -52,7 +52,7 @@ async function CreateDBAppointmentData() {
 const testConnection = async () => {
     try {
         // await CreateDBUserData();
-        // await CreateDBStudentData();
+         //await CreateDBStudentData();
         await CreateDBAppointmentData();
 
     } catch (error) {

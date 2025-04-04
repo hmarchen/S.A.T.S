@@ -8,7 +8,6 @@ import styles from "../css/styles";
 
 const filePath = FileSystem.documentDirectory + "user.json";
 
-<<<<<<< HEAD
 interface Advisor {
   advisor: string;
   email: string;
@@ -16,15 +15,7 @@ interface Advisor {
 }
 
 export default function Program() {
-=======
-interface LayoutProps {
-  setRoute: (route: string) => void;
-}
-
-const Program: React.FC<LayoutProps> = ({setRoute}) => {
->>>>>>> f2ce5511a0e46cbc1cd88c913bde165ac763111a
   const router = useRouter();
-  const isWeb = Platform.OS === 'web';
   const [program, setProgram] = useState("");
   const [searchQuery, setSearchQuery] = useState('');
   const [programs, setPrograms] = useState<string[]>([]);
@@ -85,11 +76,9 @@ const Program: React.FC<LayoutProps> = ({setRoute}) => {
     }
 
     try {
-      if (isWeb) {
-        const existingData = localStorage.getItem('student');
-        const updatedData = existingData ? JSON.parse(existingData) : [];
+      const fileExists = await FileSystem.getInfoAsync(filePath);
+      let updatedData = fileExists.exists ? JSON.parse(await FileSystem.readAsStringAsync(filePath)) : [];
 
-<<<<<<< HEAD
       if (!Array.isArray(updatedData)) {
         updatedData = [];
       }
@@ -109,28 +98,6 @@ const Program: React.FC<LayoutProps> = ({setRoute}) => {
 
       await FileSystem.writeAsStringAsync(filePath, JSON.stringify(updatedData, null, 2));
       router.push("/Login/Reason");
-=======
-        if (updatedData.length > 0) {
-          updatedData[0].program = program;
-        }
-
-        localStorage.setItem('student', JSON.stringify(updatedData));
-        console.log(updatedData);
-        alert(`Form Submitted\nDCMail: ${program}`);
-        setRoute('reason');
-      } else {
-        const fileExists = await FileSystem.getInfoAsync(filePath);
-        let updatedData = fileExists.exists ? JSON.parse(await FileSystem.readAsStringAsync(filePath)) : [];
-
-        if (updatedData.length > 0) {
-          updatedData[0].program = program;
-        }
-
-        await FileSystem.writeAsStringAsync(filePath, JSON.stringify(updatedData, null, 2));
-        console.log("Navigating to Reason...");
-        router.push("/Login/Reason");
-      }
->>>>>>> f2ce5511a0e46cbc1cd88c913bde165ac763111a
     } catch (error) {
       console.error("Error saving program:", error);
       Alert.alert("Error", "Failed to save program information");
@@ -200,10 +167,4 @@ const Program: React.FC<LayoutProps> = ({setRoute}) => {
     </View>
   </ImageBackground>
   );
-<<<<<<< HEAD
 }
-=======
-}
-
-export default Program;
->>>>>>> f2ce5511a0e46cbc1cd88c913bde165ac763111a
