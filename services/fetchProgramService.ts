@@ -5,7 +5,7 @@ import cors from 'cors';
 import fs from 'fs/promises';
 
 const app = express();
-const PORT = process.env.FETCH_PROGRAM_SERVICE_PORT || 3000;
+const PORT = process.env.FETCH_PROGRAM_SERVICE_PORT || 3001;
 
 app.use(cors());
 

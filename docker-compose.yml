@@ -1,0 +1,13 @@
+services:
+  db:
+    image: postgres:17
+    container_name: sats-db
+    ports:
+      - "5433:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: sats
+    volumes:
+      - ./docker/init:/docker-entrypoint-initdb.d
+    restart: unless-stopped
