@@ -7,6 +7,7 @@ import {
   ActivityIndicator,
   ImageBackground,
   SafeAreaView,
+  ScrollView,
 } from "react-native";
 import { useRouter } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
@@ -84,6 +85,7 @@ export default function EndScreen() {
   }
 
   return (
+    <ScrollView>
     <ImageBackground
       source={require("../../assets/background.jpg")}
       style={styles.background}
@@ -150,5 +152,6 @@ export default function EndScreen() {
       </SafeAreaView>
       
     </ImageBackground>
+    </ScrollView>
   );
 }
