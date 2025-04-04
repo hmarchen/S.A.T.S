@@ -1,0 +1,34 @@
+[
+  {
+    "id": 101000001,
+    "email": "alice.smith@fakeemail.com",
+    "firstName": "Alice",
+    "lastName": "Smith",
+    "campus": "North Campus",
+    "program": "Computer Science"
+  },
+  {
+    "id": 101000002,
+    "email": "bob.jones@fakeemail.com",
+    "firstName": "Bob",
+    "lastName": "Jones",
+    "campus": "South Campus",
+    "program": "Mechanical Engineering"
+  },
+  {
+    "id": 101000003,
+    "email": "carol.brown@fakeemail.com",
+    "firstName": "Carol",
+    "lastName": "Brown",
+    "campus": "East Campus",
+    "program": "Business Administration"
+  },
+  {
+    "id": 101000004,
+    "email": "dave.wilson@fakeemail.com",
+    "firstName": "Dave",
+    "lastName": "Wilson",
+    "campus": "West Campus",
+    "program": "Electrical Engineering"
+  }
+]

@@ -8,6 +8,7 @@ import styles from "../css/styles";
 
 const filePath = FileSystem.documentDirectory + "user.json";
 
+<<<<<<< HEAD
 const CustomRadioButton = ({ label, selected, onSelect }: { label: string, selected: boolean, onSelect: () => void }) => (
   <Pressable
     onPress={onSelect}
@@ -34,6 +35,16 @@ export default function Institution() {
   const router = useRouter();
   const [institution, setInstitution] = useState('Oshawa');
   const [isValid, setIsValid] = useState(true);
+=======
+interface LayoutProps {
+  setRoute: (route: string) => void;
+}
+
+const Institution: React.FC<LayoutProps> = ({setRoute}) => {
+  const router = useRouter();
+  const isWeb = Platform.OS === 'web';
+  const [institution, setInstitution] = useState("");
+>>>>>>> f2ce5511a0e46cbc1cd88c913bde165ac763111a
   const [program, setProgram] = useState("");
   const [data, setData] = useState([]);
   const [error, setError] = useState(null);
@@ -49,9 +60,11 @@ export default function Institution() {
     }
 
     try {
-      const fileExists = await FileSystem.getInfoAsync(filePath);
-      let updatedData = fileExists.exists ? JSON.parse(await FileSystem.readAsStringAsync(filePath)) : [];
+      if (isWeb) {
+        const existingData = localStorage.getItem('student');
+        const updatedData = existingData ? JSON.parse(existingData) : [];
 
+<<<<<<< HEAD
       if (fileExists.exists) {
         const fileContents = await FileSystem.readAsStringAsync(filePath);
         updatedData = JSON.parse(fileContents);
@@ -62,6 +75,29 @@ export default function Institution() {
       await FileSystem.writeAsStringAsync(filePath, JSON.stringify(updatedData, null, 2));
       console.log("✅ Form Submitted: Institution:", institution);
       router.push("/Login/Program");
+=======
+        updatedData.length > 0
+          ? (updatedData[0].campus = institution)
+          : updatedData.push({ firstname: "", lastname: "", studentID: "", DCMail: "", campus: institution, program: "", reason: "" });
+  
+        localStorage.setItem('student', JSON.stringify(updatedData));
+        console.log(updatedData);
+        alert(`Form Submitted\nDCMail: ${institution}`);
+        setRoute('program');
+      } else {
+        const fileExists = await FileSystem.getInfoAsync(filePath);
+        let updatedData = fileExists.exists ? JSON.parse(await FileSystem.readAsStringAsync(filePath)) : [];
+  
+        updatedData.length > 0
+          ? (updatedData[0].campus = institution)
+          : updatedData.push({ firstname: "", lastname: "", studentID: "", DCMail: "", campus: institution, program: "", reason: "" });
+  
+        await FileSystem.writeAsStringAsync(filePath, JSON.stringify(updatedData, null, 2));
+        Alert.alert("Form Submitted", `${institution}`);
+        console.log("Navigating to Program...");
+        router.push("/Login/Program");
+      }
+>>>>>>> f2ce5511a0e46cbc1cd88c913bde165ac763111a
     } catch (error) {
       console.error("❌ Error writing to file:", error);
       Alert.alert("Error", "Failed to save data.");
@@ -104,3 +140,5 @@ export default function Institution() {
     </ImageBackground>
   );
 }
+
+export default Institution;

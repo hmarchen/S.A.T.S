@@ -22,7 +22,11 @@ interface Reason {
   id: number;
   category: string;
   details: string;
+<<<<<<< HEAD
   redirect: boolean;
+=======
+  redirect: string;
+>>>>>>> f2ce5511a0e46cbc1cd88c913bde165ac763111a
 }
 
 const REASONS_FILE_PATH = path.join(__dirname, '/data/reasons.json');
@@ -72,7 +76,11 @@ app.get('/advisors', async (req: Request, res: Response) => {
         const emailRegex = /E: \s*(.*?\.ca)/i;
         const cells = row.querySelectorAll('td');
         if (cells.length >= 2) {
+<<<<<<< HEAD
           let advisorNameRaw = cells[0].textContent?.trim() || 'No name found';
+=======
+          let advisorNameRaw = cells[0].textContent?.trim() || 'No name found';  
+>>>>>>> f2ce5511a0e46cbc1cd88c913bde165ac763111a
           const emailMatch = advisorNameRaw.match(emailRegex);
           const email = emailMatch ? emailMatch[1] : 'No email found';
           const programs = cells[1]?.textContent?.trim() || 'No programs found';

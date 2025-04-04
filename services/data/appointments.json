@@ -1,0 +1,30 @@
+[
+  {
+    "id": "c9e11614-4a52-4d8a-9a79-42e663db8d39",
+    "advisor": "john.doe@fakeemail.com",
+    "studentId": 101000001,
+    "reason": "Consultation",
+    "date": "2023-11-01"
+  },
+  {
+    "id": "a66f90fa-14ec-41ab-8c8d-e90482c32ffd",
+    "advisor": "some.fake@email.com",
+    "studentId": 101000002,
+    "reason": "Follow-up",
+    "date": "2023-11-02"
+  },
+  {
+    "id": "3097844c-6b0c-4916-a78f-78271919fea9",
+    "advisor": "another@user.com",
+    "studentId": 101000003,
+    "reason": "Initial Meeting",
+    "date": "2023-11-03"
+  },
+  {
+    "id": "08f847e9-5f97-465b-9897-2e447fc3838c",
+    "advisor": "yipeppe.yahoooo@fakeemail.com",
+    "studentId": 101000004,
+    "reason": "Progress Review",
+    "date": "2023-11-04"
+  }
+]
