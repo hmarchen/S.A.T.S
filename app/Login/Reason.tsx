@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, FlatList, Alert, ImageBackground, TouchableOpacity, Dimensions, ActivityIndicator } from "react-native";
+import { View, Text, FlatList, Alert, ImageBackground, TouchableOpacity, Dimensions, ActivityIndicator, Linking } from "react-native";
 import Breadcrumb from "./breadcrumb";
 import styles from "../css/styles";
 import { useRouter } from "expo-router";
@@ -18,6 +18,7 @@ export default function Reason() {
     id: number;
     category: string;
     details: string;
+    redirect: string;
   }
 
 
@@ -26,8 +27,7 @@ export default function Reason() {
       setIsLoading(true);
       const response = await fetch(`http://10.0.2.2:3000/reasons`)
       .then(res => {return res.json()})
-      .then(data => {console.log(data.reasons); return data.reasons});
-      console.log(response);
+      .then(data => {return data.reasons});
       return response;
     }
     catch(e) {
@@ -49,6 +49,9 @@ export default function Reason() {
 
 
   const handlePress = async (item: Reason) => {
+    if (item.redirect.length > 0) {
+      Alert.alert("No advisor available for this reason. Please contact the SSB building. For more information, please visit the link below.", item.redirect);
+    } else {
     try {
       const fileExists = await FileSystem.getInfoAsync(filePath);
       let updatedData = fileExists.exists
@@ -74,11 +77,13 @@ export default function Reason() {
 
       await FileSystem.writeAsStringAsync(filePath, JSON.stringify(updatedData, null, 2));
       router.push("/Login/Calendar");
+      
     } catch (error) {
       console.error("Error writing to file:", error);
       Alert.alert("Error", "Failed to save data.");
     }
-  };
+  }
+};
 
   const { width } = Dimensions.get("window");
   const itemWidth = width / 3 - 20; // Adjusted width to allow margin between columns
@@ -112,6 +117,7 @@ export default function Reason() {
                 onPress={() => handlePress(item)}
                 style={{
                   width: "30%",
+                  height: 100,
                   backgroundColor: "rgba(255, 255, 255, 0.1)",
                   borderRadius: 10,
                   borderWidth: 2,
@@ -131,6 +137,7 @@ export default function Reason() {
                 >
                   {item.category}
                 </Text>
+                <Text style={{ color: "white", fontSize: 12, textAlign: "center" }}>{item.details}</Text>
               </TouchableOpacity>
             )}
           />
