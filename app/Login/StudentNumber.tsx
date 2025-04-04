@@ -19,14 +19,16 @@ const StudentNumber: React.FC<LayoutProps> = ({setRoute}) => {
     const handleSubmit = async () => {
         try {
             if (isWeb) {
-                const existingData = localStorage.getItem('user');
+                const existingData = localStorage.getItem('student');
                 let updatedData = existingData ? JSON.parse(existingData) : [];
+
+                console.log(updatedData);
 
                 updatedData.length > 0
                     ? (updatedData[0].studentID = studentNumber)
                     : updatedData.push({ firstname: '', lastname: '', studentID: studentNumber, DCMail: '', campus: '', program: '', reason: '' });
 
-                localStorage.setItem('user', JSON.stringify(updatedData));
+                localStorage.setItem('student', JSON.stringify(updatedData));
 
 
                 alert(`Form Submitted\nStudent Number: ${studentNumber}`);

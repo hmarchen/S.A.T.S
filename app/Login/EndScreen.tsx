@@ -6,6 +6,7 @@ import { Card } from "@rneui/themed";
 import * as FileSystem from "expo-file-system";
 import Breadcrumb from "./breadcrumb";
 import styles from "../css/styles";
+import e from "express";
 
 interface LayoutProps {
   setRoute: (route: string) => void;
@@ -21,12 +22,12 @@ const EndScreen: React.FC<LayoutProps> = ({setRoute}) => {
     const loadJsonFile = async () => {
       try {
         if (isWeb) {
-          const existingData = localStorage.getItem('user');
+          const existingData = localStorage.getItem('student');
           const fileInfo = existingData ? JSON.parse(existingData) : [];
   
           if (!fileInfo.exists) {
             const userJson = require("../../assets/data/user.json");
-            localStorage.setItem('user', JSON.stringify(userJson));
+            localStorage.setItem('student', JSON.stringify(userJson));
             console.log(`File copied to: ${filePath}`);
           }
 
@@ -56,9 +57,16 @@ const EndScreen: React.FC<LayoutProps> = ({setRoute}) => {
     try {
       if (userData) {
         // Modify the userData object here if necessary before saving
-        await FileSystem.writeAsStringAsync(filePath, JSON.stringify(userData, null, 2));
-        Alert.alert("Success", "User data saved successfully.");
-        router.push("/Login/Disclaimer");
+        if (isWeb) {
+          localStorage.setItem('student', JSON.stringify(userData, null, 2));
+          alert("User data saved successfully.");
+          setRoute('disclaimer');
+        }
+        else {
+          await FileSystem.writeAsStringAsync(filePath, JSON.stringify(userData, null, 2));
+          Alert.alert("Success", "User data saved successfully.");
+          router.push("/Login/Disclaimer");
+        }
       }
     } catch (error) {
       console.error("Error writing to file:", error);

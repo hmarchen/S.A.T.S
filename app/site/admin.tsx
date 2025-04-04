@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { View, Text, Platform, ScrollView, Pressable } from 'react-native';
 import { useRouter } from 'expo-router';
-import { useUser } from './contexts/userContext';
+import { useUser } from './context/userContext';
 import styles from './styles/style';
 import Structure from './layouts/structure';
 import AdminReasons from './layouts/adminTabs/reasons';

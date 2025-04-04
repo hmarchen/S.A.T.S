@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { View, Text, Button, Image, Pressable, ScrollView, TextInput } from 'react-native';
 import { useRouter } from 'expo-router';
-import { useUser } from './contexts/userContext';
+import { useUser } from './context/userContext';
 import styles from './styles/style';
 import Structure from './layouts/structure';
 import User from '@/db/classes/User';

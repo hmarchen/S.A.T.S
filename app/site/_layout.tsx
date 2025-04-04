@@ -2,8 +2,8 @@
 import { Platform } from 'react-native';
 import { Stack } from 'expo-router';
 import React from 'react';
-import { UserProvider } from './contexts/userContext';
-import { NotificationProvider } from './contexts/notificationContext';
+import { UserProvider } from './context/userContext';
+import { NotificationProvider } from './context/notificationContext';
 
 export default function SiteLayout() {
   const isWeb = Platform.OS === 'web';

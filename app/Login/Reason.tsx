@@ -52,14 +52,14 @@ const Reason: React.FC<LayoutProps> = ({setRoute}) => {
     try{
       SetReason(item);
       if (isWeb) {
-        const existingData = localStorage.getItem('user');
+        const existingData = localStorage.getItem('student');
         const updatedData = existingData ? JSON.parse(existingData) : [];
 
         updatedData.length > 0
           ? (updatedData[0].reason = item.category)
           : updatedData.push({ firstname: "", lastname: "", studentID: "", DCMail: "", campus: "", program: "", reason: item.category });
 
-        localStorage.setItem('user', JSON.stringify(updatedData));
+        localStorage.setItem('student', JSON.stringify(updatedData));
         console.log(updatedData);
         alert(`Form Submitted\nDCMail: ${item.category}`);
         setRoute('endScreen');

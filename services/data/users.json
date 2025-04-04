@@ -1,50 +1,34 @@
 [
   {
-    "email": "test@test.test",
-    "firstName": "[T] hi",
-    "lastName": "hi",
-    "password": "$2b$10$mLuku3EzJ3.9kNNo7a7PzeX3lGedS58gKQL/2ZsVEQYTEKM0uyJ3K",
+    "email": "john.doe@fakeemail.com",
+    "firstName": "John",
+    "lastName": "Doe",
+    "password": "$2b$10$ZiKi2rhGqI9Ef3N7i/vQrOQOCl3OnAIYjVgTMXG0EEyKbOqR/85ne",
     "role": "admin",
-    "ics": ""
-  },
-  {
-    "email": "test@test.com",
-    "firstName": "test",
-    "lastName": "test",
-    "password": "$2b$10$Gye6J5jay73sJq1Yc4uCruktY9sBCOMtnmKHMcTkC4bCYsFA84C6q",
-    "role": "advisor",
     "ics": ""
   },
   {
     "email": "some.fake@email.com",
-    "firstName": "[D] New",
+    "firstName": "New",
     "lastName": "User",
-    "password": "$2b$10$0Za8Q8v0v7NZbas2onIJueYcXaUD/.F3GykhBspcen6Zf4pzbrNJ2",
+    "password": "$2b$10$sz6ROsyRbGCahO1BK0VEzOZ0thL57WQe.jvM92Oahm4aCO8w2vlR2",
     "role": "advisor",
-    "ics": ""
-  },
-  {
-    "email": "john.doe@fakeemail.com",
-    "firstName": "[D] John",
-    "lastName": "Doe",
-    "password": "$2b$10$dj5rwE3lCXA7AueUcfg0L.5zX.75.ppBugIgKsXWh/LEfjq3pbf9W",
-    "role": "admin",
-    "ics": ""
-  },
-  {
-    "email": "yipeppe.yahoooo@fakeemail.com",
-    "firstName": "[D] YAYAYAY",
-    "lastName": "WOOOO",
-    "password": "$2b$10$lrV1NJDM6NPFdm01btjD.eK5Ym7DggRTKMoIG/lm1iLLt4WRU0TK6",
-    "role": "admin",
     "ics": ""
   },
   {
     "email": "another@user.com",
-    "firstName": "[D] Another",
+    "firstName": "Another",
     "lastName": "User",
-    "password": "$2b$10$YpSMccrZhUtG7Gg2HT22L.gp/3iBVgMkc9l8qvvMxztUx7i9a4VZS",
+    "password": "$2b$10$avPvPSPLdQX/jfGhgE5jGOaiKBGE9Cs1hozu2ITKPp9E97A1HiIue",
     "role": "advisor",
+    "ics": ""
+  },
+  {
+    "email": "yipeppe.yahoooo@fakeemail.com",
+    "firstName": "YAYAYAY",
+    "lastName": "WOOOO",
+    "password": "$2b$10$mcLeJ851a/9p7kkbYEQzWO5jrSk.V6nKKQHeJ86kttrxe8lDcFko.",
+    "role": "admin",
     "ics": ""
   }
 ]

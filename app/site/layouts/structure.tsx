@@ -7,9 +7,9 @@ import { View, Text, Button, Image, Pressable, ScrollView, TouchableOpacity, Mod
 import { useRouter, Slot } from 'expo-router';
 import styles from '../styles/style';
 import Result from './adminTabs/designs/Result';
-import { useUser } from '../contexts/userContext';
+import { useUser } from '../context/userContext';
 import Unauthorized from './unauthorized';
-import { useNotifications } from '../contexts/notificationContext';
+import { useNotifications } from '../context/notificationContext';
 
 // MAIN LAYOUT COMPONENT
 interface LayoutProps {
