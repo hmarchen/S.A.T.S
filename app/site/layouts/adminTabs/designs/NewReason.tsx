@@ -7,7 +7,7 @@ export interface Reason {
     id: number;
     category: string;
     details: string;
-    redirect: boolean;
+    redirect: string;
 }
 
 // MAIN LAYOUT COMPONENT
@@ -50,7 +50,7 @@ const NewUser: React.FC<LayoutProps> = ({ reason, isActive, onEditPress, onDelet
             </View>
             <View style={styles.inlineFill}>
                 <Text style={styles.newUserText}>Redirect:</Text>
-                <Text style={styles.newUserText}>{reason.redirect ? 'True' : 'False'}</Text>
+                <Text style={styles.newUserText}>{reason.redirect ? reason.redirect : 'None'}</Text>
             </View>
         </View>
     );

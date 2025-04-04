@@ -18,21 +18,18 @@ const AdminReasons: React.FC<LayoutProps> = ({ sendResult }) => {
   const [isAddVisible, setIsAddVisible] = useState(false);
   const [isEditVisible, setIsEditVisible] = useState(false);
   const [isDeleteVisible, setIsDeleteVisible] = useState(false);
-  const [isRedirectChecked, setIsRedirectChecked] = useState(false);
 
   const [selectedReason, setSelectedReason] = useState<Reason>({} as Reason); // for deletion
   const [reasons, setReasons] = useState<Reason[]>([]);
-  const [newReason, setNewReason] = useState<Partial<Reason>>({ category: '', details: '', redirect: false  });
+  const [newReason, setNewReason] = useState<Partial<Reason>>({ category: '', details: '', redirect: ''  });
   const [editingReason, setEditingReason] = useState<Reason | null>(null);
 
   // EVENT HANDLER
   const handleAddPopupClick = () => { 
-    setIsRedirectChecked(false);
     setIsAddVisible(true); 
   };
   const handleEditPopupClick = (reason: Reason) => {
     setIsEditVisible(true);
-    setIsRedirectChecked(reason.redirect);
     setEditingReason(reason);
   };
   const handleDeletePopupClick = (reason: Reason) => { 
@@ -43,7 +40,6 @@ const AdminReasons: React.FC<LayoutProps> = ({ sendResult }) => {
     setIsAddVisible(false); 
     setIsEditVisible(false); 
     setIsDeleteVisible(false);
-    setIsRedirectChecked(false);
     setEditingReason(null);
   };
 
@@ -64,37 +60,40 @@ const AdminReasons: React.FC<LayoutProps> = ({ sendResult }) => {
   };
 
   const handleReasonAdd = async () => {
-    if (newReason.category && newReason.details) {
-      console.log(newReason);
+    if (newReason.category?.trim() && newReason.details?.trim()) {
+      if (newReason.redirect?.trim() === '') {
+        newReason.redirect = undefined;
+      }
+      
       try {
-        const response = await fetch(`${API_BASE_URL}/reasons`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(newReason),
-        });
+      const response = await fetch(`${API_BASE_URL}/reasons`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(newReason),
+      });
 
-        if (!response.ok) throw new Error('Failed to add reason');
-        
-        const addedReason = await response.json();
-        setReasons([...reasons, addedReason]);
-        setNewReason({ category: '', details: '', redirect: false });
-        sendResult(true, 'Successfully added a new reason!');
+      if (!response.ok) throw new Error('Failed to add reason');
+      
+      const addedReason = await response.json();
+      setReasons([...reasons, addedReason]);
+      setNewReason({ category: '', details: '', redirect: '' });
+      sendResult(true, 'Successfully added a new reason!');
       } catch (error) {
-        console.error('Error adding reason:', error);
-        sendResult(false, 'Failed to add reason. Please try again.');
+      console.error('Error adding reason:', error);
+      sendResult(false, 'Failed to add reason. Please try again.');
       }
 
       handlePopupClose();
     }
     else {
       // error handling
-      if (!newReason.category) {
-        sendResult(false, 'Reason Category cannot be left empty.');
+      if (!newReason.category?.trim()) {
+      sendResult(false, 'Reason Category cannot be left empty.');
       }
-      else if (!newReason.details) {
-        sendResult(false, 'Reason Details cannot be left empty.');
+      else if (!newReason.details?.trim()) {
+      sendResult(false, 'Reason Details cannot be left empty.');
       }
     }
   };
@@ -245,14 +244,12 @@ const AdminReasons: React.FC<LayoutProps> = ({ sendResult }) => {
                       />
                     </View>
                     <View style={styles.popupBodyRow}>
-                      <Checkbox.Item
-                        label="Redirect? :"
-                        status={isRedirectChecked ? 'checked': 'unchecked' }
-                        onPress={() => {
-                          const newValue = !isRedirectChecked;
-                          setIsRedirectChecked(newValue)
-                          setNewReason({ ...newReason, redirect: newValue });
-                        }}
+                    <TextInput
+                        style={styles.popupTextInput}
+                        onChangeText={(text) => setNewReason({ ...newReason, redirect: text })}
+                        value={newReason.redirect}  
+                        placeholder="Enter redirect link (optional)" 
+                        placeholderTextColor="#999"
                       />
                     </View>
                     <Pressable style={styles.userButton} onPress={handleReasonAdd}>
@@ -284,14 +281,12 @@ const AdminReasons: React.FC<LayoutProps> = ({ sendResult }) => {
                       />
                     </View>
                     <View style={styles.popupBodyRow}>
-                      <Checkbox.Item
-                        label="Redirect? :"
-                        status={isRedirectChecked ? 'checked': 'unchecked' }
-                        onPress={() => {
-                          const newValue = !isRedirectChecked;
-                          setIsRedirectChecked(newValue)
-                          setEditingReason({ ...editingReason, redirect: newValue });
-                        }}
+                      <TextInput
+                        style={styles.popupTextInput}
+                        onChangeText={(text) => setEditingReason({ ...editingReason, redirect: text })}
+                        value={editingReason.redirect}  
+                        placeholder="Enter redirect link (optional)" 
+                        placeholderTextColor="#999"
                       />
                     </View>
                     <Pressable style={styles.userButton} onPress={handleReasonUpdate}>

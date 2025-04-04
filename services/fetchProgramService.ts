@@ -22,7 +22,7 @@ interface Reason {
   id: number;
   category: string;
   details: string;
-  redirect: boolean;
+  redirect: string;
 }
 
 const REASONS_FILE_PATH = path.join(__dirname, '/data/reasons.json');

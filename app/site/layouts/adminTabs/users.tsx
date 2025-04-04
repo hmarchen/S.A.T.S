@@ -97,7 +97,7 @@ const AdminUsers: React.FC<LayoutProps> = ({ sendResult }) => {
   
   const addUserClick = async () => {
     try {
-      const newUser = new User(email, firstName, lastName, password, selectedRole, ics);
+      const newUser = new User(email.trim(), firstName.trim(), lastName.trim(), password.trim(), selectedRole.trim(), ics.trim());
 
       const response = await fetch(`${API_BASE_URL}/users`, {
         method: 'POST',
@@ -120,7 +120,7 @@ const AdminUsers: React.FC<LayoutProps> = ({ sendResult }) => {
   const editUserClick = async () => {
     try {
       // check if user exists
-      if (editPassword && editPassword.length < 6) {
+      if (editPassword && editPassword.trim().length < 6) {
         throw new Error('Password must be at least 6 characters long.');
       }
 
@@ -140,7 +140,7 @@ const AdminUsers: React.FC<LayoutProps> = ({ sendResult }) => {
           })
           .then(data => data.hashedPassword)
       : password;
-      const user = new User(email, firstName, lastName, newPassword, selectedRole, ics);
+      const user = new User(email.trim(), firstName.trim(), lastName.trim(), newPassword, selectedRole.trim(), ics.trim());
 
       const getResponse = await fetch(`${API_BASE_URL}/users/${user.email}`);
       if (!getResponse.ok) {
