@@ -4,67 +4,123 @@
       "id": 1,
       "category": "Academic Support",
       "details": "Course selection and enrollment guidance",
+<<<<<<< HEAD
+      "redirect": false
+=======
       "redirect": ""
+>>>>>>> f2ce5511a0e46cbc1cd88c913bde165ac763111a
     },
     {
       "id": 2,
       "category": "Academic Support",
       "details": "Understanding degree requirements and prerequisites",
+<<<<<<< HEAD
+      "redirect": false
+=======
       "redirect": ""
+>>>>>>> f2ce5511a0e46cbc1cd88c913bde165ac763111a
     },
     {
       "id": 3,
       "category": "Academic Support",
       "details": "Advice on elective and specialization choices",
+<<<<<<< HEAD
+      "redirect": false
+=======
       "redirect": ""
+>>>>>>> f2ce5511a0e46cbc1cd88c913bde165ac763111a
     },
     {
       "id": 4,
       "category": "Career Guidance",
       "details": "Internship and co-op program opportunities",
+<<<<<<< HEAD
+      "redirect": false
+=======
       "redirect": ""
+>>>>>>> f2ce5511a0e46cbc1cd88c913bde165ac763111a
     },
     {
       "id": 5,
       "category": "Career Guidance",
       "details": "Career pathways for engineering, IT, and science graduates",
+<<<<<<< HEAD
+      "redirect": false
+=======
       "redirect": ""
+>>>>>>> f2ce5511a0e46cbc1cd88c913bde165ac763111a
     },
     {
       "id": 6,
       "category": "Research & Projects",
       "details": "Finding research opportunities and faculty mentors",
+<<<<<<< HEAD
+      "redirect": false
+=======
       "redirect": ""
+>>>>>>> f2ce5511a0e46cbc1cd88c913bde165ac763111a
     },
     {
       "id": 7,
       "category": "Research & Projects",
       "details": "Guidance on final-year projects and thesis work",
+<<<<<<< HEAD
+      "redirect": false
+=======
       "redirect": ""
+>>>>>>> f2ce5511a0e46cbc1cd88c913bde165ac763111a
     },
     {
       "id": 8,
       "category": "Personal & Well-being",
       "details": "Managing academic stress and workload",
+<<<<<<< HEAD
+      "redirect": false
+=======
       "redirect": ""
+>>>>>>> f2ce5511a0e46cbc1cd88c913bde165ac763111a
     },
     {
       "id": 9,
       "category": "Personal & Well-being",
       "details": "Special accommodations for learning difficulties",
+<<<<<<< HEAD
+      "redirect": false
+=======
       "redirect": ""
+>>>>>>> f2ce5511a0e46cbc1cd88c913bde165ac763111a
     },
     {
       "id": 10,
       "category": "Administrative Support",
       "details": "Understanding academic policies and deadlines",
-      "redirect": ""
+<<<<<<< HEAD
+      "redirect": false
     },
     {
       "id": 11,
       "category": "Administrative Support",
       "details": "Appealing grades and academic standing concerns",
+      "redirect": false
+=======
       "redirect": ""
+    },
+    {
+      "id": 11,
+<<<<<<<< HEAD:services/reasons.json
+      "category": "Administrative Support32",
+      "details": "Appealing grades and academic standing concerns"
+    },
+    {
+      "id": 12,
+      "category": "new 1",
+      "details": "reason"
+========
+      "category": "Administrative Support",
+      "details": "Appealing grades and academic standing concerns",
+      "redirect": ""
+>>>>>>>> f2ce5511a0e46cbc1cd88c913bde165ac763111a:services/data/reasons.json
+>>>>>>> f2ce5511a0e46cbc1cd88c913bde165ac763111a
     }
   ]
 }

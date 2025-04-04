@@ -7,7 +7,7 @@ import fs from 'fs/promises';
 import path from 'path';
 
 const app = express();
-const PORT = process.env.FETCH_PROGRAM_SERVICE_PORT || 3000;
+const PORT = process.env.FETCH_PROGRAM_SERVICE_PORT || 3001;
 
 app.use(cors());
 app.use(express.json());
@@ -22,7 +22,11 @@ interface Reason {
   id: number;
   category: string;
   details: string;
+<<<<<<< HEAD
+  redirect: boolean;
+=======
   redirect: string;
+>>>>>>> f2ce5511a0e46cbc1cd88c913bde165ac763111a
 }
 
 const REASONS_FILE_PATH = path.join(__dirname, '/data/reasons.json');
@@ -61,10 +65,10 @@ app.get('/advisors', async (req: Request, res: Response) => {
 
     const advisorData: Advisor[] = [];
     const tables = document.querySelectorAll('table');
-    
+
     // Convert NodeList to Array and remove last two tables
     const relevantTables = Array.from(tables).slice(0, -2);
-    
+
     relevantTables.forEach(table => {
       const rows = table.querySelectorAll('tr');
       rows.forEach((row, index) => {
@@ -72,7 +76,11 @@ app.get('/advisors', async (req: Request, res: Response) => {
         const emailRegex = /E: \s*(.*?\.ca)/i;
         const cells = row.querySelectorAll('td');
         if (cells.length >= 2) {
+<<<<<<< HEAD
+          let advisorNameRaw = cells[0].textContent?.trim() || 'No name found';
+=======
           let advisorNameRaw = cells[0].textContent?.trim() || 'No name found';  
+>>>>>>> f2ce5511a0e46cbc1cd88c913bde165ac763111a
           const emailMatch = advisorNameRaw.match(emailRegex);
           const email = emailMatch ? emailMatch[1] : 'No email found';
           const programs = cells[1]?.textContent?.trim() || 'No programs found';

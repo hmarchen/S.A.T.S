@@ -1,14 +1,41 @@
-import React, { useState } from "react";
-import { View, Text, SafeAreaView, TextInput, Alert, Pressable, KeyboardAvoidingView, Platform } from "react-native";
+import React, { useState, useEffect } from "react";
+import { View, Text, Pressable, ImageBackground, Alert, SafeAreaView } from "react-native";
 import { useRouter } from "expo-router";
 import * as FileSystem from "expo-file-system";
 import Breadcrumb from "./breadcrumb";
+import { Ionicons } from "@expo/vector-icons";
 import styles from "../css/styles";
-import { TouchableOpacity } from "react-native";
-import { AutocompleteDropdown, AutocompleteDropdownItem } from 'react-native-autocomplete-dropdown'
 
 const filePath = FileSystem.documentDirectory + "user.json";
 
+<<<<<<< HEAD
+const CustomRadioButton = ({ label, selected, onSelect }: { label: string, selected: boolean, onSelect: () => void }) => (
+  <Pressable
+    onPress={onSelect}
+    style={[
+      styles.radioButton,
+      {
+        backgroundColor: selected ? "#358f71" : "rgba(255, 255, 255, 0.1)",
+        minWidth: 300, // Ensures button is large enough
+        minHeight: 100,
+        alignItems: "center",
+        justifyContent: "center",
+      },
+    ]}
+    android_ripple={{ color: "rgba(255,255,255,0.2)" }}
+    hitSlop={{ top: 20, bottom: 20, left: 20, right: 20 }}
+  >
+    <Text style={{ color: "#ffffff", fontWeight: "bold", fontSize: 32 }} adjustsFontSizeToFit>
+      {label}
+    </Text>
+  </Pressable>
+);
+
+export default function Institution() {
+  const router = useRouter();
+  const [institution, setInstitution] = useState('Oshawa');
+  const [isValid, setIsValid] = useState(true);
+=======
 interface LayoutProps {
   setRoute: (route: string) => void;
 }
@@ -17,16 +44,38 @@ const Institution: React.FC<LayoutProps> = ({setRoute}) => {
   const router = useRouter();
   const isWeb = Platform.OS === 'web';
   const [institution, setInstitution] = useState("");
+>>>>>>> f2ce5511a0e46cbc1cd88c913bde165ac763111a
   const [program, setProgram] = useState("");
   const [data, setData] = useState([]);
   const [error, setError] = useState(null);
 
+  useEffect(() => {
+    setIsValid(!!institution);
+  }, [institution]);
+
   const handleSubmit = async () => {
+    if (!isValid) {
+      Alert.alert("Validation Error", "Please select a campus.");
+      return;
+    }
+
     try {
       if (isWeb) {
         const existingData = localStorage.getItem('student');
         const updatedData = existingData ? JSON.parse(existingData) : [];
 
+<<<<<<< HEAD
+      if (fileExists.exists) {
+        const fileContents = await FileSystem.readAsStringAsync(filePath);
+        updatedData = JSON.parse(fileContents);
+      }
+
+      updatedData.campus = institution;
+
+      await FileSystem.writeAsStringAsync(filePath, JSON.stringify(updatedData, null, 2));
+      console.log("✅ Form Submitted: Institution:", institution);
+      router.push("/Login/Program");
+=======
         updatedData.length > 0
           ? (updatedData[0].campus = institution)
           : updatedData.push({ firstname: "", lastname: "", studentID: "", DCMail: "", campus: institution, program: "", reason: "" });
@@ -48,101 +97,48 @@ const Institution: React.FC<LayoutProps> = ({setRoute}) => {
         console.log("Navigating to Program...");
         router.push("/Login/Program");
       }
+>>>>>>> f2ce5511a0e46cbc1cd88c913bde165ac763111a
     } catch (error) {
-      console.error("Error writing to file:", error);
+      console.error("❌ Error writing to file:", error);
       Alert.alert("Error", "Failed to save data.");
     }
   };
-  // Radio button for office selection
-  const CustomRadioButton = ({ label, selected, onSelect }) => (
-    <TouchableOpacity
-        style={[styles.radioButton,
-        { backgroundColor: selected ? '#358f71' : '#FFF' }]}
-        onPress={onSelect}
-    >
-        <Text style={[styles.radioButtonText,
-        { color: selected ? '#FFF' : '#000' }]}>
-            {label}
-        </Text>
-    </TouchableOpacity>
-);
-  // TODO fetch data from end point
-  // const FetchData = async(url) => {
-  //   try {
-  //     const response = await fetch(url);
-  //     const json = await response.json();
-  //     setData(json);
-  //     console.log("advisors: " + response)
-  //   }
-  //   catch {
-  //     console.log('Error: ' + error);
-  //   }
-  // };
-
-  const getData = async() => {
-    try {
-      const response = await fetch('http://10.0.2.2:3000/advisors');
-      const json = await response.json();
-      console.log("ada: " + json);
-      return json;
-    }
-    catch(e) {
-
-      console.error(e);
-    }
-  }
-
-  const handleClear = () => (setInstitution(""), setProgram(""));
-  const [selectedItem, setSelectedItem] = useState<AutocompleteDropdownItem | null>(null);
 
   return (
-    <KeyboardAvoidingView style={styles.container} behavior={Platform.OS === "ios" ? "padding" : "height"} keyboardVerticalOffset={20}>
-    <SafeAreaView style={styles.container}>
-      <Text style={styles.title}>Institutional Information</Text>
-      
-      {/* <TextInput style={styles.studentNumber} value={institution} onChangeText={setInstitution} placeholder="Campus Location" /> */}
-      <View style={[{ flexDirection: 'row', justifyContent: 'space-around' }]}>
-            <CustomRadioButton
-                label="Whitby"
-                selected={institution === 'Whitby'}
-                onSelect={() => setInstitution('Whitby')}
-            />
-            <CustomRadioButton
-                label="Oshawa"
-                selected={institution === 'Oshawa'}
-                onSelect={() => setInstitution('Oshawa')}
-            />
-        </View>
-          <TextInput style={styles.input} value={program} placeholder="Program Name" />
-
-          {/* <AutocompleteDropdown
-  clearOnFocus={false}
-  closeOnBlur={true}
-  closeOnSubmit={false}
-  initialValue={{ id: '2' }} // or just '2'
-  onSelectItem={setSelectedItem}
-  dataSet={[
-    { id: '1', title: 'Alpha' },
-    { id: '2', title: 'Beta' },
-    { id: '3', title: 'Gamma' },
-  ]}
-/>; */}
-      
-      
-
-      <View style={styles.buttonContainer}>
-        <Pressable style={[styles.button, styles.clearButton]} onPress={handleClear}>
-          <Text style={styles.buttonText}>CLEAR</Text>
+    <ImageBackground source={require("../../assets/background.jpg")} style={styles.background} resizeMode="cover">
+      {/* Arrows */}
+      <View style={styles.arrowContainer}>
+        <Pressable style={styles.arrowButton} onPress={() => router.back()}>
+          <Ionicons name="arrow-back" size={32} color="white" />
         </Pressable>
-        <Pressable style={styles.button} onPress={handleSubmit}>
-          <Text style={styles.buttonText}>NEXT</Text>
+
+        <Pressable
+          style={[styles.arrowButton, !isValid && styles.disabledArrow]}
+          onPress={handleSubmit}
+          disabled={!isValid}
+        >
+          <Ionicons name="arrow-forward" size={32} color="white" />
         </Pressable>
       </View>
 
-      <Breadcrumb entities={['Disclaimer', 'Student ID', 'Full Name', 'DCMail', 'Institution']} flowDepth={4} />
-    </SafeAreaView>
-  </KeyboardAvoidingView>
-);
+      {/* Content */}
+      <SafeAreaView style={styles.transparentContainer}>
+        <Text style={styles.whiteTitle}>Select Your Campus</Text>
+
+        <View style={{ flexDirection: "row", justifyContent: "center", marginTop: 20 }}>
+          <CustomRadioButton label="Whitby" selected={institution === "Whitby"} onSelect={() => setInstitution("Whitby")} />
+          <CustomRadioButton label="Oshawa" selected={institution === "Oshawa"} onSelect={() => setInstitution("Oshawa")} />
+        </View>
+
+        <View style={styles.breadcrumbContainer}>
+          <Breadcrumb
+            entities={["Disclaimer", "Student ID", "Full Name", "DCMail", "Institution"]}
+            flowDepth={4}
+          />
+        </View>
+      </SafeAreaView>
+    </ImageBackground>
+  );
 }
 
 export default Institution;

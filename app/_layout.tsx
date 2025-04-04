@@ -8,6 +8,7 @@ import { StatusBar } from 'expo-status-bar';
 import { useEffect } from 'react';
 import 'react-native-reanimated';
 import { useColorScheme } from '@/hooks/useColorScheme';
+import { InactivityProvider } from './context/InactivityContext';
 
 import { Buffer } from 'buffer';  // Import Buffer from buffer package
 global.Buffer = Buffer;
@@ -20,18 +21,38 @@ export default function RootLayout() {
   const colorScheme = useColorScheme();
   const [loaded] = useFonts({ SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'), });
 
+<<<<<<< HEAD
+  useEffect(() => {
+    if (loaded) {
+      SplashScreen.hideAsync();
+=======
   useEffect(() => { 
     if (loaded) { SplashScreen.hideAsync(); }
     
     // redirect user to homepage if on web
     if (typeof window !== 'undefined' && isWeb && window.location.pathname == '/') {
       router.push('/site/home');
+>>>>>>> f2ce5511a0e46cbc1cd88c913bde165ac763111a
     }
   }, [loaded]);
 
-  if (!loaded) { return null; }
+  if (!loaded) {
+    return null;
+  }
 
   return (
+<<<<<<< HEAD
+    <InactivityProvider timeoutMinutes={2} warningSeconds={10}>
+      <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+        <Stack screenOptions={{ headerShown: false }}>
+          <Stack.Screen name="(tabs)" />
+          <Stack.Screen name="+not-found" />
+          <Stack.Screen name="Login" />
+        </Stack>
+        <StatusBar style="auto" />
+      </ThemeProvider>
+    </InactivityProvider>
+=======
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
       <Stack>
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
@@ -40,5 +61,6 @@ export default function RootLayout() {
       </Stack>
       <StatusBar style="auto" />
     </ThemeProvider>
+>>>>>>> f2ce5511a0e46cbc1cd88c913bde165ac763111a
   );
 }
