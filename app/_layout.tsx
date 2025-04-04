@@ -25,6 +25,11 @@ export default function RootLayout() {
     if (loaded) {
       SplashScreen.hideAsync();
     }
+
+    // redirect user to homepage if on web
+    if (typeof window !== 'undefined' && isWeb && window.location.pathname == '/') {
+      router.push('/site/home');
+    }
   }, [loaded]);
 
   if (!loaded) {

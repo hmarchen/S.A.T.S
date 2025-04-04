@@ -8,7 +8,7 @@ import path from 'path';
 import bcrypt from 'bcryptjs';
 
 const app = express();
-const port = 3001; // You can change the port if needed
+const port = 3002; // You can change the port if needed
 const dbUsers = new DBUsers();
 const usersFilePath = path.join(__dirname, '/data/users.json');
 

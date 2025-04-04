@@ -10,7 +10,7 @@ import Unauthorized from './layouts/unauthorized';
 export default function Home() {  
   const router = useRouter();
   const IMAGES = './images/';
-  const API_BASE_URL = 'http://localhost:3001';
+  const API_BASE_URL = 'http://localhost:3002';
   const structureRef = useRef<any>(null);
 
   const { user } = useUser();
