@@ -7,6 +7,7 @@ import {
   ActivityIndicator,
   ImageBackground,
   SafeAreaView,
+  ScrollView,
 } from "react-native";
 import { useRouter } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
@@ -14,6 +15,7 @@ import * as FileSystem from "expo-file-system";
 import Breadcrumb from "./breadcrumb";
 import { Card } from "@rneui/themed";
 import styles from "../css/styles";
+
 
 const filePath = FileSystem.documentDirectory + "user.json";
 
@@ -50,13 +52,11 @@ export default function EndScreen() {
   const handleConfirm = async () => {
     try {
       if (userData) {
-        await fetch("http://10.0.2.2:3000/send-invite", {
+        await fetch("http://192.168.2.29:3000/send-invite", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(userData),
         });
-
-        Alert.alert("Success", "Invite sent successfully.");
         router.push("/Login/AppConfirmation");
       }
     } catch (error) {
@@ -85,6 +85,7 @@ export default function EndScreen() {
   }
 
   return (
+    <ScrollView>
     <ImageBackground
       source={require("../../assets/background.jpg")}
       style={styles.background}
@@ -96,7 +97,7 @@ export default function EndScreen() {
           <Ionicons name="arrow-back" size={32} color="white" />
         </Pressable>
       </View>
-
+      
       <SafeAreaView style={styles.transparentContainer}>
         {/* Card Container */}
         <Card containerStyle={styles.cardContainer}>
@@ -149,6 +150,8 @@ export default function EndScreen() {
           />
         </View>
       </SafeAreaView>
+      
     </ImageBackground>
+    </ScrollView>
   );
 }

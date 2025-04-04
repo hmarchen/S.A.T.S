@@ -126,7 +126,7 @@ translucentContainer: {
   },
 
   // Input
-input: {
+  input: {
   width: 500,
   height: 100, // Slightly increased height for a larger touch area
   fontSize: 28, // Slightly bigger text for readability
@@ -388,8 +388,8 @@ radioButtonText: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'center',
-    gap: 10,
-    marginBottom: 30,
+      gap: 10,
+      marginBottom: 30,
   },
 
   timeslotItem: {
@@ -467,12 +467,12 @@ summaryText: {
   lineHeight: 24, // Helps with readability
   marginVertical: 5, // Adds spacing above/below
   paddingHorizontal: 10, // Ensures consistent spacing inside
-},
-errorText: {
-  color: '#dc3545',
-  marginTop: 10,
-  fontSize: 14,
-  textAlign: 'center',
+  },
+  errorText: {
+  color: '#FF6347',
+  marginTop: 5,
+    fontSize: 14,
+    textAlign: 'center',
 },
 
 scrollView: {
