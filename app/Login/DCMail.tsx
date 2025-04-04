@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { View, Text, TextInput, Alert, Pressable, ImageBackground, SafeAreaView } from "react-native";
 import { useRouter } from "expo-router";
 import Breadcrumb from "./breadcrumb";
@@ -11,8 +11,44 @@ const filePath = FileSystem.documentDirectory + "user.json";
 export default function DCMail() {
   const router = useRouter();
   const [DCMail, setMail] = useState("");
+  const [error, setError] = useState<string | null>(null);
+  const [touched, setTouched] = useState(false);
+  
   const DCMailREGEX = /^[a-z]+(\.[a-z\d]+)?@dcmail\.ca$/;
   const isValid = DCMailREGEX.test(DCMail.trim());
+
+  // Validate on every change once touched
+  const validateInput = () => {
+    const trimmedMail = DCMail.trim();
+    if (!trimmedMail) {
+      setError("DC Mail address is required.");
+      return false;
+    }
+    if (!DCMailREGEX.test(trimmedMail)) {
+      setError("Must be lowercase and follow: firstname.lastname@dcmail.ca");
+      return false;
+    }
+    setError(null);
+    return true;
+  };
+
+  // This ensures we check for errors on each keystroke after first interaction
+  useEffect(() => {
+    if (touched) {
+      validateInput();
+    }
+  }, [DCMail]);
+
+  // Force a validation check when user starts typing
+  const handleChangeText = (text: string) => {
+    setMail(text);
+    setTouched(true);
+  };
+
+  const handleBlur = () => {
+    setTouched(true);
+    validateInput();
+  };
 
   const validateEmail = () => {
     const trimmedMail = DCMail.trim();
@@ -83,17 +119,38 @@ export default function DCMail() {
       {/* Main UI */}
       <View style={styles.transparentContainer}>
         <Text style={styles.whiteTitle}>Enter your Durham College Email Address</Text>
-		<SafeAreaView>
-        <TextInput
-          style={styles.input}
-          placeholder="Durham College Email"
-          placeholderTextColor="rgba(255,255,255,0.6)"
-          value={DCMail}
-          onChangeText={setMail}
-          autoCapitalize="none"
-          keyboardType="email-address"
-        />
-		</SafeAreaView>
+        <SafeAreaView>
+          <TextInput
+            style={[
+              styles.input, 
+              (error && touched) ? { borderColor: '#FF6347', borderWidth: 2 } : {}
+            ]}
+            placeholder="Durham College Email"
+            placeholderTextColor="rgba(255,255,255,0.6)"
+            value={DCMail}
+            onChangeText={handleChangeText}
+            autoCapitalize="none"
+            keyboardType="email-address"
+            onBlur={handleBlur}
+          />
+          
+          {/* Enhanced error message styling */}
+          {error && touched && (
+            <Text style={{
+              color: '#FF6347',
+              backgroundColor: 'rgba(0,0,0,0.5)',
+              padding: 10,
+              borderRadius: 5,
+              marginTop: 5,
+              fontSize: 18,
+              textAlign: 'center',
+              marginBottom: 10,
+              fontWeight: 'bold'
+            }}>
+              {error}
+            </Text>
+          )}
+        </SafeAreaView>
         <View style={styles.breadcrumbContainer}>
           <Breadcrumb entities={["Disclaimer", "StudentNumber", "Firstname", "Lastname", "DCMail"]} flowDepth={4} />
         </View>

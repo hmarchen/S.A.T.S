@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, KeyboardAvoidingView, SafeAreaView, Text, TextInput, Alert, Pressable, ImageBackground } from 'react-native';
 import { useRouter } from 'expo-router';
 import Breadcrumb from './breadcrumb';
@@ -11,13 +11,54 @@ const filePath = FileSystem.documentDirectory + 'user.json';
 export default function StudentNumber() {
   const router = useRouter();
   const [studentNumber, setStudentNumber] = useState('');
-  const studentNumberREGEX = /^100\d{6}$/; // Regex for valid student numbers
+  const [error, setError] = useState<string | null>(null);
+  const [touched, setTouched] = useState(false);
+  
+  // Updated regex to accept numbers starting with either 100 or 101
+  const studentNumberREGEX = /^(100|101)\d{6}$/;
   const isValid = studentNumber.length === 9 && studentNumberREGEX.test(studentNumber);
+
+  // Validate on every change once touched
+  const validateInput = () => {
+    const trimmedID = studentNumber.trim();
+    if (!trimmedID) {
+      setError("Student number is required.");
+      return false;
+    }
+    if (trimmedID.length !== 9) {
+      setError("Student number must be 9 digits.");
+      return false;
+    }
+    if (!studentNumberREGEX.test(trimmedID)) {
+      setError("Must start with 100 or 101 and contain 9 digits.");
+      return false;
+    }
+    setError(null);
+    return true;
+  };
+
+  // This ensures we check for errors on each keystroke after first interaction
+  useEffect(() => {
+    if (touched) {
+      validateInput();
+    }
+  }, [studentNumber]);
+
+  // Force a validation check when user starts typing
+  const handleChangeText = (text: string) => {
+    setStudentNumber(text);
+    setTouched(true);
+  };
+
+  const handleBlur = () => {
+    setTouched(true);
+    validateInput();
+  };
 
   const validateForm = () => {
     const trimmedID = studentNumber.trim();
     if (!trimmedID) return "Student number is required.";
-    if (!studentNumberREGEX.test(trimmedID)) return "Invalid Student Number: Must start with 100 and contain 9 digits.";
+    if (!studentNumberREGEX.test(trimmedID)) return "Invalid Student Number: Must start with 100 or 101 and contain 9 digits.";
     return null; // No error
   };
 
@@ -61,7 +102,11 @@ export default function StudentNumber() {
   };
 
   return (
-    <>
+    <ImageBackground
+      source={require('../../assets/background.jpg')}
+      style={styles.background}
+      resizeMode="cover"
+    >
       {/* Arrow navigation */}
       <View style={styles.arrowContainer}>
         <Pressable style={styles.arrowButton} onPress={() => router.back()}>
@@ -77,29 +122,46 @@ export default function StudentNumber() {
         </Pressable>
       </View>
 
-      <ImageBackground
-        source={require('../../assets/background.jpg')}
-        style={styles.background}
-        resizeMode="cover"
-      >
-        {/* Main UI */}
-        <KeyboardAvoidingView style={styles.transparentContainer}>
-          <Text style={styles.whiteTitle}>Enter your Student Number</Text>
-		  <SafeAreaView>
-	          <TextInput
-	            style={styles.input}
-	            placeholder="Student Number"
-	            placeholderTextColor="rgba(255,255,255,0.6)"
-	            value={studentNumber}
-	            onChangeText={setStudentNumber}
-	            keyboardType="numeric"
-	          />
-	      </SafeAreaView>
-          <View style={styles.breadcrumbContainer}>
-            <Breadcrumb entities={['Disclaimer', 'StudentNumber']} flowDepth={1} />
-          </View>
-        </KeyboardAvoidingView>
-      </ImageBackground>
-    </>
+      {/* Main UI */}
+      <View style={styles.transparentContainer}>
+        <Text style={styles.whiteTitle}>Enter your Student Number</Text>
+        <SafeAreaView>
+          <TextInput
+            style={[
+              styles.input, 
+              (error && touched) ? { borderColor: '#FF6347', borderWidth: 2 } : {}
+            ]}
+            placeholder="Student Number"
+            placeholderTextColor="rgba(255,255,255,0.6)"
+            value={studentNumber}
+            onChangeText={handleChangeText}
+            keyboardType="numeric"
+            onBlur={handleBlur}
+            maxLength={9} // Prevent typing more than 9 digits
+          />
+          
+          {/* Make sure error message has enough space and contrasting style */}
+          {error && touched && (
+            <Text style={{
+              color: '#FF6347',
+              backgroundColor: 'rgba(0,0,0,0.5)',
+              padding: 10,
+              borderRadius: 5,
+              marginTop: 5,
+              fontSize: 18,
+              textAlign: 'center',
+              marginBottom: 10,
+              fontWeight: 'bold'
+            }}>
+              {error}
+            </Text>
+          )}
+        </SafeAreaView>
+        
+        <View style={styles.breadcrumbContainer}>
+          <Breadcrumb entities={['Disclaimer', 'StudentNumber']} flowDepth={1} />
+        </View>
+      </View>
+    </ImageBackground>
   );
 }
