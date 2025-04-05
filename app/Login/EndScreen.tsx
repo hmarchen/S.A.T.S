@@ -52,7 +52,7 @@ export default function EndScreen() {
   const handleConfirm = async () => {
     try {
       if (userData) {
-        await fetch("http://192.168.2.29:3000/send-invite", {
+        await fetch("http://10.190.8.112:3000/send-invite", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(userData),

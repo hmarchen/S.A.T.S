@@ -57,7 +57,10 @@ export default function Institution() {
         updatedData = JSON.parse(fileContents);
       }
 
-      updatedData.campus = institution;
+      updatedData[0].campus = institution;
+      console.log("==========================");
+      console.log(updatedData[0].campus);
+      console.log("==========================");
 
       await FileSystem.writeAsStringAsync(filePath, JSON.stringify(updatedData, null, 2));
       console.log("✅ Form Submitted: Institution:", institution);

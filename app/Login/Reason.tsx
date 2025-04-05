@@ -25,7 +25,7 @@ export default function Reason() {
   const getReasons = async() => {
     try {
       setIsLoading(true);
-      const response = await fetch(`http://10.0.2.2:3001/reasons`)
+      const response = await fetch(`http://10.190.8.112:3001/reasons`)
       .then(res => {return res.json()})
       .then(data => {return data.reasons});
       return response;
