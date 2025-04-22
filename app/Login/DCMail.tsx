@@ -11,6 +11,9 @@ const filePath = FileSystem.documentDirectory + "user.json";
 export default function DCMail() {
   const router = useRouter();
   const [DCMail, setMail] = useState("");
+
+  const [error, setError] = useState('');
+
   const DCMailREGEX = /^[a-z]+(\.[a-z\d]+)?@dcmail\.ca$/;
   const isValid = DCMailREGEX.test(DCMail.trim());
 
@@ -89,10 +92,23 @@ export default function DCMail() {
           placeholder="Durham College Email"
           placeholderTextColor="rgba(255,255,255,0.6)"
           value={DCMail}
-          onChangeText={setMail}
+          //onChangeText={setMail}
+          onChangeText={(text) => {
+            setMail(text);
+            const trimmed = text.trim();
+            if (!trimmed) {
+              setError("DC Mail address is required.");
+            } else if (!DCMailREGEX.test(trimmed)) {
+              setError("Email must be lowercase and follow: firstname.lastname@dcmail.ca");
+            } else {
+              setError('');
+            }
+          }}
           autoCapitalize="none"
           keyboardType="email-address"
         />
+
+        {error ? <Text style={{ color: 'red', marginTop: 8 }}>{error}</Text> : null}
 
         <View style={styles.breadcrumbContainer}>
           <Breadcrumb entities={["Disclaimer", "StudentNumber", "Firstname", "Lastname", "DCMail"]} flowDepth={4} />

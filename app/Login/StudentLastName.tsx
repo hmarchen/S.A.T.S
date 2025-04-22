@@ -11,11 +11,14 @@ const filePath = FileSystem.documentDirectory + 'user.json';
 export default function StudentLastName() {
   const router = useRouter();
   const [lastName, setLastName] = useState('');
+
+  const [error, setError] = useState('');
+
   const LastnameREGEX = /^[A-Z][a-zA-Z' -]+$/;
   const isValid = lastName.length > 0 && LastnameREGEX.test(lastName.trim());
 
   const REQ_ERROR = "Last name is required.";
-  const REG_ERROR = "Invalid last name: Must start with a capital letter and contain only letters.";
+  const REG_ERROR = "Invalid last name: Must start with a capital letter, contain only letters, and be more than one character long.";
 
   const validateForm = () => {
     const trimmedLastName = lastName.trim();
@@ -93,8 +96,21 @@ export default function StudentLastName() {
           placeholder="Last Name"
           placeholderTextColor="rgba(255,255,255,0.6)"
           value={lastName}
-          onChangeText={setLastName}
+          //onChangeText={setLastName}
+          onChangeText={(text) => {
+            setLastName(text);
+            const trimmed = text.trim();
+            if (!trimmed) {
+              setError(REQ_ERROR);
+            } else if (!LastnameREGEX.test(trimmed)) {
+              setError(REG_ERROR);
+            } else {
+              setError('');
+            }
+          }}
         />
+
+        {error ? <Text style={{ color: 'red', marginTop: 8 }}>{error}</Text> : null}
 
         <View style={styles.breadcrumbContainer}>
           <Breadcrumb entities={['Disclaimer', 'StudentNumber', 'Firstname', 'Lastname']} flowDepth={3} />

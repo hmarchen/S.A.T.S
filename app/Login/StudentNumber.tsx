@@ -11,6 +11,9 @@ const filePath = FileSystem.documentDirectory + 'user.json';
 export default function StudentNumber() {
   const router = useRouter();
   const [studentNumber, setStudentNumber] = useState('');
+
+  const [error, setError] = useState('');
+
   const studentNumberREGEX = /^100\d{6}$/; // Regex for valid student numbers
   const isValid = studentNumber.length === 9 && studentNumberREGEX.test(studentNumber);
 
@@ -91,9 +94,22 @@ export default function StudentNumber() {
             placeholder="Student Number"
             placeholderTextColor="rgba(255,255,255,0.6)"
             value={studentNumber}
-            onChangeText={setStudentNumber}
+            //onChangeText={setStudentNumber}
+            onChangeText={(text) => {
+              setStudentNumber(text);
+              const trimmed = text.trim();
+              if (!trimmed) {
+                setError("Student number is required.");
+              } else if (!studentNumberREGEX.test(trimmed)) {
+                setError("Invalid Student Number: Must start with 100 and contain 9 digits.");
+              } else {
+                setError('');
+              }
+            }}
             keyboardType="numeric"
           />
+
+          {error ? <Text style={{ color: 'red', marginTop: 8 }}>{error}</Text> : null}
 
           <View style={styles.breadcrumbContainer}>
             <Breadcrumb entities={['Disclaimer', 'StudentNumber']} flowDepth={1} />

@@ -12,6 +12,8 @@ export default function StudentFirstName() {
   const router = useRouter();
   const [firstName, setFirstName] = useState('');
 
+  const [error, setError] = useState('');
+
   const FirstnameREGEX = /^[A-Z][a-zA-Z' -]+$/; // Regex for valid first names
   const isValid = FirstnameREGEX.test(firstName.trim());
 
@@ -91,8 +93,21 @@ export default function StudentFirstName() {
           placeholder="First Name"
           placeholderTextColor="rgba(255,255,255,0.6)"
           value={firstName}
-          onChangeText={setFirstName}
+          //onChangeText={setFirstName}
+          onChangeText={(text) => {
+            setFirstName(text);
+            const trimmed = text.trim();
+            if (!trimmed) {
+              setError('First name is required.');
+            } else if (!FirstnameREGEX.test(trimmed)) {
+              setError('Invalid first name: Must start with a capital letter, contain only letters, and be more than one character.');
+            } else {
+              setError('');
+            }
+          }}
         />
+
+        {error ? <Text style={{ color: 'red', marginTop: 8 }}>{error}</Text> : null}
 
         <View style={styles.breadcrumbContainer}>
           <Breadcrumb entities={['Disclaimer', 'StudentNumber', 'Firstname']} flowDepth={2} />
