@@ -5,6 +5,7 @@ import { Ionicons } from "@expo/vector-icons";
 import * as FileSystem from "expo-file-system";
 import Breadcrumb from "./breadcrumb";
 import styles from "../css/styles";
+import Arrows from "./arrows";
 
 const filePath = FileSystem.documentDirectory + "user.json";
 
@@ -40,7 +41,7 @@ export default function Program() {
   const fetchPrograms = async () => {
     try {
       setIsLoading(true);
-      const response = await fetch('http://10.190.8.112:3001/advisors');
+      const response = await fetch('http://192.168.193.60:3001/advisors');
       if (!response.ok) throw new Error('Failed to fetch programs');
       const data: Advisor[] = await response.json();
 
@@ -69,7 +70,7 @@ export default function Program() {
     setSearchQuery("");
   };
 
-  const HandleSubmit = async () => {
+  const handleSubmit = async () => {
     if (!program) {
       Alert.alert("Error", "Please enter your program");
       return;
@@ -110,18 +111,20 @@ export default function Program() {
     style={styles.background}
     resizeMode="cover"
   >
-    <View style={styles.arrowContainer}>
+    {/* Arrows navigation */}
+    <Arrows handleSubmit={handleSubmit} router={router} isValid={program != "" && filteredPrograms.length === 1}></Arrows>
+    {/* <View style={styles.arrowContainer}>
       <Pressable style={styles.arrowButton} onPress={() => router.back()}>
         <Ionicons name="arrow-back" size={32} color="white" />
       </Pressable>
       <Pressable
         style={[styles.arrowButton, program && filteredPrograms.length === 1 ? styles.activeArrow : styles.disabledArrow]}
-        onPress={HandleSubmit}
+        onPress={handleSubmit}
         disabled={!program || filteredPrograms.length > 1 }
       >
         <Ionicons name="arrow-forward" size={32} color="white" />
       </Pressable>
-    </View>
+    </View> */}
 
     <View style={styles.transparentContainer}>
       <Text style={styles.whiteTitle}>Program Information</Text>
@@ -145,7 +148,7 @@ export default function Program() {
             keyExtractor={(item) => item}
             renderItem={({ item }) => (
               <TouchableOpacity
-                style={[styles.button, { marginVertical: 2, paddingVertical: 15, paddingHorizontal: 30 }]}
+                style={[styles.button, { marginVertical: 2, paddingVertical: 10, height: 50, width: 900 }]}
                 onPress={() => handleSelectProgram(item)}
               >
                 <Text style={styles.buttonText}>{item}</Text>

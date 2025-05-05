@@ -5,6 +5,7 @@ import Breadcrumb from "./breadcrumb";
 import { Ionicons } from "@expo/vector-icons";
 import styles from "../css/styles";
 import * as FileSystem from "expo-file-system";
+import Arrows from "./arrows";
 
 const filePath = FileSystem.documentDirectory + "user.json";
 
@@ -102,19 +103,7 @@ export default function DCMail() {
       resizeMode="cover"
     >
       {/* Navigation Arrows */}
-      <View style={styles.arrowContainer}>
-        <Pressable style={styles.arrowButton} onPress={() => router.back()}>
-          <Ionicons name="arrow-back" size={32} color="white" />
-        </Pressable>
-
-        <Pressable
-          style={[styles.arrowButton, !isValid && styles.disabledArrow]}
-          onPress={handleSubmit}
-          disabled={!isValid}
-        >
-          <Ionicons name="arrow-forward" size={32} color="white" />
-        </Pressable>
-      </View>
+      <Arrows handleSubmit={handleSubmit} router={router} isValid={isValid}></Arrows>
 
       {/* Main UI */}
       <View style={styles.transparentContainer}>

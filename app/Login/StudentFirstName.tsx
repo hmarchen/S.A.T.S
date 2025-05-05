@@ -5,6 +5,7 @@ import Breadcrumb from './breadcrumb';
 import { Ionicons } from '@expo/vector-icons';
 import styles from '../css/styles';
 import * as FileSystem from 'expo-file-system';
+import Arrows from './arrows';
 
 const filePath = FileSystem.documentDirectory + 'user.json';
 
@@ -102,20 +103,8 @@ export default function StudentFirstName() {
       style={styles.background}
       resizeMode="cover"
     >
-      {/* Arrow navigation */}
-      <View style={styles.arrowContainer}>
-        <Pressable style={styles.arrowButton} onPress={() => router.back()}>
-          <Ionicons name="arrow-back" size={32} color="white" />
-        </Pressable>
-
-        <Pressable
-          style={[styles.arrowButton, !isValid && styles.disabledArrow]}
-          onPress={handleSubmit}
-          disabled={!isValid}
-        >
-          <Ionicons name="arrow-forward" size={32} color="white" />
-        </Pressable>
-      </View>
+      {/* Arrows navigation */}
+      <Arrows handleSubmit={handleSubmit} router={router} isValid={isValid}></Arrows>
 
       {/* Main transparent content */}
       <View style={styles.transparentContainer}>

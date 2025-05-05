@@ -70,7 +70,7 @@ export default function EndScreen() {
     return (
       <SafeAreaView style={styles.container}>
         <ActivityIndicator size="large" color="#358f71" />
-        <Text style={styles.text}>Loading user data...</Text>
+        <Text style={{}}>Loading user data...</Text>
       </SafeAreaView>
     );
   }
@@ -79,7 +79,7 @@ export default function EndScreen() {
   if (!userData || Object.keys(userData).length === 0) {
     return (
       <SafeAreaView style={styles.container}>
-        <Text style={styles.text}>No user data found.</Text>
+        <Text style={{}}>No user data found.</Text>
       </SafeAreaView>
     );
   }

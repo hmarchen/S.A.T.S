@@ -23,7 +23,7 @@ const CalendarAvailability = () => {
     setAvailability([]);
 
     try {
-      const response = await fetch('http://10.190.8.112:3000/download-ics', {
+      const response = await fetch('http://192.168.193.60:3000/download-ics', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ url: icsUrl }),
