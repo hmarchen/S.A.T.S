@@ -23,6 +23,10 @@ export default function Program() {
   const [advisorData, setAdvisorData] = useState<Advisor[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
+  // True only if program exactly matches one of the fetched programs
+  const isValidProgram = programs
+    .some(p => p.toLowerCase() === program.trim().toLowerCase()); 
+
   useEffect(() => {
     fetchPrograms();
   }, []);
@@ -46,8 +50,11 @@ export default function Program() {
       
       // Extract unique programs
       const uniquePrograms = Array.from(new Set(
-        data.map(advisor => advisor.programs.split('\n')).flat()
-      )).filter(program => program !== 'PROGRAMS:' && program !== '');
+        data
+          .flatMap(advisor => advisor.programs.split('\n'))
+          .map(p => p.trim())           
+      ))
+        .filter(program => program && program !== 'PROGRAMS:');
       
       setAdvisorData(data);
       setPrograms(uniquePrograms);
@@ -70,10 +77,11 @@ export default function Program() {
   };
 
   const HandleSubmit = async () => {
-    if (!program) {
-      Alert.alert("Error", "Please enter your program");
+    if (!isValidProgram) {
+      Alert.alert("Error", "Please select a program from the list.");
       return;
     }
+
 
     try {
       const fileExists = await FileSystem.getInfoAsync(filePath);
@@ -115,9 +123,9 @@ export default function Program() {
         <Ionicons name="arrow-back" size={32} color="white" />
       </Pressable>
       <Pressable
-        style={[styles.arrowButton, program ? styles.activeArrow : styles.disabledArrow]}
+        style={[styles.arrowButton, isValidProgram ? styles.activeArrow : styles.disabledArrow]}
         onPress={HandleSubmit}
-        disabled={!program}
+        disabled={!isValidProgram}
       >
         <Ionicons name="arrow-forward" size={32} color="white" />
       </Pressable>
