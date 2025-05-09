@@ -52,7 +52,7 @@ export default function EndScreen() {
   const handleConfirm = async () => {
     try {
       if (userData) {
-        await fetch("http://192.168.193.60:3000/send-invite", {
+        await fetch("http://192.168.2.29:3000/send-invite", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(userData),
@@ -70,7 +70,7 @@ export default function EndScreen() {
     return (
       <SafeAreaView style={styles.container}>
         <ActivityIndicator size="large" color="#358f71" />
-        <Text style={{}}>Loading user data...</Text>
+        <Text style={styles.text}>Loading user data...</Text>
       </SafeAreaView>
     );
   }
@@ -79,7 +79,7 @@ export default function EndScreen() {
   if (!userData || Object.keys(userData).length === 0) {
     return (
       <SafeAreaView style={styles.container}>
-        <Text style={{}}>No user data found.</Text>
+        <Text style={styles.text}>No user data found.</Text>
       </SafeAreaView>
     );
   }

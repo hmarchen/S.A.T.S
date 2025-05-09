@@ -1,0 +1,62 @@
+services:
+    auth:
+        image: node:18
+        container_name: sats-authService
+        working_dir: /app/services
+        volumes:
+        - .:/app
+        command: sh -c "npm install && npx ts-node authService.ts"
+        ports:
+        - "3000:3000"
+        restart: unless-stopped
+
+    fetch-program:
+        image: node:18
+        container_name: sats-fetchProgramService
+        working_dir: /app/services
+        volumes:
+        - .:/app
+        command: sh -c "npm install && npx ts-node fetchProgramService.ts"
+        ports:
+        - "3001:3001"
+        restart: unless-stopped
+
+    fetch-users:
+        image: node:18
+        container_name: sats-fetchDBUsers
+        working_dir: /app/services
+        volumes:
+        - .:/app
+        command: sh -c "npm install && npx ts-node fetchDBUsers.ts"
+        ports:
+        - "3002:3002"
+        restart: unless-stopped
+
+    db:
+        image: postgres:17
+        container_name: sats-db
+        ports:
+          - "5432:5432"
+        environment:
+          POSTGRES_USER: capstone
+          POSTGRES_PASSWORD: 2025
+          POSTGRES_DB: sats
+        volumes:
+          - sats-db-data:/var/lib/postgresql/data
+          - ./db/sql:/docker-entrypoint-initdb.d
+        restart: unless-stopped
+
+    expo:
+        image: node:18
+        container_name: sats-expo-web
+        working_dir: /app
+        volumes:
+          - .:/app
+        command: sh -c "npx expo start --web"
+        ports:
+          - "8081:8081"  # default Expo web port
+        environment:
+          - EXPO_DEVTOOLS_LISTEN_ADDRESS=0.0.0.0
+          - NODE_ENV=development
+volumes:
+  sats-db-data:

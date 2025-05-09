@@ -1,0 +1,42 @@
+[
+  {
+    "email": "john.doe@fakeemail.com",
+    "firstName": "John",
+    "lastName": "Doe",
+    "password": "$2b$10$cWQ4cL9P4K5OjYb7PHKya.GzaDe1r2sLh1/bx8QXllbJmS6sNaPue",
+    "role": "admin",
+    "ics": ""
+  },
+  {
+    "email": "some.fake@email.com",
+    "firstName": "New",
+    "lastName": "User",
+    "password": "$2b$10$h0b7SU0QqHGZXHZMxP/GRuAat20pkbrz8dsBsKekJXL4SOsPzUu2.",
+    "role": "advisor",
+    "ics": ""
+  },
+  {
+    "email": "another@user.com",
+    "firstName": "Another",
+    "lastName": "User",
+    "password": "$2b$10$0v7rH0JooyPHPRnt0z06vefP7TwgGhfvr0jufrEUFcE4bPpzoJp0y",
+    "role": "advisor",
+    "ics": ""
+  },
+  {
+    "email": "yipeppe.yahoooo@fakeemail.com",
+    "firstName": "YAYAYAY",
+    "lastName": "WOOOO",
+    "password": "$2b$10$Kdzpj5YfVf4zUd4fBx0rz.PprDa4WZQGNechB9PQWPptYVfIhSXpS",
+    "role": "admin",
+    "ics": ""
+  },
+  {
+    "email": "dawda@dad.ca",
+    "firstName": "DAD",
+    "lastName": "WDA",
+    "password": "$2b$10$3YgF72Y2bIZoyGfuS0fALuNOF4fZ0/00l5F3MIudhHX45echHhF4q",
+    "role": "admin",
+    "ics": ""
+  }
+]

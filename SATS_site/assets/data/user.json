@@ -1,0 +1,14 @@
+[
+  {
+    "firstname": "John",
+    "lastname": "Doe",
+    "studentID": "100835223",
+    "DCMail": "john.doe@dcmail.ca",
+    "campus": "Oshawa",
+    "program": "Computer Programming and Analysis",
+    "reason": "test reason",
+    "appointmentDate": "11/11/2002",
+    "appointmentTime": "12:00",
+    "appointmentType": "ONLINE"
+  }
+]
