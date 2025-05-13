@@ -127,13 +127,12 @@ export default function StudentNumber() {
       <View style={styles.transparentContainer}>
         <Text style={styles.whiteTitle}>Enter your Student Number</Text>
         <SafeAreaView>
-              <TextInput
-                style={[
-                  styles.input,
-                  error && touched
-                    ? { borderColor: "#FF6347", borderWidth: 2 }
-                    : {},
-                ]}
+          <TextInput
+            style={[
+              styles.input,
+              error && touched ? styles.errorInput : null
+            ]}
+            underlineColorAndroid="transparent"
                 hitSlop={{ top: 50, bottom: 20, left: 20, right: 20 }}
                 ref={inputRef}
                 placeholder="Student Number"

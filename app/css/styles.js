@@ -475,6 +475,10 @@ summaryText: {
     textAlign: 'center',
 },
 
+errorInput: {
+  borderBottomColor: '#FF6347',  // red color for error
+},
+
 scrollView: {
   width: '100%',
   maxHeight: 400,
