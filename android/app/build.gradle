@@ -88,6 +88,9 @@ android {
 
     namespace 'com.anonymous.SATS'
     defaultConfig {
+    // manifestPlaceholders = [
+    //         appAuthRedirectScheme: "com.redirectScheme.comm" // Replace with your desired scheme
+    //     ]
         applicationId 'com.anonymous.SATS'
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion

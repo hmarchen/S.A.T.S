@@ -10,7 +10,7 @@ import Breadcrumb from "./breadcrumb";
 import Arrows from "./arrows";
 
 const filePath = FileSystem.documentDirectory + "user.json";
-const calendarUrl = "https://outlook.office365.com/owa/calendar/b325e82263a8475588faa2bbfc361837@dcmail.ca/d981e389098149ec940733ebd78594b21905603363431473149/calendar.ics";
+const calendarUrl = "https://outlook.office365.com/owa/calendar/08c221235ef8475e8d6a166abc1be35e@durhamcollege.ca/555e28df4959472cae7120416ec850c98785236020046212054/calendar.ics";
 
 export default function AppointmentCalendar() {
   const router = useRouter();

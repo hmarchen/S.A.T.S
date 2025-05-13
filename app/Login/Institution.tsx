@@ -3,7 +3,6 @@ import { View, Text, Pressable, ImageBackground, Alert, SafeAreaView } from "rea
 import { useRouter } from "expo-router";
 import * as FileSystem from "expo-file-system";
 import Breadcrumb from "./breadcrumb";
-import { Ionicons } from "@expo/vector-icons";
 import styles from "../css/styles";
 import Arrows from "./arrows";
 
@@ -33,7 +32,8 @@ const CustomRadioButton = ({ label, selected, onSelect }: { label: string, selec
 
 export default function Institution() {
   const router = useRouter();
-  const [institution, setInstitution] = useState('Oshawa');
+  const [institution, setInstitution] = useState('');
+  const [submitRequested, setSubmitRequested] = useState(false);
   const [isValid, setIsValid] = useState(true);
   const [program, setProgram] = useState("");
   const [data, setData] = useState([]);
@@ -43,11 +43,12 @@ export default function Institution() {
     setIsValid(!!institution);
   }, [institution]);
 
-  const handleSubmit = async () => {
-    if (!isValid) {
-      Alert.alert("Validation Error", "Please select a campus.");
-      return;
-    }
+  const handleSubmit = async (institution: string) => {
+    setInstitution(institution);
+    // if (!isValid) {
+    //   Alert.alert("Validation Error", "Please select a campus.");
+    //   return;
+    // }
 
     try {
       const fileExists = await FileSystem.getInfoAsync(filePath);
@@ -75,15 +76,15 @@ export default function Institution() {
   return (
     <ImageBackground source={require("../../assets/background.jpg")} style={styles.background} resizeMode="cover">
       {/* Arrows */}
-      <Arrows handleSubmit={handleSubmit} router={router} isValid={isValid}></Arrows>
+      {/* <Arrows handleSubmit={handleSubmit} router={router} isValid={isValid}></Arrows> */}
 
       {/* Content */}
       <SafeAreaView style={styles.transparentContainer}>
         <Text style={styles.whiteTitle}>Select Your Campus</Text>
 
         <View style={{ flexDirection: "row", justifyContent: "center", marginTop: 20 }}>
-          <CustomRadioButton label="Whitby" selected={institution === "Whitby"} onSelect={() => setInstitution("Whitby")} />
-          <CustomRadioButton label="Oshawa" selected={institution === "Oshawa"} onSelect={() => setInstitution("Oshawa")} />
+          <CustomRadioButton label="Whitby" selected={institution === "Whitby"} onSelect={() => {handleSubmit("Whitby")}} />
+          <CustomRadioButton label="Oshawa" selected={institution === "Oshawa"} onSelect={() => {handleSubmit("Oshawa")}} />
         </View>
 
         <View style={styles.breadcrumbContainer}>
