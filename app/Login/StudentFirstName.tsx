@@ -112,9 +112,10 @@ export default function StudentFirstName() {
         <SafeAreaView>
           <TextInput
             style={[
-              styles.input, 
-              (error && touched) ? { borderColor: '#FF6347', borderWidth: 2 } : {}
+              styles.input,
+              error && touched ? styles.errorInput : null
             ]}
+            underlineColorAndroid="transparent"           
             placeholder="First Name"
             placeholderTextColor="rgba(255,255,255,0.6)"
             value={firstName}

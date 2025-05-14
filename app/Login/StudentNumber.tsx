@@ -30,17 +30,19 @@ export default function StudentNumber() {
   // Validate on every change once touched
   const validateInput = () => {
     const trimmedID = studentNumber.trim();
-    if (!trimmedID) {
-      setError("Student number is required.");
-      return false;
-    }
-    if (trimmedID.length !== 9) {
-      setError("Student number must be 9 digits.");
-      return false;
-    }
-    if (!studentNumberREGEX.test(trimmedID)) {
-      setError("Must start with 100 or 101 and contain 9 digits.");
-      return false;
+    switch (!!trimmedID) {
+      case !trimmedID:
+        setError("Student number is required.");
+        return false;
+      case trimmedID.length !== 9:
+        setError("Student number must be 9 digits.");
+        return false;
+      case !studentNumberREGEX.test(trimmedID):
+        setError("Must start with 100 or 101 and contain 9 digits.");
+        return false;
+    
+      default:
+        break;
     }
     setError(null);
     return true;
@@ -49,7 +51,11 @@ export default function StudentNumber() {
   // This ensures we check for errors on each keystroke after first interaction
   useEffect(() => {
     if (touched) {
-      validateInput();
+      const timeout = setTimeout(() => {
+        validateInput();
+      }, 200); // small delay
+  
+      return () => clearTimeout(timeout);
     }
   }, [studentNumber]);
 
@@ -127,15 +133,13 @@ export default function StudentNumber() {
       <View style={styles.transparentContainer}>
         <Text style={styles.whiteTitle}>Enter your Student Number</Text>
         <SafeAreaView>
-              <TextInput
-                style={[
-                  styles.input,
-                  error && touched
-                    ? { borderColor: "#FF6347", borderWidth: 2 }
-                    : {},
-                ]}
+          <TextInput
+            style={[
+              styles.input,
+              // error && touched ? styles.errorInput : null
+            ]}
+            underlineColorAndroid="transparent"
                 hitSlop={{ top: 50, bottom: 20, left: 20, right: 20 }}
-                ref={inputRef}
                 placeholder="Student Number"
                 placeholderTextColor="rgba(255,255,255,0.6)"
                 value={studentNumber}
@@ -146,10 +150,10 @@ export default function StudentNumber() {
               />
 
           {/* Make sure error message has enough space and contrasting style */}
-          {error && touched && (
             <Text
               style={{
                 color: "#FF6347",
+                opacity: error && touched ? 1 : 0,
                 backgroundColor: "rgba(0,0,0,0.5)",
                 padding: 10,
                 borderRadius: 5,
@@ -162,7 +166,6 @@ export default function StudentNumber() {
             >
               {error}
             </Text>
-          )}
         </SafeAreaView>
 
         <View style={styles.breadcrumbContainer}>
