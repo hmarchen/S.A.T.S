@@ -243,7 +243,7 @@ translucentContainer: {
 
   textLink: {
     textAlign: 'center',
-    color: 'white',
+    color: 'cyan',
     fontSize: 18,
     paddingBottom: 20,
   },
@@ -497,7 +497,42 @@ errorText: {
   marginTop: 10,
   textAlign: 'center',
 },
+// *** MODAL STUFF ***
 
+modalOverlay: {
+  flex: 1,
+  justifyContent: "center",
+  alignItems: "center",
+  backgroundColor: "rgba(0,0,0,0.3)",
+},
+modalContent: {
+  backgroundColor: "white",
+  padding: 24,
+  borderRadius: 12,
+  alignItems: "center",
+  maxWidth: 900,
+},
+title: {
+  fontWeight: "bold",
+  fontSize: 18,
+  marginBottom: 10,
+  textAlign: "center"
+},
+subtitle: {
+  marginBottom: 15,
+  textAlign: "center"
+},
+closeButton: {
+  marginTop: 20,
+  backgroundColor: "#2196F3",
+  paddingVertical: 10,
+  paddingHorizontal: 20,
+  borderRadius: 8,
+},
+closeText: {
+  color: "white",
+  fontWeight: "bold",
+},
 });
 
 export default styles;

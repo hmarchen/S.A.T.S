@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, FlatList, Alert, ImageBackground, TouchableOpacity, Dimensions, ActivityIndicator, Linking } from "react-native";
+import { Pressable, StyleSheet, View, Text, FlatList, Alert, ImageBackground, TouchableOpacity, Dimensions, ActivityIndicator, Linking, Modal } from "react-native";
 import Breadcrumb from "./breadcrumb";
 import styles from "../css/styles";
 import { useRouter } from "expo-router";
 import * as FileSystem from "expo-file-system";
+import QRCode from "react-native-qrcode-svg";
 
 const filePath = FileSystem.documentDirectory + "user.json";
 
@@ -11,14 +12,15 @@ export default function Reason() {
 // Router and State values
   const router = useRouter();
   const [reasons, setReasons] = useState<Reason[]>([]);
-  const [reason, SetReason] = useState<Reason>();
+  const [modalVisible, setModalVisible] = useState(false);
+  const [Item , setItem] = useState<Reason>();
   const [isLoading, setIsLoading] = useState(true);
 
   type Reason = {
     id: number;
     category: string;
     details: string;
-    redirect: string;
+    redirect?: string;
   }
 
 
@@ -49,8 +51,9 @@ export default function Reason() {
 
 
   const handlePress = async (item: Reason) => {
-    if (item.redirect.length > 0) {
-      Alert.alert("No advisor available for this reason. Please contact the SSB building. For more information, please visit the link below.", item.redirect);
+    if (item.redirect && item.redirect.length > 0) {
+      setModalVisible(true);
+      // Alert.alert("No advisor available for this reason. Please contact the SSB building. For more information, please visit the link below.", item.redirect);
     } else {
     try {
       const fileExists = await FileSystem.getInfoAsync(filePath);
@@ -114,7 +117,7 @@ export default function Reason() {
             }}
             renderItem={({ item }) => (
               <TouchableOpacity
-                onPress={() => handlePress(item)}
+                onPress={() => (handlePress(item), setItem(item))}
                 style={{
                   width: "30%",
                   height: 100,
@@ -142,6 +145,32 @@ export default function Reason() {
             )}
           />
         )}
+        <Modal
+        transparent={true}
+        animationType="fade"
+        visible={modalVisible}
+        onRequestClose={() => setModalVisible(false)}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={[styles.modalContent]}>
+            <Text style={[styles.title]}>
+            No advisor available for this reason.
+            </Text>
+            <Text style={styles.subtitle}>
+            Please contact the SSB building. For more information, please visit the QR code below.
+            </Text>
+
+            <QRCode value={Item?.redirect} size={200} />
+
+            <Pressable
+              style={styles.closeButton}
+              onPress={() => setModalVisible(false)}
+            >
+              <Text style={styles.closeText}>Close</Text>
+            </Pressable>
+          </View>
+        </View>
+      </Modal>
 
         <Text
           style={styles.textLink}
