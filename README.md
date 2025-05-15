@@ -1,28 +1,48 @@
 # Welcome to S.A.T.S.
 
 
+
+https://github.com/user-attachments/assets/a99be301-1e88-4c96-abd3-83087a0d7192
+
+
+
+
 ## Get started
 
 1. Install dependencies
 
    
-bash
+```bash
    npm install
-
+```
 
 2. Start the app
 
    
-bash
-    npx expo start
-
-
----
-
+```bash
+   npx expo start
+```
 
 ---
 
-## Starting the Backend Services
+## 🚀 Starting the Server (automatic)
+
+To start the server for the SATS app:
+
+1. **Clone the Repository**
+   ```bash
+   git clone https://github.com/hmarchen/S.A.T.S.git
+   cd S.A.T.S
+2. **Start the compose container**
+   ```bash
+   docker compose up -d
+   ```
+   or
+   ```bash
+   docker-compose up -d
+---
+
+## Starting the Backend Services (manual)
 
 ### Starting the Auth Service
 
