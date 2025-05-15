@@ -1,23 +1,80 @@
-import React, { useState } from 'react';
-import { View, KeyboardAvoidingView, Text, TextInput, Alert, Pressable, ImageBackground } from 'react-native';
-import { useRouter } from 'expo-router';
-import Breadcrumb from './breadcrumb';
-import { Ionicons } from '@expo/vector-icons';
-import styles from '../css/styles';
-import * as FileSystem from 'expo-file-system';
+import React, { useState, useEffect, useRef } from "react";
+import {
+  View,
+  SafeAreaView,
+  Text,
+  TextInput,
+  Alert,
+  ImageBackground,
+} from "react-native";
+import { useRouter } from "expo-router";
+import Breadcrumb from "./breadcrumb";
+import styles from "../css/styles";
+import * as FileSystem from "expo-file-system";
+import Arrows from "./arrows";
 
-const filePath = FileSystem.documentDirectory + 'user.json';
+const filePath = FileSystem.documentDirectory + "user.json";
 
 export default function StudentNumber() {
+  const inputRef = useRef<TextInput>(null);
   const router = useRouter();
-  const [studentNumber, setStudentNumber] = useState('');
-  const studentNumberREGEX = /^100\d{6}$/; // Regex for valid student numbers
-  const isValid = studentNumber.length === 9 && studentNumberREGEX.test(studentNumber);
+  const [studentNumber, setStudentNumber] = useState("");
+  const [error, setError] = useState<string | null>(null);
+  const [touched, setTouched] = useState(false);
+
+  // Updated regex to accept numbers starting with either 100 or 101
+  const studentNumberREGEX = /^(100|101)\d{6}$/;
+  const isValid =
+    studentNumber.length === 9 && studentNumberREGEX.test(studentNumber);
+
+  // Validate on every change once touched
+  const validateInput = () => {
+    const trimmedID = studentNumber.trim();
+    switch (!!trimmedID) {
+      case !trimmedID:
+        setError("Student number is required.");
+        return false;
+      case trimmedID.length !== 9:
+        setError("Student number must be 9 digits.");
+        return false;
+      case !studentNumberREGEX.test(trimmedID):
+        setError("Must start with 100 or 101 and contain 9 digits.");
+        return false;
+    
+      default:
+        break;
+    }
+    setError(null);
+    return true;
+  };
+
+  // This ensures we check for errors on each keystroke after first interaction
+  useEffect(() => {
+    if (touched) {
+      const timeout = setTimeout(() => {
+        validateInput();
+      }, 200); // small delay
+  
+      return () => clearTimeout(timeout);
+    }
+  }, [studentNumber]);
+
+  // Force a validation check when user starts typing
+  const handleChangeText = (text: string) => {
+    setStudentNumber(text);
+    setTouched(true);
+  };
+
+  const handleBlur = () => {
+    setTouched(true);
+    validateInput();
+  };
 
   const validateForm = () => {
     const trimmedID = studentNumber.trim();
     if (!trimmedID) return "Student number is required.";
-    if (!studentNumberREGEX.test(trimmedID)) return "Invalid Student Number: Must start with 100 and contain 9 digits.";
+    if (!studentNumberREGEX.test(trimmedID))
+      return "Invalid Student Number: Must start with 100 or 101 and contain 9 digits.";
     return null; // No error
   };
 
@@ -38,68 +95,86 @@ export default function StudentNumber() {
         updatedData[0].studentID = studentNumber; // Update existing data
       } else {
         updatedData.push({
-          firstname: '',
-          lastname: '',
+          firstname: "",
+          lastname: "",
           studentID: studentNumber,
-          DCMail: '',
-          campus: '',
-          program: '',
-          reason: '',
-          appointmentDate: '',
-          appointmentTime: '',
-          appointmentType: '',
+          DCMail: "",
+          campus: "",
+          program: "",
+          reason: "",
+          appointmentDate: "",
+          appointmentTime: "",
+          appointmentType: "",
         });
       }
 
-      await FileSystem.writeAsStringAsync(filePath, JSON.stringify(updatedData, null, 2));
+      await FileSystem.writeAsStringAsync(
+        filePath,
+        JSON.stringify(updatedData, null, 2)
+      );
       console.log("✅ Form Submitted: Student Number", studentNumber);
-      router.push('/Login/StudentFirstName');
+      router.push("/Login/StudentFirstName");
     } catch (error) {
-      console.error('❌ Error writing to file:', error);
-      Alert.alert('Error', 'Failed to save data.');
+      console.error("❌ Error writing to file:", error);
+      Alert.alert("Error", "Failed to save data.");
     }
   };
 
   return (
-    <>
-      {/* Arrow navigation */}
-      <View style={styles.arrowContainer}>
-        <Pressable style={styles.arrowButton} onPress={() => router.back()}>
-          <Ionicons name="arrow-back" size={32} color="white" />
-        </Pressable>
+    <ImageBackground
+      source={require("../../assets/background.jpg")}
+      style={styles.background}
+      resizeMode="cover"
+    >
+      {/* Arrows navigation */}
+      <Arrows handleSubmit={handleSubmit} router={router} isValid={isValid}></Arrows>
 
-        <Pressable
-          style={[styles.arrowButton, !isValid && styles.disabledArrow]}
-          onPress={handleSubmit}
-          disabled={!isValid}
-        >
-          <Ionicons name="arrow-forward" size={32} color="white" />
-        </Pressable>
-      </View>
-
-      <ImageBackground
-        source={require('../../assets/background.jpg')}
-        style={styles.background}
-        resizeMode="cover"
-      >
-        {/* Main UI */}
-        <KeyboardAvoidingView style={styles.transparentContainer}>
-          <Text style={styles.whiteTitle}>Enter your Student Number</Text>
-
+      {/* Main UI */}
+      <View style={styles.transparentContainer}>
+        <Text style={styles.whiteTitle}>Enter your Student Number</Text>
+        <SafeAreaView>
           <TextInput
-            style={styles.input}
-            placeholder="Student Number"
-            placeholderTextColor="rgba(255,255,255,0.6)"
-            value={studentNumber}
-            onChangeText={setStudentNumber}
-            keyboardType="numeric"
-          />
+            style={[
+              styles.input,
+              // error && touched ? styles.errorInput : null
+            ]}
+            underlineColorAndroid="transparent"
+                hitSlop={{ top: 50, bottom: 20, left: 20, right: 20 }}
+                placeholder="Student Number"
+                placeholderTextColor="rgba(255,255,255,0.6)"
+                value={studentNumber}
+                onChangeText={handleChangeText}
+                keyboardType="numeric"
+                onBlur={handleBlur}
+                maxLength={9} // Prevent typing more than 9 digits
+              />
 
-          <View style={styles.breadcrumbContainer}>
-            <Breadcrumb entities={['Disclaimer', 'StudentNumber']} flowDepth={1} />
-          </View>
-        </KeyboardAvoidingView>
-      </ImageBackground>
-    </>
+          {/* Make sure error message has enough space and contrasting style */}
+            <Text
+              style={{
+                color: "#FF6347",
+                opacity: error && touched ? 1 : 0,
+                backgroundColor: "rgba(0,0,0,0.5)",
+                padding: 10,
+                borderRadius: 5,
+                marginTop: 5,
+                fontSize: 18,
+                textAlign: "center",
+                marginBottom: 10,
+                fontWeight: "bold",
+              }}
+            >
+              {error}
+            </Text>
+        </SafeAreaView>
+
+        <View style={styles.breadcrumbContainer}>
+          <Breadcrumb
+            entities={["Disclaimer", "StudentNumber"]}
+            flowDepth={1}
+          />
+        </View>
+      </View>
+    </ImageBackground>
   );
 }

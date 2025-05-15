@@ -1,14 +1,20 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, ScrollView, Alert, ImageBackground, Pressable, ActivityIndicator, TouchableOpacity } from "react-native";
 import { useRouter } from "expo-router";
-import { Ionicons } from "@expo/vector-icons";
 import * as FileSystem from "expo-file-system";
 import Breadcrumb from "./breadcrumb";
 import styles from "../css/styles";
+import Arrows from "./arrows";
 
 const filePath = FileSystem.documentDirectory + "user.json";
 
-const CustomRadioButton = ({ label, selected, onSelect }) => (
+interface RadioParams {
+  label: string;
+  selected: boolean;
+  onSelect: () => void;
+}
+
+const CustomRadioButton = ({ label, selected, onSelect }: RadioParams) => (
   <TouchableOpacity
     style={[
       styles.radioButton,
@@ -53,6 +59,7 @@ export default function TimeSelection() {
         const userData = JSON.parse(fileContent);
         if (userData.length > 0 && userData[0].availableSlots) {
           setAvailableSlots(userData[0].availableSlots);
+          console.log(userData[0].availableSlots);
         }
       }
     } catch (error) {
@@ -108,22 +115,7 @@ export default function TimeSelection() {
   return (
     <ImageBackground source={require("../../assets/background.jpg")} style={styles.background} resizeMode="cover">
       {/* Arrows Navigation */}
-      <View style={styles.arrowContainer}>
-        <Pressable style={[styles.arrowButton, { position: "absolute", left: 10 }]} onPress={() => router.back()}>
-          <Ionicons name="arrow-back" size={32} color="white" />
-        </Pressable>
-        <Pressable
-          style={[
-            styles.arrowButton,
-            selectedTime && selectedType ? styles.activeArrow : styles.disabledArrow,
-            { position: "absolute", right: 10 },
-          ]}
-          onPress={handleSubmit}
-          disabled={!selectedTime || !selectedType}
-        >
-          <Ionicons name="arrow-forward" size={32} color="white" />
-        </Pressable>
-      </View>
+      <Arrows handleSubmit={handleSubmit} router={router} isValid={(selectedTime && selectedType) != ""}></Arrows>
 
       <View style={styles.transparentContainer}>
         <Text style={styles.whiteTitle}>Select an Appointment Time</Text>

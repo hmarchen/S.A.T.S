@@ -5,6 +5,7 @@ import { Ionicons } from "@expo/vector-icons";
 import * as FileSystem from "expo-file-system";
 import Breadcrumb from "./breadcrumb";
 import styles from "../css/styles";
+import Arrows from "./arrows";
 
 const filePath = FileSystem.documentDirectory + "user.json";
 
@@ -31,7 +32,7 @@ export default function Program() {
     if (searchQuery.trim() === '') {
       setFilteredPrograms(programs);
     } else {
-      setFilteredPrograms(programs.filter(p => 
+      setFilteredPrograms(programs.filter(p =>
         p.toLowerCase().includes(searchQuery.toLowerCase())
       ));
     }
@@ -40,15 +41,15 @@ export default function Program() {
   const fetchPrograms = async () => {
     try {
       setIsLoading(true);
-      const response = await fetch('http://10.0.2.2:3000/advisors');
+      const response = await fetch('http://192.168.193.60:3001/advisors');
       if (!response.ok) throw new Error('Failed to fetch programs');
       const data: Advisor[] = await response.json();
-      
+
       // Extract unique programs
       const uniquePrograms = Array.from(new Set(
         data.map(advisor => advisor.programs.split('\n')).flat()
       )).filter(program => program !== 'PROGRAMS:' && program !== '');
-      
+
       setAdvisorData(data);
       setPrograms(uniquePrograms);
       setFilteredPrograms(uniquePrograms);
@@ -69,7 +70,7 @@ export default function Program() {
     setSearchQuery("");
   };
 
-  const HandleSubmit = async () => {
+  const handleSubmit = async () => {
     if (!program) {
       Alert.alert("Error", "Please enter your program");
       return;
@@ -78,13 +79,13 @@ export default function Program() {
     try {
       const fileExists = await FileSystem.getInfoAsync(filePath);
       let updatedData = fileExists.exists ? JSON.parse(await FileSystem.readAsStringAsync(filePath)) : [];
-      
+
       if (!Array.isArray(updatedData)) {
         updatedData = [];
       }
 
       // Find advisor data for selected program
-      const selectedAdvisor = advisorData.find(advisor => 
+      const selectedAdvisor = advisorData.find(advisor =>
         advisor.programs.split('\n').includes(program)
       );
 
@@ -95,7 +96,7 @@ export default function Program() {
           updatedData[0].email = selectedAdvisor.email;
         }
       }
-      
+
       await FileSystem.writeAsStringAsync(filePath, JSON.stringify(updatedData, null, 2));
       router.push("/Login/Reason");
     } catch (error) {
@@ -110,33 +111,35 @@ export default function Program() {
     style={styles.background}
     resizeMode="cover"
   >
-    <View style={styles.arrowContainer}>
+    {/* Arrows navigation */}
+    <Arrows handleSubmit={handleSubmit} router={router} isValid={program != "" && filteredPrograms.length === 1}></Arrows>
+    {/* <View style={styles.arrowContainer}>
       <Pressable style={styles.arrowButton} onPress={() => router.back()}>
         <Ionicons name="arrow-back" size={32} color="white" />
       </Pressable>
       <Pressable
-        style={[styles.arrowButton, program ? styles.activeArrow : styles.disabledArrow]}
-        onPress={HandleSubmit}
-        disabled={!program}
+        style={[styles.arrowButton, program && filteredPrograms.length === 1 ? styles.activeArrow : styles.disabledArrow]}
+        onPress={handleSubmit}
+        disabled={!program || filteredPrograms.length > 1 }
       >
         <Ionicons name="arrow-forward" size={32} color="white" />
       </Pressable>
-    </View>
+    </View> */}
 
     <View style={styles.transparentContainer}>
       <Text style={styles.whiteTitle}>Program Information</Text>
-      <TextInput
-        style={styles.input}
-        value={searchQuery}
-        onChangeText={(text) => {
-          setSearchQuery(text);
-          setProgram(text); // Set program for instant update
-        }}
-        placeholder="Search for a program..."
-        placeholderTextColor="#ddd"
-      />
-
-      <View style={{ maxHeight: 300, width: "90%", marginVertical: 10 }}>
+      <SafeAreaView>
+	      <TextInput
+	        style={styles.input}
+	        value={searchQuery}
+	        onChangeText={(text) => {
+	          setSearchQuery(text);
+	        }}
+	        placeholder="Search for a program..."
+	        placeholderTextColor="#ddd"
+	      />
+	  </SafeAreaView>
+      <View style={{ maxHeight: 300, width: "90%", marginVertical: 20, zIndex: 1 }}>
         {isLoading ? (
           <ActivityIndicator size="large" color="#358f71" />
         ) : (
@@ -145,13 +148,15 @@ export default function Program() {
             keyExtractor={(item) => item}
             renderItem={({ item }) => (
               <TouchableOpacity
-                style={[styles.button, { marginVertical: 2 }]}
+                style={[styles.button, { marginVertical: 2, paddingVertical: 10, height: 50, width: 900 }]}
                 onPress={() => handleSelectProgram(item)}
               >
                 <Text style={styles.buttonText}>{item}</Text>
               </TouchableOpacity>
+
             )}
             style={{ width: "100%" }}
+            keyboardShouldPersistTaps="handled"
           />
         )}
       </View>

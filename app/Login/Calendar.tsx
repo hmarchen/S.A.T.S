@@ -7,9 +7,10 @@ import styles from "../css/styles";
 import * as FileSystem from "expo-file-system";
 import ICAL from "ical.js";
 import Breadcrumb from "./breadcrumb";
+import Arrows from "./arrows";
 
 const filePath = FileSystem.documentDirectory + "user.json";
-const calendarUrl = "https://outlook.office365.com/owa/calendar/b325e82263a8475588faa2bbfc361837@dcmail.ca/d981e389098149ec940733ebd78594b21905603363431473149/calendar.ics";
+const calendarUrl = "https://outlook.office365.com/owa/calendar/08c221235ef8475e8d6a166abc1be35e@durhamcollege.ca/555e28df4959472cae7120416ec850c98785236020046212054/calendar.ics";
 
 export default function AppointmentCalendar() {
   const router = useRouter();
@@ -21,7 +22,7 @@ export default function AppointmentCalendar() {
   const fetchAvailability = async (date: string) => {
     setLoading(true);
     try {
-      const response = await fetch("http://10.0.2.2:3001/download-ics", {
+      const response = await fetch("http://192.168.193.60:3000/download-ics", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ url: calendarUrl }),
@@ -82,14 +83,17 @@ export default function AppointmentCalendar() {
 
   return (
     <ImageBackground source={require("../../assets/background.jpg")} style={styles.background} resizeMode="cover">
-      <View style={styles.arrowContainer}>
+
+    {/* Arrows navigation */}
+    <Arrows handleSubmit={handleSubmit} router={router} isValid={selectedDate != ""}></Arrows>
+      {/* <View style={styles.arrowContainer}>
         <Pressable style={styles.arrowButton} onPress={() => router.back()}>
           <Ionicons name="arrow-back" size={32} color="white" />
         </Pressable>
         <Pressable style={[styles.arrowButton, selectedDate ? styles.activeArrow : styles.disabledArrow]} onPress={handleSubmit} disabled={!selectedDate}>
           <Ionicons name="arrow-forward" size={32} color="white" />
         </Pressable>
-      </View>
+      </View> */}
       <View>
         <Text style={styles.whiteTitle}>Select an Appointment Date</Text>
         {loading && <ActivityIndicator size="large" color="#358f71" />}

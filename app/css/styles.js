@@ -126,7 +126,7 @@ translucentContainer: {
   },
 
   // Input
-input: {
+  input: {
   width: 500,
   height: 100, // Slightly increased height for a larger touch area
   fontSize: 28, // Slightly bigger text for readability
@@ -243,7 +243,7 @@ input: {
 
   textLink: {
     textAlign: 'center',
-    color: 'white',
+    color: 'cyan',
     fontSize: 18,
     paddingBottom: 20,
   },
@@ -388,8 +388,8 @@ radioButtonText: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'center',
-    gap: 10,
-    marginBottom: 30,
+      gap: 10,
+      marginBottom: 30,
   },
 
   timeslotItem: {
@@ -467,12 +467,16 @@ summaryText: {
   lineHeight: 24, // Helps with readability
   marginVertical: 5, // Adds spacing above/below
   paddingHorizontal: 10, // Ensures consistent spacing inside
+  },
+  errorText: {
+  color: '#FF6347',
+  marginTop: 5,
+    fontSize: 14,
+    textAlign: 'center',
 },
-errorText: {
-  color: '#dc3545',
-  marginTop: 10,
-  fontSize: 14,
-  textAlign: 'center',
+
+errorInput: {
+  borderBottomColor: '#FF6347',  // red color for error
 },
 
 scrollView: {
@@ -497,7 +501,42 @@ errorText: {
   marginTop: 10,
   textAlign: 'center',
 },
+// *** MODAL STUFF ***
 
+modalOverlay: {
+  flex: 1,
+  justifyContent: "center",
+  alignItems: "center",
+  backgroundColor: "rgba(0,0,0,0.3)",
+},
+modalContent: {
+  backgroundColor: "white",
+  padding: 24,
+  borderRadius: 12,
+  alignItems: "center",
+  maxWidth: 900,
+},
+title: {
+  fontWeight: "bold",
+  fontSize: 18,
+  marginBottom: 10,
+  textAlign: "center"
+},
+subtitle: {
+  marginBottom: 15,
+  textAlign: "center"
+},
+closeButton: {
+  marginTop: 20,
+  backgroundColor: "#2196F3",
+  paddingVertical: 10,
+  paddingHorizontal: 20,
+  borderRadius: 8,
+},
+closeText: {
+  color: "white",
+  fontWeight: "bold",
+},
 });
 
 export default styles;

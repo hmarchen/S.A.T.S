@@ -70,7 +70,7 @@ app.post('/send-invite', async (req: any, res: any) => {
 
   try {
     // Insert the emailID and email into the database
-    await pool.query('INSERT INTO Email (EmailID, EmailAddress) VALUES ($1, $2)', [emailID, DCMail]);
+    await pool.query('INSERT INTO Email (EmailID, emailaddress) VALUES ($1, $2)', [emailID, DCMail]);
 
     // Calculate the next day's date at 10 AM
     const now = new Date();
@@ -341,7 +341,7 @@ function processNewEmails() {
 
               if (studentEmail) {
                 try {
-                  await fetch('http://localhost:3001/handle-acceptance', {
+                  await fetch('http://localhost:3000/handle-acceptance', {
                     method: 'POST',
                     headers: {
                       'Content-Type': 'application/json',
@@ -371,7 +371,7 @@ function processNewEmails() {
 
               if (studentEmail) {
                 try {
-                  await fetch('http://localhost:3001/handle-tentative', {
+                  await fetch('http://localhost:3000/handle-tentative', {
                     method: 'POST',
                     headers: {
                       'Content-Type': 'application/json',
@@ -401,7 +401,7 @@ function processNewEmails() {
 
               if (studentEmail) {
                 try {
-                  await fetch('http://localhost:3001/handle-rejection', {
+                  await fetch('http://localhost:3000/handle-rejection', {
                     method: 'POST',
                     headers: {
                       'Content-Type': 'application/json',
@@ -464,6 +464,6 @@ app.post('/download-ics', async (req: any, res: any) => {
   }
 });
 
-app.listen(3001, () => {
-  console.log('Server is running on port 3001');
+app.listen(3000, () => {
+  console.log('Server is running on port 3000');
 });

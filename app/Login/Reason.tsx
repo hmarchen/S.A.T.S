@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, FlatList, Alert, ImageBackground, TouchableOpacity, Dimensions, ActivityIndicator } from "react-native";
+import { Pressable, StyleSheet, View, Text, FlatList, Alert, ImageBackground, TouchableOpacity, Dimensions, ActivityIndicator, Linking, Modal } from "react-native";
 import Breadcrumb from "./breadcrumb";
 import styles from "../css/styles";
 import { useRouter } from "expo-router";
 import * as FileSystem from "expo-file-system";
+import QRCode from "react-native-qrcode-svg";
 
 const filePath = FileSystem.documentDirectory + "user.json";
 
@@ -11,23 +12,24 @@ export default function Reason() {
 // Router and State values
   const router = useRouter();
   const [reasons, setReasons] = useState<Reason[]>([]);
-  const [reason, SetReason] = useState<Reason>();
+  const [modalVisible, setModalVisible] = useState(false);
+  const [Item , setItem] = useState<Reason>();
   const [isLoading, setIsLoading] = useState(true);
 
   type Reason = {
     id: number;
     category: string;
     details: string;
+    redirect?: string;
   }
 
 
   const getReasons = async() => {
     try {
       setIsLoading(true);
-      const response = await fetch(`http://10.0.2.2:3000/reasons`)
+      const response = await fetch(`http://192.168.193.60:3001/reasons`)
       .then(res => {return res.json()})
-      .then(data => {console.log(data.reasons); return data.reasons});
-      console.log(response);
+      .then(data => {return data.reasons});
       return response;
     }
     catch(e) {
@@ -49,6 +51,10 @@ export default function Reason() {
 
 
   const handlePress = async (item: Reason) => {
+    if (item.redirect && item.redirect.length > 0) {
+      setModalVisible(true);
+      // Alert.alert("No advisor available for this reason. Please contact the SSB building. For more information, please visit the link below.", item.redirect);
+    } else {
     try {
       const fileExists = await FileSystem.getInfoAsync(filePath);
       let updatedData = fileExists.exists
@@ -74,11 +80,13 @@ export default function Reason() {
 
       await FileSystem.writeAsStringAsync(filePath, JSON.stringify(updatedData, null, 2));
       router.push("/Login/Calendar");
+      
     } catch (error) {
       console.error("Error writing to file:", error);
       Alert.alert("Error", "Failed to save data.");
     }
-  };
+  }
+};
 
   const { width } = Dimensions.get("window");
   const itemWidth = width / 3 - 20; // Adjusted width to allow margin between columns
@@ -109,9 +117,10 @@ export default function Reason() {
             }}
             renderItem={({ item }) => (
               <TouchableOpacity
-                onPress={() => handlePress(item)}
+                onPress={() => (handlePress(item), setItem(item))}
                 style={{
                   width: "30%",
+                  height: 100,
                   backgroundColor: "rgba(255, 255, 255, 0.1)",
                   borderRadius: 10,
                   borderWidth: 2,
@@ -131,10 +140,37 @@ export default function Reason() {
                 >
                   {item.category}
                 </Text>
+                <Text style={{ color: "white", fontSize: 12, textAlign: "center" }}>{item.details}</Text>
               </TouchableOpacity>
             )}
           />
         )}
+        <Modal
+        transparent={true}
+        animationType="fade"
+        visible={modalVisible}
+        onRequestClose={() => setModalVisible(false)}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={[styles.modalContent]}>
+            <Text style={[styles.title]}>
+            No advisor available for this reason.
+            </Text>
+            <Text style={styles.subtitle}>
+            Please contact the SSB building. For more information, please visit the QR code below.
+            </Text>
+
+            <QRCode value={Item?.redirect} size={200} />
+
+            <Pressable
+              style={styles.closeButton}
+              onPress={() => setModalVisible(false)}
+            >
+              <Text style={styles.closeText}>Close</Text>
+            </Pressable>
+          </View>
+        </View>
+      </Modal>
 
         <Text
           style={styles.textLink}

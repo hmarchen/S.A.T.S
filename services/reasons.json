@@ -2,63 +2,93 @@
 "reasons": [
     {
       "id": 1,
-      "category": "Academic Support",
-      "details": "Course selection and enrollment guidance"
+      "category": "Academic Planning",
+      "details": "Dropping courses/reduced workload/taking a break",
+      "redirect": ""
     },
     {
       "id": 2,
-      "category": "Academic Support",
-      "details": "Understanding degree requirements and prerequisites"
+      "category": "Academic Planning",
+      "details": "Planning for Future Semesters",
+      "redirect": ""
     },
     {
       "id": 3,
-      "category": "Academic Support",
-      "details": "Advice on elective and specialization choices"
+      "category": "Academic Planning",
+      "details": "Program Changes / Program Transfers",
+      "redirect": ""
     },
     {
       "id": 4,
-      "category": "Career Guidance",
-      "details": "Internship and co-op program opportunities"
+      "category": "Academic Support",
+      "details": "Struggling in current courses",
+      "redirect": ""
     },
     {
       "id": 5,
-      "category": "Career Guidance",
-      "details": "Career pathways for engineering, IT, and science graduates"
+      "category": "Academic Support",
+      "details": "Personal / Private",
+      "redirect": ""
     },
     {
       "id": 6,
-      "category": "Research & Projects",
-      "details": "Finding research opportunities and faculty mentors"
+      "category": "Tuition/Fees",
+      "details": "Internship and co-op program opportunities",
+      "redirect": "https://durhamcollege.ca/program-fee-calculator"
     },
     {
       "id": 7,
-      "category": "Research & Projects",
-      "details": "Guidance on final-year projects and thesis work"
+      "category": "Financial Aid/OSAP",
+      "details": "Career pathways for engineering, IT, and science graduates",
+      "redirect": "https://durhamcollege.ca/mydc/financial-aid-and-awards"
     },
     {
       "id": 8,
-      "category": "Personal & Well-being",
-      "details": "Managing academic stress and workload"
+      "category": "Scholarships/Bursaries/Awards",
+      "details": "Finding research opportunities and faculty mentors",
+      "redirect": "https://durhamcollege.ca/mydc/financial-aid-and-awards"
     },
     {
       "id": 9,
-      "category": "Personal & Well-being",
-      "details": "Special accommodations for learning difficulties"
+      "category": "International - Study Permit/PGWP",
+      "details": "ISA booking",
+      "redirect": "https://outlook.office365.com/book/DurhamCollegeInternationalEducation@dconline.onmicrosoft.com/"
     },
     {
       "id": 10,
-      "category": "Administrative Support",
-      "details": "Understanding academic policies and deadlines"
+      "category": "Credit Transfers",
+      "details": "Credit Transfer | Durham College",
+      "redirect": "https://durhamcollege.ca/admissions/transfer-services/credit-transfer"
     },
     {
       "id": 11,
-      "category": "Administrative Support32",
-      "details": "Appealing grades and academic standing concerns"
+      "category": "Pathways",
+      "details": "Career pathways for engineering, IT, and science graduates",
+      "redirect": "https://durhamcollege.ca/admissions/transfer-services/pathways"
     },
     {
       "id": 12,
-      "category": "new 1",
-      "details": "reason"
+      "category": "Document Requests/Verification Letters",
+      "details": "Verification Letters | MyDC  or Transcript request | MyDC",
+      "redirect": "https://durhamcollege.ca/mydc/records-and-personal-information/verification-of-enrolment"
+    },
+    {
+      "id": 13,
+      "category": "Career Development",
+      "details": "Job Searching/Resume Advice/Interview Prep - Career Development - Hired Portal - Home",
+      "redirect": "https://hired.durhamcollege.ca/home.htm"
+    },
+    {
+      "id": 14,
+      "category": "Career Development",
+      "details": "Career Coaching - Career Development - Hired Portal - Home",
+      "redirect": "https://durhamcollege.ca/student-life/student-services/career-development"
+    },
+    {
+      "id": 15,
+      "category": "Career Development test",
+      "details": "Career Development - Hired Portal - Home",
+      "redirect": "https://hired.durhamcollege.ca/home.htm"
     }
   ]
 }
