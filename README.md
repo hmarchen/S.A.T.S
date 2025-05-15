@@ -55,7 +55,7 @@ To start the `authService`, follow these steps:
    npx ts-node authService.ts
    ```
 
-Remember to close the service when you're done. You cannot run both services at the same time. Dont ask me why. IDK - Yasir.
+Remember to close the service when you're done. You cannot run both instances of a service at the same time.
 
 ### Starting the Fetch Program Service
 
