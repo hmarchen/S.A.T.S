@@ -2,63 +2,93 @@
 "reasons": [
     {
       "id": 1,
-      "category": "Academic Support",
-      "details": "Course selection and enrollment guidance"
+      "category": "Academic Planning",
+      "details": "reduced workload / taking a break",
+      "redirect": ""
     },
     {
       "id": 2,
-      "category": "Academic Support",
-      "details": "Understanding degree requirements and prerequisites"
+      "category": "Academic Planning",
+      "details": "planning for future semesters",
+      "redirect": ""
     },
     {
       "id": 3,
-      "category": "Academic Support",
-      "details": "Advice on elective and specialization choices"
+      "category": "Academic Planning",
+      "details": "program change or program transfers",
+      "redirect": ""
     },
     {
       "id": 4,
-      "category": "Career Guidance",
-      "details": "Internship and co-op program opportunities"
+      "category": "Academic Support",
+      "details": "Struggling in current courses and need direction",
+      "redirect": ""
     },
     {
       "id": 5,
-      "category": "Career Guidance",
-      "details": "Career pathways for engineering, IT, and science graduates"
+      "category": "Academic Support",
+      "details": "-referral to other college supports and resources / -personal/private",
+      "redirect": ""
     },
     {
       "id": 6,
-      "category": "Research & Projects",
-      "details": "Finding research opportunities and faculty mentors"
+      "category": "Tuition/Fees",
+      "details": "For information on payment, click on this link",
+      "redirect": "https://durhamcollege.ca/program-fee-calculator"
     },
     {
       "id": 7,
-      "category": "Research & Projects",
-      "details": "Guidance on final-year projects and thesis work"
+      "category": "Financial Aid/OSAP",
+      "details": "OSAP/Scholarships, Bursaries & Awards",
+      "redirect": "https://durhamcollege.ca/mydc/financial-aid-and-awards"
     },
     {
       "id": 8,
-      "category": "Personal & Well-being",
-      "details": "Managing academic stress and workload"
+      "category": "Scholarships/Bursaries/Awards",
+      "details": "Finding research opportunities and faculty mentors",
+      "redirect": "https://durhamcollege.ca/mydc/financial-aid-and-awards"
     },
     {
       "id": 9,
-      "category": "Personal & Well-being",
-      "details": "Special accommodations for learning difficulties"
+      "category": "International",
+      "details": "Study permit/PGWP",
+      "redirect": "https://outlook.office365.com/book/DurhamCollegeInternationalEducation@dconline.onmicrosoft.com/"
     },
     {
       "id": 10,
-      "category": "Administrative Support",
-      "details": "Understanding academic policies and deadlines"
+      "category": "Credit Transfers",
+      "details": "Applying for transfer credits",
+      "redirect": "https://durhamcollege.ca/admissions/transfer-services/credit-transfer"
     },
     {
       "id": 11,
-      "category": "Administrative Support32",
-      "details": "Appealing grades and academic standing concerns"
+      "category": "Pathways",
+      "details": "Looking at University pathway/transfer options",
+      "redirect": "https://durhamcollege.ca/admissions/transfer-services/pathways"
     },
     {
       "id": 12,
-      "category": "new 1",
-      "details": "reason"
+      "category": "Document Requests/Verification Letters",
+      "details": "Verification Letters and or Transcript requests",
+      "redirect": "https://durhamcollege.ca/mydc/records-and-personal-information/verification-of-enrolment"
+    },
+    {
+      "id": 13,
+      "category": "Career Coaching",
+      "details": "Job searching/resume advice/interview prep/program & career coaching",
+      "redirect": "https://durhamcollege.ca/student-life/student-services/career-development"
+    },
+    {
+      "id": 14,
+      "category": "Mental Health Supports",
+      "details": "Link to all supports and resources",
+      "redirect": "https://durhamcollege.ca/are-you-ok"
+    },
+    {
+      "id": 15,
+      "category": "Health & Wellness Centre (Doctor’s Office)",
+      "details": "Physicians/nurses/lab technicians/mental health professionals/etc",
+      "redirect": "https://durhamcollege.ca/student-life/health-and-wellness/campus-health-and-wellness-centre"
     }
   ]
 }
