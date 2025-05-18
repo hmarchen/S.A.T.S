@@ -40,19 +40,54 @@ export default function Program() {
 
   const fetchPrograms = async () => {
     try {
+      const userData = JSON.parse(await FileSystem.readAsStringAsync(filePath));
       setIsLoading(true);
       const response = await fetch('http://192.168.193.60:3001/advisors');
       if (!response.ok) throw new Error('Failed to fetch programs');
       const data: Advisor[] = await response.json();
 
       // Extract unique programs
-      const uniquePrograms = Array.from(new Set(
-        data.map(advisor => advisor.programs.split('\n')).flat()
-      )).filter(program => program !== 'PROGRAMS:' && program !== '');
+      // const uniquePrograms = Array.from(new Set(
+      //   data.map(advisor => advisor.programs.split('\n')).flat()
+      // )).filter(program => program !== 'PROGRAMS:' && program !== '');
+
+      // console.log(uniquePrograms);
+
+      const WhitbyProfs = ['Christa Andrews', 'Diana Cirone', 'Haya Esaad'];
+      const uniqueProgramsOshawa = data.filter(advisor => !WhitbyProfs.includes(advisor.advisor));
+      const uniqueProgramsWhitby = data.filter(advisor => WhitbyProfs.includes(advisor.advisor));
+
 
       setAdvisorData(data);
-      setPrograms(uniquePrograms);
-      setFilteredPrograms(uniquePrograms);
+      console.log(userData[0].campus);
+      if (userData[0].campus === "Oshawa") {
+        
+        const uniquePrograms = Array.from(
+          new Set(
+            uniqueProgramsOshawa
+              .map((advisor) => advisor.programs.split("\n"))
+              .flat()
+          )
+        ).filter((program) => program !== "PROGRAMS:" && program !== "");
+
+        setPrograms(uniquePrograms);
+        setFilteredPrograms(uniquePrograms);
+
+      }
+      if (userData[0].campus === "Whitby") {
+
+        const uniquePrograms = Array.from(
+          new Set(
+            uniqueProgramsWhitby
+              .map((advisor) => advisor.programs.split("\n"))
+              .flat()
+          )
+        ).filter((program) => program !== "PROGRAMS:" && program !== "");
+
+        setPrograms(uniquePrograms);
+        setFilteredPrograms(uniquePrograms);
+
+      }
     } catch (error) {
       console.error('Error fetching programs:', error);
     } finally {
@@ -113,18 +148,6 @@ export default function Program() {
   >
     {/* Arrows navigation */}
     <Arrows handleSubmit={handleSubmit} router={router} isValid={program != "" && filteredPrograms.length === 1}></Arrows>
-    {/* <View style={styles.arrowContainer}>
-      <Pressable style={styles.arrowButton} onPress={() => router.back()}>
-        <Ionicons name="arrow-back" size={32} color="white" />
-      </Pressable>
-      <Pressable
-        style={[styles.arrowButton, program && filteredPrograms.length === 1 ? styles.activeArrow : styles.disabledArrow]}
-        onPress={handleSubmit}
-        disabled={!program || filteredPrograms.length > 1 }
-      >
-        <Ionicons name="arrow-forward" size={32} color="white" />
-      </Pressable>
-    </View> */}
 
     <View style={styles.transparentContainer}>
       <Text style={styles.whiteTitle}>Program Information</Text>

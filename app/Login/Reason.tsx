@@ -173,7 +173,7 @@ export default function Reason() {
       </Modal>
 
         <Text
-          style={styles.textLink}
+          style={[styles.textLink, {padding: 20}]}
           onPress={() => router.push("/Login/OtherReason")}
         >
           Didn't find what you wanted?

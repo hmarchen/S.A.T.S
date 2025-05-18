@@ -1,5 +1,5 @@
-import React from "react";
-import { View, Text, Pressable, ImageBackground, FlatList } from "react-native";
+import React, { useEffect } from "react";
+import { View, Text, Pressable, ImageBackground, FlatList, BackHandler } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
 import Breadcrumb from "./breadcrumb";
@@ -12,6 +12,18 @@ const requiredInfo = [
   "Durham College Email Address",
   "Purpose of Visit",
 ];
+useEffect(() => {
+  const backHandler = BackHandler.addEventListener(
+    'hardwareBackPress',
+    () => {
+      // Returning true disables the back button
+      return true;
+    }
+  );
+
+  return () => backHandler.remove();
+}, []);
+
 
 const CustomButton = ({ title, onPress, isClear = false }: { title: string, onPress: () => void, isClear?: boolean }) => (
   <Pressable
