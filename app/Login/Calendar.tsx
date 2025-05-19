@@ -49,6 +49,13 @@ export default function AppointmentCalendar() {
         }
       }
       setAvailableSlots(slots);
+      
+      // No slots on weekends
+      const dayOfWeek = new Date(year, month - 1, day).getDay();
+      if (dayOfWeek === 0 || dayOfWeek === 6) {
+      setAvailableSlots([]); 
+      return;
+      }
     } catch (error) {
       Alert.alert("Error", "Failed to check calendar availability");
       console.error(error);
