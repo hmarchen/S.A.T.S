@@ -12,17 +12,6 @@ const requiredInfo = [
   "Durham College Email Address",
   "Purpose of Visit",
 ];
-useEffect(() => {
-  const backHandler = BackHandler.addEventListener(
-    'hardwareBackPress',
-    () => {
-      // Returning true disables the back button
-      return true;
-    }
-  );
-
-  return () => backHandler.remove();
-}, []);
 
 
 const CustomButton = ({ title, onPress, isClear = false }: { title: string, onPress: () => void, isClear?: boolean }) => (
@@ -37,6 +26,18 @@ const CustomButton = ({ title, onPress, isClear = false }: { title: string, onPr
 
 export default function LoginScreen() {
   const router = useRouter();
+  useEffect(() => {
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      () => {
+        // Returning true disables the back button
+        return true;
+      }
+    );
+  
+    return () => backHandler.remove();
+  }, []);
+  
 
   return (
     <ImageBackground
