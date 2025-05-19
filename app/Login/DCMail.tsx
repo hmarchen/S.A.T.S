@@ -125,9 +125,9 @@ export default function DCMail() {
           />
           
           {/* Enhanced error message styling */}
-          {error && touched && (
             <Text style={{
               color: '#FF6347',
+              opacity: error && touched ? 1 : 0,
               backgroundColor: 'rgba(0,0,0,0.5)',
               padding: 10,
               borderRadius: 5,
@@ -139,7 +139,6 @@ export default function DCMail() {
             }}>
               {error}
             </Text>
-          )}
         </SafeAreaView>
         <View style={styles.breadcrumbContainer}>
           <Breadcrumb entities={["Disclaimer", "StudentNumber", "Firstname", "Lastname", "DCMail"]} flowDepth={4} />

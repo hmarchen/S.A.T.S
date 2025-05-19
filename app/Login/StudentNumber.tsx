@@ -136,7 +136,7 @@ export default function StudentNumber() {
           <TextInput
             style={[
               styles.input,
-              // error && touched ? styles.errorInput : null
+              error && touched ? styles.errorInput : null
             ]}
             underlineColorAndroid="transparent"
                 hitSlop={{ top: 50, bottom: 20, left: 20, right: 20 }}
