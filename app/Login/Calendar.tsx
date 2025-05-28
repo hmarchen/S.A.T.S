@@ -10,7 +10,6 @@ import Breadcrumb from "./breadcrumb";
 import Arrows from "./arrows";
 
 const filePath = FileSystem.documentDirectory + "user.json";
-const calendarUrl = "https://outlook.office365.com/owa/calendar/08c221235ef8475e8d6a166abc1be35e@durhamcollege.ca/555e28df4959472cae7120416ec850c98785236020046212054/calendar.ics";
 
 export default function AppointmentCalendar() {
   const router = useRouter();
@@ -22,6 +21,9 @@ export default function AppointmentCalendar() {
   const fetchAvailability = async (date: string) => {
     setLoading(true);
     try {
+      const fileExists = await FileSystem.getInfoAsync(filePath);
+      const userData = fileExists.exists ? JSON.parse(await FileSystem.readAsStringAsync(filePath)) : [{}];
+      const calendarUrl = userData[0].ics;
       const response = await fetch("http://192.168.193.60:3000/download-ics", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
