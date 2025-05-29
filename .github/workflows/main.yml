@@ -32,7 +32,7 @@ jobs:
           build-tools-version: 35.0.0
 
       - name: Build Android App
-        run: ./gradlew assembleRelease
+        run: ls -la && cd ./packages/app-mobile/android && ./gradlew assembleRelease
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
