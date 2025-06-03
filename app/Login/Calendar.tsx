@@ -30,22 +30,76 @@ export default function AppointmentCalendar() {
         body: JSON.stringify({ url: calendarUrl }),
       });
       if (!response.ok) throw new Error("Failed to download calendar data");
-
-      const icsContent = await response.text();
-      const events = new ICAL.Component(ICAL.parse(icsContent))
-        .getAllSubcomponents("vevent")
-        .map(vevent => new ICAL.Event(vevent))
-        .map(event => ({ start: event.startDate.toJSDate(), end: event.endDate.toJSDate() }));
-
+      
       const [year, month, day] = date.split("-").map(Number);
       const slots = [];
 
-      for (let hour = 9; hour < 17; hour++) {
+
+
+
+      // const events = new ICAL.Component(ICAL.parse(icsContent))
+      //   .getAllSubcomponents("vevent")
+      //   .map(vevent => new ICAL.Event(vevent))
+      //   .map(event => ({ start: event.startDate.toJSDate(), end: event.endDate.toJSDate() }));
+
+
+
+      
+      
+      const targetDate = new Date(year, month - 1, day);
+      const targetStart = new Date(targetDate);
+      const targetEnd = new Date(targetDate);
+      targetEnd.setHours(23, 59, 59, 999); // End of that day
+
+      const icsContent = await response.text();
+      const jcalData = ICAL.parse(icsContent);
+      const comp = new ICAL.Component(jcalData);
+      
+      const RecEvents: Array<{start: Date, end: Date}> = [];
+      
+      const vevents = comp.getAllSubcomponents("vevent")
+      .map(vevent => new ICAL.Event(vevent));
+
+      vevents.forEach((vevent) => {
+        const event = vevent;
+
+        if (event.isRecurring()) {
+          const iterator = event.iterator();
+          let next;
+          while ((next = iterator.next())) {
+            const occurrence = event.getOccurrenceDetails(next);
+            const start = occurrence.startDate.toJSDate();
+            const end = occurrence.endDate.toJSDate();
+
+            if (start >= targetStart && start <= targetEnd) {
+              if (!occurrence.startDate.isDate && !occurrence.endDate.isDate) {
+                RecEvents.push({ start, end });
+              }
+              break;
+            }
+
+            if (start > targetEnd) break; // Optimization
+          }
+        } 
+        else {
+          const start = event.startDate.toJSDate();
+          const end = event.endDate.toJSDate();
+
+          if (
+            start.toDateString() === targetDate.toDateString() &&
+            (!event.startDate.isDate || !event.endDate.isDate)
+          ) {
+            RecEvents.push({ start, end });
+          }
+        }
+      });
+
+      for (let hour = 9; hour < 16; hour++) {
         for (let minute = 0; minute < 60; minute += 30) {
           const slotStart = new Date(year, month - 1, day, hour, minute);
           const slotEnd = new Date(year, month - 1, day, hour, minute + 30);
 
-          if (!events.some(event => !(slotEnd <= event.start || slotStart >= event.end))) {
+          if (!RecEvents.some(event => !(slotEnd <= event.start || slotStart >= event.end))) {
             slots.push(slotStart.toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit", hour12: true }));
           }
         }
