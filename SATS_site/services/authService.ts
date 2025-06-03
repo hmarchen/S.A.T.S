@@ -65,7 +65,7 @@ transporter.verify(function(error: any, success: any) {
 
 app.post('/send-invite', async (req: any, res: any) => {
   console.log('Incoming request body:', req.body);
-  const { firstname, lastname, DCMail, studentID, advisor } = req.body;
+  const { firstname, lastname, DCMail, studentID, advisor, email } = req.body;
   const emailID = getNextEmailID();
 
   try {
@@ -121,7 +121,7 @@ END:VCALENDAR
     // Send email to advisor with .ics attachment
     const advisorMessage = {
       from: process.env.EMAIL_USER!,
-      to: process.env.ADVISOR_EMAIL!,
+      to: email!, // Send email to the selected advisor
       subject: `${emailID} - SEIT Visit Request - ${firstname} ${lastname}`,
       html: `
         <h2>SEIT Visit Request</h2>
