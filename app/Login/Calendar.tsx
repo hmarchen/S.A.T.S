@@ -148,15 +148,7 @@ export default function AppointmentCalendar() {
     <ImageBackground source={require("../../assets/background.jpg")} style={styles.background} resizeMode="cover">
 
     {/* Arrows navigation */}
-    <Arrows handleSubmit={handleSubmit} router={router} isValid={selectedDate != ""}></Arrows>
-      {/* <View style={styles.arrowContainer}>
-        <Pressable style={styles.arrowButton} onPress={() => router.back()}>
-          <Ionicons name="arrow-back" size={32} color="white" />
-        </Pressable>
-        <Pressable style={[styles.arrowButton, selectedDate ? styles.activeArrow : styles.disabledArrow]} onPress={handleSubmit} disabled={!selectedDate}>
-          <Ionicons name="arrow-forward" size={32} color="white" />
-        </Pressable>
-      </View> */}
+    <Arrows handleSubmit={handleSubmit} router={router} isValid={selectedDate != "" && loading === false}></Arrows>
       <View>
         <Text style={styles.whiteTitle}>Select an Appointment Date</Text>
         {loading && <ActivityIndicator size="large" color="#358f71" />}

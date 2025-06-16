@@ -69,14 +69,14 @@ app.get('/advisors', async (req: Request, res: Response) => {
       const rows = table.querySelectorAll('tr');
       rows.forEach((row, index) => {
         if (index === 0) return;
-        const emailRegex = /E: \s*(.*?\.ca)/i;
+        const emailRegex = /E:\s*(.*?\.ca)/i;
         const cells = row.querySelectorAll('td');
         if (cells.length >= 2) {
           let advisorNameRaw = cells[0].textContent?.trim() || 'No name found';
           const emailMatch = advisorNameRaw.match(emailRegex);
-          const email = emailMatch ? emailMatch[1] : 'No email found';
+          const email = emailMatch ? emailMatch[1].toLowerCase() : 'No email found';
           const programs = cells[1]?.textContent?.trim() || 'No programs found';
-          let advisorName = advisorNameRaw.replace(/\nE:.*?\.ca/, '').trim();
+          let advisorName = advisorNameRaw.replace(/\nE:.*?\.ca/, '').replace(/(?<=\n).*/, '').trim();
           if (advisorName !== 'No name found') {
             advisorData.push({ advisor: advisorName, email, programs });
           }

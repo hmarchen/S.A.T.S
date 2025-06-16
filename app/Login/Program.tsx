@@ -129,6 +129,8 @@ export default function Program() {
         if (selectedAdvisor) {
           updatedData[0].advisor = selectedAdvisor.advisor;
           updatedData[0].email = selectedAdvisor.email;
+          console.log(selectedAdvisor.advisor);
+          console.log(selectedAdvisor.email);
           const response = await fetch(`http://192.168.193.60:3002/users/${selectedAdvisor.email}`);
           if (!response.ok) throw new Error('Failed to fetch programs');
           const json = await response.json();
