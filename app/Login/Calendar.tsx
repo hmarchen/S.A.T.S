@@ -17,6 +17,7 @@ export default function AppointmentCalendar() {
   const [availableSlots, setAvailableSlots] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
   const todayStr = new Date().toISOString().split("T")[0];
+  // const [disabledWeekends, setDisabledWeekends] = useState<Array<string>>();
 
   const fetchAvailability = async (date: string) => {
     setLoading(true);
@@ -99,7 +100,7 @@ export default function AppointmentCalendar() {
           const slotStart = new Date(year, month - 1, day, hour, minute);
           const slotEnd = new Date(year, month - 1, day, hour, minute + 30);
 
-          if (!RecEvents.some(event => !(slotEnd <= event.start || slotStart >= event.end))) {
+          if (!RecEvents.some(event => !(slotEnd <= event.start || slotStart >= event.end)) && new Date < slotStart) {
             slots.push(slotStart.toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit", hour12: true }));
           }
         }
@@ -143,6 +144,27 @@ export default function AppointmentCalendar() {
       console.error(error);
     }
   };
+  // const getDisabledWeekends = () => {
+  //   const disabledDates: Array<string> = [];
+  //   const today = new Date();
+  //   const daysToCheck = 90; // Number of days ahead to disable weekends
+  
+  //   for (let i = 0; i < daysToCheck; i++) {
+  //     const date = new Date();
+  //     date.setDate(today.getDate() + i);
+  //     const day = date.getDay();
+  
+  //     if (day === 0 || day === 6) {
+  //       const dateStr = date.toISOString().split('T')[0];
+  //       disabledDates.push(dateStr);
+  //     }
+  //   }
+  
+  //   return disabledDates;
+  // };
+
+  
+  // setDisabledWeekends(getDisabledWeekends())
 
   return (
     <ImageBackground source={require("../../assets/background.jpg")} style={styles.background} resizeMode="cover">
@@ -154,7 +176,7 @@ export default function AppointmentCalendar() {
         {loading && <ActivityIndicator size="large" color="#358f71" />}
         <Calendar
           onDayPress={handleDayPress}
-          markedDates={{ [selectedDate]: { selected: true, selectedColor: "#358f71" } }}
+          markedDates={{ /*[disabledWeekends]: {disabled: true, disableTouchEvent: true},*/ [selectedDate]: { selected: true, selectedColor: "#358f71" } }}
           minDate={todayStr}
           disableAllTouchEventsForDisabledDays
           style={styles.calendar}
