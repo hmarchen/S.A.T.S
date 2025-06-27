@@ -65,8 +65,31 @@ transporter.verify(function(error: any, success: any) {
 
 app.post('/send-invite', async (req: any, res: any) => {
   console.log('Incoming request body:', req.body);
-  const { firstname, lastname, DCMail, studentID, advisor, email } = req.body;
+  const { firstname, lastname, DCMail, studentID, advisor, email, appointmentTime, appointmentDate } = req.body;
   const emailID = getNextEmailID();
+
+  function toMilitary(timeStr: String, dateStr: String) {
+    const [time, modifier] = timeStr.split(/\s/);
+    let [hours, minutes] = time.split(":").map(Number);
+    
+    if (modifier === "PM" && hours !== 12) hours += 12;
+    if (modifier === "AM" && hours === 12) hours = 0;
+    
+    // Create local date object
+    const startDate = new Date(`${dateStr}T${hours.toString().padStart(2, "0")}:${minutes.toString().padStart(2, "0")}:00`);
+    
+
+    // Get end time by adding 30 minutes
+    const endDate = new Date(startDate.getTime() + 30 * 60000);
+    
+
+    const formatICS = (d: Date) => d.toISOString().replace(/[-:]/g, "").split(".")[0] + "Z";
+
+    return {
+      start: formatICS(startDate),
+      end: formatICS(endDate),
+    };
+  }
 
   try {
     // Insert the emailID and email into the database
@@ -97,6 +120,8 @@ app.post('/send-invite', async (req: any, res: any) => {
     };
 
     // Generate the .ics file in the required format
+    const { start, end } = toMilitary(appointmentTime, appointmentDate);
+
     const icsContent = `
 BEGIN:VCALENDAR
 VERSION:2.0
@@ -105,8 +130,8 @@ METHOD:REQUEST
 BEGIN:VEVENT
 UID:${studentID}@dcmail.ca
 DTSTAMP:${now.toISOString().replace(/[-:]/g, '').split('.')[0]}Z
-DTSTART:${nextDay.toISOString().replace(/[-:]/g, '').split('.')[0]}Z
-DTEND:${new Date(nextDay.getTime() + 60 * 60 * 1000).toISOString().replace(/[-:]/g, '').split('.')[0]}Z
+DTSTART:${start}
+DTEND:${end}
 SUMMARY:${event.title}
 DESCRIPTION:${event.description}
 LOCATION:${event.location}
@@ -174,10 +199,10 @@ app.post('/handle-rejection', async (req: any, res: any) => {
     console.log("Extracted emailid:", extractedEmailID);
 
     // Fetch the email address from the database using the emailID
-    const result = await pool.query('SELECT emailaddress FROM Email WHERE EmailID = $1', [extractedEmailID]); // Use lowercase emailaddress
+    const result = await pool.query('SELECT email FROM emails WHERE EmailID = $1', [extractedEmailID]); // Use lowercase emailaddress
     console.log("Result variable:", result); // Log the result of the query
 
-    const studentEmail = result.rows[0]?.emailaddress; // Use lowercase emailaddress
+    const studentEmail = result.rows[0]?.email; // Use lowercase emailaddress
     console.log("studentEmail variable:", studentEmail); // Log the fetched email
 
     if (!studentEmail) {
@@ -218,8 +243,8 @@ app.post('/handle-acceptance', async (req: any, res: any) => {
     }
     const extractedEmailID = emailIdMatch[1];
 
-    const result = await pool.query('SELECT emailaddress FROM Email WHERE EmailID = $1', [extractedEmailID]); // Use lowercase emailaddress
-    const studentEmail = result.rows[0]?.emailaddress;
+    const result = await pool.query('SELECT email FROM emails WHERE EmailID = $1', [extractedEmailID]); // Use lowercase emailaddress
+    const studentEmail = result.rows[0]?.email;
 
     if (!studentEmail) {
       return res.status(404).send('Email not found for the given ID');
@@ -231,7 +256,7 @@ app.post('/handle-acceptance', async (req: any, res: any) => {
       subject: `Appointment Accepted - ${name}`,
       html: `
         <h2>Appointment Accepted</h2>
-        <p>Dear Advisor,</p>
+        <p>Dear Student,</p>
         <p>The appointment request for ${name} has been accepted.</p>
         <p><strong>Reason for acceptance:</strong></p>
         <p>${reason}</p>
@@ -257,8 +282,8 @@ app.post('/handle-tentative', async (req: any, res: any) => {
     }
     const extractedEmailID = emailIdMatch[1];
 
-    const result = await pool.query('SELECT emailaddress FROM Email WHERE EmailID = $1', [extractedEmailID]); // Use lowercase emailaddress
-    const studentEmail = result.rows[0]?.emailaddress;
+    const result = await pool.query('SELECT email FROM emails WHERE EmailID = $1', [extractedEmailID]); // Use lowercase emailaddress
+    const studentEmail = result.rows[0]?.email;
 
     if (!studentEmail) {
       return res.status(404).send('Email not found for the given ID');
@@ -270,7 +295,7 @@ app.post('/handle-tentative', async (req: any, res: any) => {
       subject: `Appointment Tentative - ${name}`,
       html: `
         <h2>Appointment Tentative</h2>
-        <p>Dear Advisor,</p>
+        <p>Dear Student,</p>
         <p>The appointment request for ${name} is tentative.</p>
         <p><strong>Reason for tentativeness:</strong></p>
         <p>${reason}</p>
@@ -334,7 +359,7 @@ function processNewEmails() {
 
               // Extract the accept reason from the email body
               const bodyText = parsed.text || '';
-              const reasonMatch = bodyText.match(/Accept reason:(.*?)(?=\n|$)/i);
+              const reasonMatch = bodyText.match(/(.*?)(?=\n|$)/i);
               const reason = reasonMatch ? reasonMatch[1].trim() : 'No reason provided';
 
               console.log('Extracted accept reason:', reason);
@@ -394,7 +419,7 @@ function processNewEmails() {
 
               // Extract the decline reason from the email body
               const bodyText = parsed.text || '';
-              const reasonMatch = bodyText.match(/Decline reason:(.*?)(?=\n|$)/i);
+              const reasonMatch = bodyText.match(/(.*?)(?=\n|$)/i);
               const reason = reasonMatch ? reasonMatch[1].trim() : 'No reason provided';
 
               console.log('Extracted decline reason:', reason);
