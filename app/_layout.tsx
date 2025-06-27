@@ -26,7 +26,7 @@ export default function RootLayout() {
   }
 
   return (
-    <InactivityProvider timeoutMinutes={2} warningSeconds={10}>
+    <InactivityProvider timeoutMinutes={3000} warningSeconds={10}>
       <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
         <Stack screenOptions={{ headerShown: false }}>
           <Stack.Screen name="(tabs)" />

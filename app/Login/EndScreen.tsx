@@ -52,12 +52,12 @@ export default function EndScreen() {
   const handleConfirm = async () => {
     try {
       if (userData) {
-        await fetch("http://192.168.193.60:3000/send-invite", {
+        await fetch("http://10.0.2.2:3000/send-invite", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(userData),
         });
-        router.push("/Login/AppConfirmation");
+        // router.push("/Login/AppConfirmation");
       }
     } catch (error) {
       console.error("Error sending invite:", error);
