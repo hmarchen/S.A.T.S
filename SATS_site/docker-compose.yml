@@ -5,7 +5,7 @@ services:
         working_dir: /app/services
         volumes:
         - .:/app
-        command: sh -c "npm install && npx ts-node authService.ts"
+        command: sh -c "npm install && TZ=America/Toronto npx ts-node authService.ts"
         ports:
         - "3000:3000"
         restart: unless-stopped

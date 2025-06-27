@@ -77,13 +77,13 @@ app.post('/send-invite', async (req: any, res: any) => {
     
     // Create local date object
     const startDate = new Date(`${dateStr}T${hours.toString().padStart(2, "0")}:${minutes.toString().padStart(2, "0")}:00`);
-    
+
 
     // Get end time by adding 30 minutes
     const endDate = new Date(startDate.getTime() + 30 * 60000);
     
 
-    const formatICS = (d: Date) => d.toISOString().replace(/[-:]/g, "").split(".")[0] + "Z";
+    const formatICS = (d: Date) => d.toISOString().replace(/[-:]/g, "").split(".")[0];
 
     return {
       start: formatICS(startDate),
